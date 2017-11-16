@@ -1,0 +1,9 @@
+
+.. blogpost::
+    :title: A REST API with falcon
+    :keywords: reference, blog, post
+    :date: 2017-11-16
+    :categories: blog
+
+    Implements a light :epkg:`REST API` for machine learning
+    with :epkg:`falcon`.
