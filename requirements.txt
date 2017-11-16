@@ -47,6 +47,7 @@ sphinxjp.themes.revealjs
 sphinxjp.themes.sphinxjp
 tornado
 tqdm
+ujson
 unify
 virtualenv
 wheel
