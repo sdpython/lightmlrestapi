@@ -18,7 +18,7 @@ history = "HISTORY.rst"
 requirements = None
 
 KEYWORDS = project_var_name + ', Xavier Dupré'
-DESCRIPTION = """Module with C functions. No precise purpose yet."""
+DESCRIPTION = """Light REST API for machine learned models"""
 
 
 CLASSIFIERS = [
@@ -234,7 +234,7 @@ if not r:
         packages=packages,
         package_dir=package_dir,
         package_data=package_data,
-        #data_files              = data_files,
-        install_requires=['numpy', 'pandas', 'tornado'],
-        #include_package_data    = True,
+        # data_files=data_files,
+        install_requires=['ujson', 'falcon', 'falcon-auth'],
+        # include_package_data=True,
     )

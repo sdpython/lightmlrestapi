@@ -5,6 +5,7 @@ coverage
 Cython
 docformatter
 falcon
+falcon-auth
 ipython>=5.0.0
 jupyter
 jupyter-client
