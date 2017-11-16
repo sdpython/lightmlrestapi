@@ -21,7 +21,7 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.lightmlboard import __version__
+from src.lightmlrestapi import __version__
 
 
 class TestVersion (unittest.TestCase):

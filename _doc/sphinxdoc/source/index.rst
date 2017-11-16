@@ -9,7 +9,7 @@ lightmlrestapi
     :target: https://travis-ci.org/sdpython/lightmlrestapi
     :alt: Build status
 
-.. image:: https://ci.appveyor.com/api/projects/status/6g0xro11tmc6t05d?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/itkrtmperlhjm4xw?svg=true
     :target: https://ci.appveyor.com/project/sdpython/lightmlrestapi
     :alt: Build Status Windows
 

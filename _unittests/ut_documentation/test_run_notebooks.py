@@ -43,7 +43,7 @@ from pyquickhelper.pycode import get_temp_folder, ExtTestCase
 from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
 from pyquickhelper.pycode import is_travis_or_appveyor
 from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
-import src.lightmlboard
+import src.lightmlrestapi
 
 
 class TestRunNotebooksPython(ExtTestCase):
@@ -97,7 +97,7 @@ class TestRunNotebooksPython(ExtTestCase):
         res = execute_notebook_list(
             temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths, kernel_name=kernel_name)
         execute_notebook_list_finalize_ut(
-            res, fLOG=fLOG, dump=src.lightmlboard)
+            res, fLOG=fLOG, dump=src.lightmlrestapi)
 
 
 if __name__ == "__main__":
