@@ -1,2 +1,0 @@
-name,login,pwd,team,mail
-xx,xd,pwd,team1,x@x.x
