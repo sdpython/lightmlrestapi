@@ -43,3 +43,6 @@ html_sidebars = {}
 language = "en"
 
 mathdef_link_only = True
+
+epkg_dictionary['falcon'] = "https://falconframework.org/"
+epkg_dictionary['REST API'] = "https://en.wikipedia.org/wiki/Representational_state_transfer"
