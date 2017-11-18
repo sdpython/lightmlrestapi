@@ -2,7 +2,7 @@
 """
 @file
 @brief Module *lightmlrestapi*.
-Custom Machine Learning Leaderbord for a competition.
+Light REST API for machine learned models.
 """
 __version__ = "0.1"
 __author__ = "Xavier Dupré"

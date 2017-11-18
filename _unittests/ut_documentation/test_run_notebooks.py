@@ -59,7 +59,7 @@ class TestRunNotebooksPython(ExtTestCase):
             return
 
         kernel_name = None if is_travis_or_appveyor() else install_python_kernel_for_unittest(
-            "lightmlboard")
+            "lightmlrestapi")
 
         temp = get_temp_folder(__file__, "temp_run_notebooks")
 
