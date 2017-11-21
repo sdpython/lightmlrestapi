@@ -23,10 +23,6 @@ lightmlrestapi
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-.. image:: https://landscape.io/github/sdpython/lightmlrestapi/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/sdpython/lightmlrestapi/master
-   :alt: Code Health
-
 .. image:: https://requires.io/github/sdpython/lightmlrestapi/requirements.svg?branch=master
      :target: https://requires.io/github/sdpython/lightmlrestapi/requirements/?branch=master
      :alt: Requirements Status
