@@ -235,6 +235,13 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         # data_files=data_files,
-        install_requires=['ujson', 'falcon', 'falcon-auth'],
+        install_requires=['ujson', 'falcon', 'falcon-auth', 'waitress'],
+        extras_require={
+            'cli': ['pyquickhelper>=1.6.2284'],
+        },
+        entry_points={
+            'console_scripts': [
+                'start_mlrestapi = lightmlrestapi.cli.make_ml_server:start_mlrestapi',
+            ]}
         # include_package_data=True,
     )

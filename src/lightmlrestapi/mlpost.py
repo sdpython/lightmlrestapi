@@ -38,7 +38,7 @@ class MachineLearningPost(object):
         resp.body = ujson.dumps({"Y": res})
 
     @staticmethod
-    def dummy_application(app):
+    def dummy_application(app=None):
         """
         Defines a dummy application using this API.
 

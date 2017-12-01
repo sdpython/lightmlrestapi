@@ -50,18 +50,38 @@ based on :epkg:`falcon`.
 
     tutorial/index
     api/index
+    i_cmd
     i_index
     i_ex
     all_notebooks
     blog/blogindex
     index_modules
 
-You can start the web application by running:
+You can test a dummy :epkg:`wsgi` server by running:
 
 ::
 
-    import lightmlrestapi
-    ...
+    start_mlrestapi --name=dummy
+
+And then query it with:
+
+::
+
+    import requests
+    import ujson
+    features = ujson.dumps({'X': [0.1, 0.2]})
+    r = requests.post('http://127.0.0.1:8081', data=features)
+    print(r)
+    print(r.json())
+
+It should return:
+
+::
+
+    {'Y': [[0.4994216179, 0.4514893599, 0.0490890222]]}
+
+The command line is described at
+:ref:`cmd_start_mlrestapi_cmd <Creates an falcon application and starts it through a wsgi application>`.
 
 **Links:** `github <https://github.com/sdpython/lightmlrestapi/>`_,
 `documentation <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html>`_,
