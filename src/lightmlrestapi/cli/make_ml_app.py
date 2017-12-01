@@ -70,7 +70,7 @@ def _start_mlrestapi(fLOG=print, args=None):
 
     .. cmdref::
         :title: Creates an falcon application and starts it through a wsgi application
-        :cmd: lightmlrestapi.cli.make_ml_app:start_mlrestapi
+        :cmd: lightmlrestapi.cli.make_ml_app:_start_mlrestapi
         :lid: cmd_start_mlrestapi_cmd
 
         Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
