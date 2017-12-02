@@ -41,12 +41,32 @@ README
     :target: http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
-*lightmlrestapi* implements a REST API for machine learned models.
-
-*not ready*
-
 **Links:**
 
 * `GitHub/lightmlrestapi <https://github.com/sdpython/lightmlrestapi/>`_
 * `documentation <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html>`_
 * `Blog <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/blog/main_0000.html#ap-main-0>`_
+
+*lightmlrestapi* implements a light machine learning *REST API*
+based on *falcon*. You can test a dummy *wsgi* server by running:
+
+::
+
+    start_mlrestapi --name=dummy
+
+And then query it with:
+
+::
+
+    import requests
+    import ujson
+    features = ujson.dumps({'X': [0.1, 0.2]})
+    r = requests.post('http://127.0.0.1:8081', data=features)
+    print(r)
+    print(r.json())
+
+It should return:
+
+::
+
+    {'Y': [[0.4994216179, 0.4514893599, 0.0490890222]]}
