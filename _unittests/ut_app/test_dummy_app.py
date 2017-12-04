@@ -42,13 +42,13 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
-from src.lightmlrestapi.mlpost import MachineLearningPost
+from src.lightmlrestapi.testing import dummy_application
 
 
 class TestDummyApp(testing.TestBase):
 
     def before(self):
-        MachineLearningPost.dummy_application(self.api)
+        dummy_application(self.api)
 
     def test_dummy_app(self):
         fLOG(

@@ -28,15 +28,15 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     can be tested with a dummy application (``app_name='dummy'``).
     """
     try:
-        from ..mlpost import MachineLearningPost
+        from ..testing import dummy_application
     except (ImportError, ValueError):
         folder = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", ".."))
         sys.path.append(folder)
-        from lightmlrestapi.mlpost import MachineLearningPost
+        from lightmlrestapi.testing import dummy_application
 
     if name == "dummy":
-        app = MachineLearningPost.dummy_application()
+        app = dummy_application()
     elif '.py' in name:
         raise NotImplementedError(
             "Unable to get application from filename '{}'. Not implemented.".format(name))
