@@ -173,3 +173,57 @@ def dummy_application_fct(restapi_predict, app=None):
     app.add_route(
         '/', MachineLearningPost(lambda X: restapi_predict))
     return app
+
+
+def dummy_application_neighbors(app=None):
+    """
+    Defines a dummy application using this API.
+    It returns a list of neighbors with a score
+    on `Iris datasets <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_.
+
+    @param      app     application, if None, creates one
+    @return             app
+
+    You can start it by running:
+
+    ::
+
+        start_mlrestapi --name=dummyknn
+
+    And then query it with:
+
+    ::
+
+        import requests
+        import ujson
+        features = ujson.dumps({'X': [0.1, 0.2]})
+        r = requests.post('http://127.0.0.1:8081', data=features)
+        print(r)
+        print(r.json())
+
+    It should return:
+
+    ::
+
+        {'Y': [[[41, 4.8754486973], [13, 5.0477717856], [8, 5.0774009099], [38, 5.1312766443], [60, 5.2201532545]]]}
+    """
+    from sklearn import datasets
+    from sklearn.neighbors import NearestNeighbors
+    iris = datasets.load_iris()
+    X = iris.data[:, :2]  # we only take the first two features.
+    knn = NearestNeighbors(n_neighbors=5)
+    knn.fit(X)
+
+    def to_serie(x):
+        dist, ind = knn.kneighbors(x)
+        res = []
+        for i in range(0, len(x)):
+            res.append([(int(j), float(s))
+                        for j, s in zip(ind[i, :], dist[i, :])])
+        return res
+
+    if app is None:
+        app = falcon.API()
+    app.add_route(
+        '/', MachineLearningPost(lambda x: to_serie(x)))
+    return app

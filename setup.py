@@ -243,7 +243,7 @@ if not r:
         },
         entry_points={
             'console_scripts': [
-                'start_mlrestapi = lightmlrestapi.cli.make_ml_app:_start_mlrestapi',
+                'start_mlrestapi=lightmlrestapi.cli.make_ml_app:_start_mlrestapi',
             ]}
         # include_package_data=True,
     )
