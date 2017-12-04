@@ -4,4 +4,4 @@ API
 
 .. toctree::
 
-    rdata
+    args

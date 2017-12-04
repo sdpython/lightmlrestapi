@@ -9,7 +9,7 @@ from pyquickhelper.cli.cli_helper import call_cli_function
 
 
 def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
-                    fLOG=print):
+                    options='', fLOG=print):
     """
     Creates an :epkg:`falcon` application and
     runs it through a :epkg:`wsgi` server.
@@ -19,6 +19,7 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     :param port: port
     :param nostart: do not start the wsgi server
     :param wsgi: wsgi framework which runs the falcon application
+    :param options: additional options as a string (depends on the application)
     :param fLOG: logging function
 
     Only :epkg:`waitress` is implemented right now.
@@ -28,15 +29,17 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     can be tested with a dummy application (``app_name='dummy'``).
     """
     try:
-        from ..testing import dummy_application
+        from ..testing import dummy_application, dummy_application_image
     except (ImportError, ValueError):
         folder = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", ".."))
         sys.path.append(folder)
-        from lightmlrestapi.testing import dummy_application
+        from lightmlrestapi.testing import dummy_application, dummy_application_image
 
     if name == "dummy":
         app = dummy_application()
+    elif name == "dummy":
+        app = dummy_application_image(options=options)
     elif '.py' in name:
         raise NotImplementedError(
             "Unable to get application from filename '{}'. Not implemented.".format(name))
