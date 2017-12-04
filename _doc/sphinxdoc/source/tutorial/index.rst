@@ -2,4 +2,6 @@
 Tutorial
 ========
 
-Not yet ready.
+.. toctree::
+
+    first_rest_api

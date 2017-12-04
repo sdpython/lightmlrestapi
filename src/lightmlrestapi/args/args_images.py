@@ -23,7 +23,7 @@ def image2array(img):
 
 def image2base64(path):
     """
-    Encodes an image into :epkg:`*py:base64`.
+    Encodes an image into :epkg:`*pyf:base64`.
 
     @param      path        filename
     @return                 format, base64
@@ -41,7 +41,7 @@ def base642image(encoded):
     Gets an encoded image and builds an
     :epkg:`PIL:Image.Image` from it.
 
-    @param      encoded     :epkg:`*py:base64` encoded image
+    @param      encoded     :epkg:`*pyf:base64` encoded image
                             (see @see fn image2base64)
     @return                 :epkg:`PIL:Image.Image`
     """

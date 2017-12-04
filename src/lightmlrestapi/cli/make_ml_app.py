@@ -29,20 +29,55 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     can be tested with a dummy application (``app_name='dummy'``).
     """
     try:
-        from ..testing import dummy_application, dummy_application_image
+        from ..testing import dummy_application, dummy_application_image, dummy_application_fct
     except (ImportError, ValueError):
         folder = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", ".."))
         sys.path.append(folder)
-        from lightmlrestapi.testing import dummy_application, dummy_application_image
+        from lightmlrestapi.testing import dummy_application, dummy_application_image, dummy_application_fct
 
     if name == "dummy":
+        # Dummy application.
         app = dummy_application()
+
+    elif name == "dummyfct":
+        # Dummy application with a function.
+        name = options
+        if not os.path.exists(name):
+            raise FileNotFoundError("Unable to find '{0}'.".format(name))
+        path, loc = os.path.split(name)
+        if path not in sys.path:
+            sys.path.append(path)
+            rem = True
+        else:
+            rem = False
+        loc = os.path.splitext(loc)[0]
+        try:
+            mod = __import__(loc)
+        except ImportError as e:
+            if rem:
+                sys.path.pop()
+            with open(name, "r") as f:
+                code = f.read()
+            raise ImportError(
+                "Unable to compile file '{0}'\n{1}".format(name, code)) from e
+        if rem:
+            sys.path.pop()
+        if not hasattr(mod, 'restapi_predict'):
+            with open(name, "r") as f:
+                code = f.read()
+            raise AttributeError(
+                "Unable to find function 'restapi_predict' in file '{0}'\n{1}".format(name, code))
+        app = dummy_application_fct(mod.restapi_predict)
+
     elif name == "dummy":
+        # Dummy application with an image.
         app = dummy_application_image(options=options)
+
     elif '.py' in name:
         raise NotImplementedError(
             "Unable to get application from filename '{}'. Not implemented.".format(name))
+
     else:
         raise NotImplementedError(
             "Application '{}' is not implemented.".format(name))

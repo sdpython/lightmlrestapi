@@ -89,10 +89,10 @@ def _distance_img(img1, img2, arr1=None):
 
 def _distance_img_b64(img1, img2, arr1=None):
     """
-    Calls @see fn _distance_img on an image encoded with :epkg:`*py:base64`.
+    Calls @see fn _distance_img on an image encoded with :epkg:`*pyf:base64`.
 
     @param      img1    reference :epkg:`PIL:Image.Image`
-    @param      img2    new image or list of images encoded with :epkg:`*py:base64`
+    @param      img2    new image or list of images encoded with :epkg:`*pyf:base64`
     @param      arr1    img1 as an array if available (to avoid converting
                         the same image multiple times)
     @return             distance (in [0, 1]) or list of distances
@@ -157,4 +157,19 @@ def dummy_application_image(app=None, options=None):
         app = falcon.API()
     app.add_route(
         '/', MachineLearningPost(lambda X: _distance_img_b64(img_base, X)))
+    return app
+
+
+def dummy_application_fct(restapi_predict, app=None):
+    """
+    Defines an application as defined in the tutorial
+    :ref:`l-dummy-function-application`.
+
+    @param      restapi_predict     predict function
+    @param      app                 application, if None, creates one
+    """
+    if app is None:
+        app = falcon.API()
+    app.add_route(
+        '/', MachineLearningPost(lambda X: restapi_predict))
     return app

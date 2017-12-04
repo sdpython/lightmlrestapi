@@ -8,7 +8,8 @@ import falcon
 
 class MachineLearningPost(object):
     """
-    Implements a post request, no authentification
+    Implements a simple REST API which handles
+    a post request, no authentification
     is required. The model ingests a vector *X*
     and outputs another one or a number *Y*.
     """

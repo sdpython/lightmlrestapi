@@ -41,7 +41,7 @@ from src.lightmlrestapi.cli.make_ml_app import _start_mlrestapi
 
 class TestStartMlRestApi(unittest.TestCase):
 
-    def test_stat_mlrestapi(self):
+    def test_start_mlrestapi(self):
         fLOG(
             __file__,
             self._testMethodName,
@@ -58,7 +58,7 @@ class TestStartMlRestApi(unittest.TestCase):
         if not r.startswith("usage: start_mlrestapi [-h] [-n NAME] [-ho HOST]"):
             raise Exception(r)
 
-    def test_stat_mlrestapi_notstart(self):
+    def test_start_mlrestapi_notstart(self):
         fLOG(
             __file__,
             self._testMethodName,

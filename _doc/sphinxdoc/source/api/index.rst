@@ -5,3 +5,4 @@ API
 .. toctree::
 
     args
+    mlapp
