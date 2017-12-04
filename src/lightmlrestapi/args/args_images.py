@@ -30,9 +30,19 @@ def image2base64(path):
 
     The format is the file extension.
     """
-    ext = os.path.splitext(path)[-1].lower().strip('.')
-    with open(path, "rb") as f:
-        content = f.read()
+    if isinstance(path, bytes):
+        content = path
+        ext = None
+    elif hasattr(path, 'convert'):
+        # Most probably a Pillow object
+        st = io.BytesIO()
+        path.save(st, format='png')
+        content = st.getvalue()
+        ext = 'png'
+    else:
+        ext = os.path.splitext(path)[-1].lower().strip('.')
+        with open(path, "rb") as f:
+            content = f.read()
     return 'image/' + ext, base64.b64encode(content)
 
 

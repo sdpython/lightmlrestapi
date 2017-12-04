@@ -51,11 +51,11 @@ based on :epkg:`falcon`.
     tutorial/index
     api/index
     i_cmd
-    i_index
     i_ex
     all_notebooks
     blog/blogindex
     index_modules
+    i_index
 
 You can test a dummy :epkg:`wsgi` server by running:
 
