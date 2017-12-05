@@ -29,12 +29,12 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     can be tested with a dummy application (``app_name='dummy'``).
     """
     try:
-        from ..testing import dummy_application, dummy_application_image, dummy_application_fct, dummy_application_neighbors
+        from ..testing import dummy_application, dummy_application_image, dummy_application_fct, dummy_application_neighbors, dummy_application_neighbors_image
     except (ImportError, ValueError):
         folder = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", ".."))
         sys.path.append(folder)
-        from lightmlrestapi.testing import dummy_application, dummy_application_image, dummy_application_fct, dummy_application_neighbors
+        from lightmlrestapi.testing import dummy_application, dummy_application_image, dummy_application_fct, dummy_application_neighbors, dummy_application_neighbors_image
 
     if name == "dummy":
         # Dummy application.
@@ -77,6 +77,10 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     elif name == "dummyknn":
         # Dummy application with neighbors.
         app = dummy_application_neighbors()
+        
+    elif name == "dummyknnimg":
+        # Dummy application with neighbors and an image.
+        app = dummy_application_neighbors_image(options=options)
 
     elif '.py' in name:
         raise NotImplementedError(

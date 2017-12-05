@@ -227,3 +227,65 @@ def dummy_application_neighbors(app=None):
     app.add_route(
         '/', MachineLearningPost(lambda x: to_serie(x)))
     return app
+
+
+def dummy_application_neighbors_image(app=None, options=None):
+    """
+    Defines a dummy application using this API.
+    It returns a list of one neighbor for an image
+    and metadata (random).
+
+    @param      app         application, if None, creates one
+    @param      options     if not empty, path to an image
+    @return                 app
+
+    You can start it by running:
+
+    ::
+
+        start_mlrestapi --name=dummyknnimg
+
+    And then query it with:
+
+    ::
+
+        import requests
+        import ujson
+        from lightmlrestapi.args import image2base64
+        img = "path_to_image"
+        b64 = image2base64(img)[1]
+        features = ujson.dumps({'X': b64})
+        r = requests.post('http://127.0.0.1:8081', data=features)
+        print(r)
+        print(r.json())
+
+    It should return:
+
+    ::
+
+        {'Y': [[[41, 4.8754486973, {'name': 'wiki.png', description='something'}]]]}
+    """
+    if options is None or not isinstance(options, str) or len(options) == 0:
+        options = get_wiki_img()
+    if not os.path.exists(options):
+        raise FileNotFoundError("Unable to find image '{0}'.".format(options))
+    from PIL import Image
+    img_base = Image.open(get_wiki_img())
+    if img_base.size != (224, 224):
+        img_base = img_base.resize((224, 224))
+        if img_base.mode != 'RGB':
+            img_base = img_base.convert('RGB')
+
+    def mypredict(X):
+        res = _distance_img_b64(img_base, X)
+        final = []
+        for r, x in zip(res, X):
+            final.append([(0, r, dict(name=os.path.split(options)[1],
+                                description="image from wikipedia"))])
+        return final
+
+    if app is None:
+        app = falcon.API()
+    app.add_route(
+        '/', MachineLearningPost(mypredict))
+    return app

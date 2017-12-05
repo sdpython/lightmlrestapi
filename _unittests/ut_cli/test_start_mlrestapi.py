@@ -75,6 +75,40 @@ class TestStartMlRestApi(unittest.TestCase):
         if not r.startswith("[start_mlrestapi] do not run serve"):
             raise Exception(r)
 
+    def test_start_mlrestapi_notstart_image(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        rows = []
+
+        def flog(*l):
+            rows.append(l)
+
+        _start_mlrestapi(args=['--nostart=True', '--name=dummyimg'], fLOG=flog)
+
+        r = rows[0][0]
+        if not r.startswith("[start_mlrestapi] do not run serve"):
+            raise Exception(r)
+
+    def test_start_mlrestapi_notstart_neighobrs_image(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        rows = []
+
+        def flog(*l):
+            rows.append(l)
+
+        _start_mlrestapi(args=['--nostart=True', '--name=dummyknnimg'], fLOG=flog)
+
+        r = rows[0][0]
+        if not r.startswith("[start_mlrestapi] do not run serve"):
+            raise Exception(r)
+
 
 if __name__ == "__main__":
     unittest.main()
