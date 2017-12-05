@@ -281,7 +281,7 @@ def dummy_application_neighbors_image(app=None, options=None):
         final = []
         for r, x in zip(res, X):
             final.append([(0, r, dict(name=os.path.split(options)[1],
-                                description="image from wikipedia"))])
+                                      description="image from wikipedia"))])
         return final
 
     if app is None:

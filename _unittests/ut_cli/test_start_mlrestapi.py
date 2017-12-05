@@ -103,7 +103,8 @@ class TestStartMlRestApi(unittest.TestCase):
         def flog(*l):
             rows.append(l)
 
-        _start_mlrestapi(args=['--nostart=True', '--name=dummyknnimg'], fLOG=flog)
+        _start_mlrestapi(
+            args=['--nostart=True', '--name=dummyknnimg'], fLOG=flog)
 
         r = rows[0][0]
         if not r.startswith("[start_mlrestapi] do not run serve"):

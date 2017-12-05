@@ -9,7 +9,6 @@ import unittest
 import ujson
 import falcon
 import falcon.testing as testing
-from PIL import Image
 
 
 try:
@@ -45,7 +44,6 @@ except ImportError:
 from pyquickhelper.loghelper import fLOG
 from src.lightmlrestapi.testing import dummy_application_neighbors_image
 from src.lightmlrestapi.testing.data import get_wiki_img
-from src.lightmlrestapi.testing.dummy_applications import _distance_img
 from src.lightmlrestapi.args import image2base64, image2array, base642image
 
 
@@ -78,7 +76,8 @@ class TestDummyAppSearchImg(testing.TestBase):
         self.assertEqual(len(d['Y'][0]), 1)
         self.assertEqual(d['Y'][0][0][0], 0)
         self.assertGreater(d['Y'][0][0][1], 0.21)
-        self.assertEqual(d['Y'][0][0][2], {'description': 'image from wikipedia', 'name': 'wiki.png'})
+        self.assertEqual(d['Y'][0][0][2], {
+                         'description': 'image from wikipedia', 'name': 'wiki.png'})
 
     def test_dummy_error_img(self):
         fLOG(

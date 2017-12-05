@@ -77,7 +77,7 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     elif name == "dummyknn":
         # Dummy application with neighbors.
         app = dummy_application_neighbors()
-        
+
     elif name == "dummyknnimg":
         # Dummy application with neighbors and an image.
         app = dummy_application_neighbors_image(options=options)
