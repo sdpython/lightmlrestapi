@@ -49,6 +49,7 @@ based on :epkg:`falcon`.
     :maxdepth: 1
 
     tutorial/index
+    gyexamples/index
     api/index
     i_cmd
     i_ex

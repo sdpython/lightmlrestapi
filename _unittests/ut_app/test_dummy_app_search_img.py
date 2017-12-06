@@ -96,7 +96,8 @@ class TestDummyAppSearchImg(testing.TestBase):
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         d = ujson.loads(body)
         self.assertIn('Unable to predict', d['title'])
-        self.assertIn("argument should be a bytes-like object or ASCII string, not 'list'", d['title'])
+        self.assertIn(
+            "argument should be a bytes-like object or ASCII string, not 'list'", d['title'])
         self.assertIn('.py', d['description'])
 
 
