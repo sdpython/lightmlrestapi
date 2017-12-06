@@ -54,12 +54,11 @@ with open(code_file, "w") as f:
 
 import sys
 from subprocess import Popen, PIPE
-cmd = '{0} -u "{1}"'.format(sys.executable, code_file)
-try:
+if sys.platform.startswith('win'):
+    cmd = '{0} -u "{1}"'.format(sys.executable, code_file)
     proc = Popen(cmd)
-except FileNotFoundError as e:
-    # We try just python.
-    cmd = 'python -u "{0}"'.format(code_file)
+else:
+    cmd = [sys.executable, '-u', code_file]
     proc = Popen(cmd)
 print('Start server, process id', proc.pid)
 
