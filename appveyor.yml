@@ -26,7 +26,7 @@ install:
   - "%PYTHON%\\Scripts\\pip install pyquickhelper --no-deps"
   - "%PYTHON%\\Scripts\\pip install wcwidth"
   - "%PYTHON%\\Scripts\\pip install falcon falcon-auth waitress"
-  - "%PYTHON%\\Scripts\\pymy_install3 scikit-learn scipy ujson"
+  - "%PYTHON%\\Scripts\\pymy_install3 scikit-learn scipy ujson psutil"
   - "set PATH=%PATH%;C:\\projects\\jyquickhelper\\build\\update_modules\\Graphviz\\bin"
 build: off
 
