@@ -51,6 +51,7 @@ if not os.path.exists(dest):
 code_file = os.path.join(dest, "_start_server.py")
 with open(code_file, "w") as f:
     f.write(code)
+assert os.path.exists(code_file)
 
 import sys
 from subprocess import Popen, PIPE
