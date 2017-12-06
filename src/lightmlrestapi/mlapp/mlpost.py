@@ -36,8 +36,11 @@ class MachineLearningPost(object):
             res = self._predict([X])
         except Exception as e:
             excs = traceback.format_exc()
+            es = str(e)
+            if len(es) > 200:
+                es = es[:200] + '...'
             raise falcon.HTTPBadRequest(
-                'Unable to predict due to: {0}'.format(e), excs)
+                'Unable to predict due to: {0}'.format(es), excs)
 
         resp.status = falcon.HTTP_201
         try:

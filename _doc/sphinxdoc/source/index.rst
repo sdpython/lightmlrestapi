@@ -42,7 +42,7 @@ lightmlrestapi
     :target: http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
-*lightmlrestapi* implements a light machine learning :epkg:`REST API`.
+*lightmlrestapi* implements a light machine learning :epkg:`REST API`
 based on :epkg:`falcon`.
 
 .. toctree::
