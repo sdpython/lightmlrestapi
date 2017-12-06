@@ -2,7 +2,7 @@
 Starts and queries a REST API
 =============================
 
-This example starts a waitress server, creates
+This example starts a :epkg:`waitress` server, creates
 a :epkg:`WSGI` application based on :epkg:`falcon`
 and queries the REST API. This application
 returns the prediction from a model trained
