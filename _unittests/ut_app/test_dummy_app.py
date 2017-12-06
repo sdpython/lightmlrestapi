@@ -77,9 +77,9 @@ class TestDummyApp(testing.TestBase):
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         d = ujson.loads(body)
-        self.assertEqual(d['title'], 'Unable to predict')
-        self.assertEqual(d['description'],
-                         'X has 3 features per sample; expecting 2')
+        self.assertIn('Unable to predict', d['title'])
+        self.assertIn('X has 3 features per sample; expecting 2', d['title'])
+        self.assertIn('.py', d['description'])
 
 
 if __name__ == "__main__":

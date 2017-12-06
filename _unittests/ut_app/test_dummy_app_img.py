@@ -110,9 +110,9 @@ class TestDummyAppImg(testing.TestBase):
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         d = ujson.loads(body)
-        self.assertEqual(d['title'], 'Unable to predict')
-        self.assertEqual(d['description'],
-                         "argument should be a bytes-like object or ASCII string, not 'list'")
+        self.assertIn('Unable to predict', d['title'])
+        self.assertIn("argument should be a bytes-like object or ASCII string, not 'list'", d['title'])
+        self.assertIn('.py', d['description'])
 
     def test_image_distance(self):
         fLOG(

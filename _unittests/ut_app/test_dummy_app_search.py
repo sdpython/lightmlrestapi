@@ -77,9 +77,9 @@ class TestDummyAppSearch(testing.TestBase):
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         d = ujson.loads(body)
-        self.assertEqual(d['title'], 'Unable to predict')
-        self.assertEqual(d['description'],
-                         'query data dimension must match training data dimension')
+        self.assertIn('Unable to predict', d['title'])
+        self.assertIn('query data dimension must match training data dimension', d['title'])
+        self.assertIn('.py', d['description'])
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@
 @file
 @brief Machine Learning Post request
 """
+import traceback
+import json
 import ujson
 import falcon
 
@@ -33,10 +35,22 @@ class MachineLearningPost(object):
         try:
             res = self._predict([X])
         except Exception as e:
-            raise falcon.HTTPBadRequest('Unable to predict', str(e))
+            excs = traceback.format_exc()
+            raise falcon.HTTPBadRequest(
+                'Unable to predict due to: {0}'.format(e), excs)
 
         resp.status = falcon.HTTP_201
-        resp.body = ujson.dumps({"Y": res})
+        try:
+            js = ujson.dumps({"Y": res})
+        except OverflowError as e:
+            try:
+                json.dumps({"Y": res})
+            except Exception as ee:
+                raise OverflowError(
+                    'res probably contains numpy arrays or numpy.types ({0}), they cannot be serialized.'.format(type(res))) from ee
+            raise OverflowError(
+                'res probably contains numpy arrays ({0}), they cannot be serialized with ujson but with json.'.format(type(res))) from e
+        resp.body = js
 
     @staticmethod
     def dummy_application(app=None):

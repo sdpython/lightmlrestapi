@@ -20,28 +20,33 @@ def dummy_application(app=None):
     @param      app     application, if None, creates one
     @return             app
 
-    You can start it by running:
+    .. exref::
+        :title: Query a REST API with features
 
-    ::
+        This example shows how to query a REST API
+        by sending a vector of features.
+        You can start it by running:
 
-        start_mlrestapi --name=dummy
+        ::
 
-    And then query it with:
+            start_mlrestapi --name=dummy
 
-    ::
+        And then query it with:
 
-        import requests
-        import ujson
-        features = ujson.dumps({'X': [0.1, 0.2]})
-        r = requests.post('http://127.0.0.1:8081', data=features)
-        print(r)
-        print(r.json())
+        ::
 
-    It should return:
+            import requests
+            import ujson
+            features = ujson.dumps({'X': [0.1, 0.2]})
+            r = requests.post('http://127.0.0.1:8081', data=features)
+            print(r)
+            print(r.json())
 
-    ::
+        It should return:
 
-        {'Y': [[0.4994216179, 0.4514893599, 0.0490890222]]}
+        ::
+
+            {'Y': [[0.4994216179, 0.4514893599, 0.0490890222]]}
     """
     from sklearn import datasets
     from sklearn.linear_model import LogisticRegression
@@ -116,31 +121,36 @@ def dummy_application_image(app=None, options=None):
     @param      options     if not empty, path to an image
     @return                 app
 
-    You can start it by running:
+    .. exref::
+        :title: Query a REST API with an image
 
-    ::
+        This example shows how to query a REST API
+        by sending an image.
+        You can start it by running:
 
-        start_mlrestapi --name=dummyimg
+        ::
 
-    And then query it with:
+            start_mlrestapi --name=dummyimg
 
-    ::
+        And then query it with:
 
-        import requests
-        import ujson
-        from lightmlrestapi.args import image2base64
-        img = "path_to_image"
-        b64 = image2base64(img)[1]
-        features = ujson.dumps({'X': b64})
-        r = requests.post('http://127.0.0.1:8081', data=features)
-        print(r)
-        print(r.json())
+        ::
 
-    It should return something like:
+            import requests
+            import ujson
+            from lightmlrestapi.args import image2base64
+            img = "path_to_image"
+            b64 = image2base64(img)[1]
+            features = ujson.dumps({'X': b64})
+            r = requests.post('http://127.0.0.1:8081', data=features)
+            print(r)
+            print(r.json())
 
-    ::
+        It should return something like:
 
-        {'distance': [0.21]}
+        ::
+
+            {'distance': [0.21]}
     """
     if options is None or not isinstance(options, str) or len(options) == 0:
         options = get_wiki_img()
@@ -184,28 +194,34 @@ def dummy_application_neighbors(app=None):
     @param      app     application, if None, creates one
     @return             app
 
-    You can start it by running:
+    .. exref::
+        :title: Query a REST API with an image and get neighbors
 
-    ::
+        A previous example shows how to send an image,
+        this one illustrates a result which is a classifier result
+        neither a regressor one but neighbors.
+        You can start it by running:
 
-        start_mlrestapi --name=dummyknn
+        ::
 
-    And then query it with:
+            start_mlrestapi --name=dummyknn
 
-    ::
+        And then query it with:
 
-        import requests
-        import ujson
-        features = ujson.dumps({'X': [0.1, 0.2]})
-        r = requests.post('http://127.0.0.1:8081', data=features)
-        print(r)
-        print(r.json())
+        ::
 
-    It should return:
+            import requests
+            import ujson
+            features = ujson.dumps({'X': [0.1, 0.2]})
+            r = requests.post('http://127.0.0.1:8081', data=features)
+            print(r)
+            print(r.json())
 
-    ::
+        It should return:
 
-        {'Y': [[[41, 4.8754486973], [13, 5.0477717856], [8, 5.0774009099], [38, 5.1312766443], [60, 5.2201532545]]]}
+        ::
+
+            {'Y': [[[41, 4.8754486973], [13, 5.0477717856], [8, 5.0774009099], [38, 5.1312766443], [60, 5.2201532545]]]}
     """
     from sklearn import datasets
     from sklearn.neighbors import NearestNeighbors
