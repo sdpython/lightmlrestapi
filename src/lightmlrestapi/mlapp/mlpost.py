@@ -14,6 +14,8 @@ class MachineLearningPost(object):
     a post request, no authentification
     is required. The model ingests a vector *X*
     and outputs another one or a number *Y*.
+    An basic exemple of an application is given by
+    @see fn dummy_application.
     """
 
     def __init__(self, predict_function):
@@ -54,25 +56,3 @@ class MachineLearningPost(object):
             raise OverflowError(
                 'res probably contains numpy arrays ({0}), they cannot be serialized with ujson but with json.'.format(type(res))) from e
         resp.body = js
-
-    @staticmethod
-    def dummy_application(app=None):
-        """
-        Defines a dummy application using this API.
-
-        @param      app     application, if None, creates one
-        @return             app
-        """
-        from sklearn import datasets
-        from sklearn.linear_model import LogisticRegression
-
-        iris = datasets.load_iris()
-        X = iris.data[:, :2]  # we only take the first two features.
-        y = iris.target
-        clf = LogisticRegression()
-        clf.fit(X, y)
-
-        if app is None:
-            app = falcon.API()
-        app.add_route('/', MachineLearningPost(clf.predict_proba))
-        return app
