@@ -78,14 +78,5 @@ print(r.json())
 
 ####################
 # Let's stop the server.
-proc.kill()
-
-############################
-# You can check that the process disappeared.
-import psutil
-sleep(1)
-nb = 0
-while nb < 5 and proc.pid in psutil.pids():
-    print("Let's wait for the server to terminate.")
-    sleep(1)
-    nb += 1
+from pyquickhelper.loghelper import reap_children
+reap_children(subset={proc.pid}, fLOG=print)
