@@ -19,10 +19,6 @@ port = 8081
 
 
 def process_server(host, port):
-    import logging
-    logger = logging.getLogger('waitress')
-    logger.setLevel(logging.INFO)
-
     from lightmlrestapi.testing import dummy_application
     app = dummy_application()
 
@@ -49,16 +45,19 @@ dest = os.path.abspath('temp_scripts')
 if not os.path.exists(dest):
     os.mkdir(dest)
 code_file = os.path.join(dest, "_start_server.py")
+print("Write file '{0}'.".format(code_file))
 with open(code_file, "w") as f:
     f.write(code)
 
 import sys
-from subprocess import Popen, PIPE
+from subprocess import Popen
 if sys.platform.startswith('win'):
     cmd = '{0} -u "{1}"'.format(sys.executable, code_file)
+    print("Running '{0}'."format(cmd))
     proc = Popen(cmd)
 else:
     cmd = [sys.executable, '-u', code_file]
+    print("Running '{0}'."format(cmd))
     proc = Popen(cmd)
 print('Start server, process id', proc.pid)
 
