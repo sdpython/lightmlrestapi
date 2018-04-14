@@ -4,7 +4,7 @@ falcon-auth
 jyquickhelper
 keyring
 Pillow
-pyquickhelper>=1.7.2438
+pyquickhelper>=1.7.2539
 scikit-learn
 scipy
 sphinxjp.themes.sphinxjp
