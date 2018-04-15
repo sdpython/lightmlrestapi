@@ -64,6 +64,10 @@ class TestDummyAppLogging(testing.TestBase):
         self.assertEqual(len(d['Y'][0]), 3)
         res = list(enumerate_parsed_logs(temp, secret='dummys'))
         self.assertEqual(len(res), 1)
+        for i in range(0, 10):
+            body = self.simulate_request(
+                '/', decode='utf-8', method="POST", body=bodyin)
+            self.assertEqual(self.srmock.status, falcon.HTTP_201)
 
     def test_parsed_logs(self):
         data = os.path.join(os.path.dirname(__file__), 'data', 'logs')

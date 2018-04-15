@@ -69,14 +69,13 @@ class MachineLearningPost(BaseLogging):
                 'Unable to predict due to: {0}'.format(es), excs)
         duration = self.duration()
 
-        self.save_time()
-        log_data = {'duration': duration}
+        # see http://falcon.readthedocs.io/en/stable/api/request_and_response.html
+        log_data = dict(duration=duration,
+                        ip=req.access_route)
         if self._log_features:
             log_data['X'] = MachineLearningPost.data2json(X)
         if self._log_prediction:
             log_data['Y'] = MachineLearningPost.data2json(res)
-        duration_log = self.duration()
-        log_data['logging'] = duration_log
         self.info("ML", log_data)
 
         resp.status = falcon.HTTP_201
