@@ -35,7 +35,7 @@ class MachineLearningPost(BaseLogging):
         self._predict = predict_function
         self._log_features = log_features
         self._log_prediction = log_prediction
-    
+
     @staticmethod
     def data2json(data):
         """
@@ -68,7 +68,7 @@ class MachineLearningPost(BaseLogging):
             raise falcon.HTTPBadRequest(
                 'Unable to predict due to: {0}'.format(es), excs)
         duration = self.duration()
-        
+
         self.save_time()
         log_data = {'duration': duration}
         if self._log_features:
@@ -78,7 +78,7 @@ class MachineLearningPost(BaseLogging):
         duration_log = self.duration()
         log_data['logging'] = duration_log
         self.info("ML", log_data)
-        
+
         resp.status = falcon.HTTP_201
         try:
             js = ujson.dumps({"Y": res})

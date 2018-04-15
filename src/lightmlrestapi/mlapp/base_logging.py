@@ -21,7 +21,7 @@ class BaseLogging(object):
     def __init__(self, secret, folder='.', level=logging.INFO, encoding='utf-8', when='d'):
         """
         @param      secret      secret for encryption (None to disable the logging)
-        @param      folder      folder where to write the logs        
+        @param      folder      folder where to write the logs
         @param      level       logging level
         @param      when        when rotating the logs,
                                 see `TimedRotatingFileHandler <https://docs.python.org/3/library/logging.handlers.html?highlight=streamhandler#logging.handlers.TimedRotatingFileHandler>`_
@@ -32,32 +32,35 @@ class BaseLogging(object):
         else:
             current_time = datetime.now()
             current_date = current_time.strftime("%Y-%m-%d")
-            filename = "{0}-{1}.log".format(self.__class__.__name__, current_date)
+            filename = "{0}-{1}.log".format(
+                self.__class__.__name__, current_date)
             file_location = os.path.join(folder, filename)
-            format = Formatter('%(asctime)s,%(levelname)s,%(message)s,%(data)s')
-            self.handler = TimedRotatingFileHandler(file_location, encoding=encoding, delay=True, when=when)
+            format = Formatter(
+                '%(asctime)s,%(levelname)s,%(message)s,%(data)s')
+            self.handler = TimedRotatingFileHandler(
+                file_location, encoding=encoding, delay=True, when=when)
             self.handler.setFormatter(format)
             self.logger = logging.getLogger(self.__class__.__name__)
             self.logger.setLevel(level)
             self.logger.addHandler(self.handler)
             self.secret = secret
-            
+
     def save_time(self):
         """
         Saves the times to get a duration later.
         """
         self.t1 = perf_counter()
-        
+
     def duration(self):
         """
         Get the duration since @see me save_time was called.
         """
         return perf_counter() - self.t1
-        
+
     def info(self, msg, data):
         """
         Logs any king of data into the logs.
-        
+
         @param  msg         message
         @param  data        data to log
         """
@@ -70,7 +73,7 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
     """
     Goes through a list of logged files,
     reads and decrypt the content.
-    
+
     @param      folder      folder which contains the logs
     @param      secret      secret
     @param      encoding    encoding
@@ -83,7 +86,8 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
                 for i, line in enumerate(f):
                     spl = line.rstrip('\n\r').split(',')
                     if len(spl) != 5:
-                        raise ValueError("Format issue in\n    File \"{0}\", line {1}".format(full, i+1))
+                        raise ValueError(
+                            "Format issue in\n    File \"{0}\", line {1}".format(full, i + 1))
                     data = eval(spl[4])
                     dec = jwt.decode(data, secret, algorithms=['HS256'])
                     dt = datetime.strptime(spl[0], '%Y-%m-%d %H:%M:%S')

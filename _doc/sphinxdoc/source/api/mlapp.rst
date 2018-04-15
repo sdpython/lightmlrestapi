@@ -21,4 +21,3 @@ Machine Learning
 ================
 
 .. autosignature:: lightmlrestapi.mlapp.mlpost.MachineLearningPost
-
