@@ -14,5 +14,6 @@ Index
     all_report
     glossary
     README
+    HISTORY
     license
     blog/blogindex

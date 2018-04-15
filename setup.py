@@ -214,7 +214,7 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         # data_files=data_files,
-        install_requires=['ujson', 'falcon', 'falcon-auth', 'waitress'],
+        install_requires=['ujson', 'falcon', 'falcon-auth', 'waitress', 'PyJWT'],
         extras_require={
             'cli': ['pyquickhelper>=1.6.2284'],
         },

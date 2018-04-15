@@ -22,7 +22,7 @@ install:
   - "%PYTHON%\\Scripts\\pymy_install3 --task=tool --source=zip graphviz"
   - "%PYTHON%\\Scripts\\pip install pyquickhelper --no-deps"
   - "%PYTHON%\\Scripts\\pip install wcwidth backcall packaging"
-  - "%PYTHON%\\Scripts\\pip install falcon falcon-auth waitress"
+  - "%PYTHON%\\Scripts\\pip install falcon falcon-auth waitress PyJWT"
   - "%PYTHON%\\Scripts\\pymy_install3 scikit-learn scipy ujson psutil"
   - "set PATH=%PATH%;C:\\projects\\jyquickhelper\\build\\update_modules\\Graphviz\\bin"
 build: off

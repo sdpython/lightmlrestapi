@@ -6,11 +6,15 @@ import traceback
 import json
 import ujson
 import falcon
+import logging
+import logging.handlers
+import numpy
+from .base_logging import BaseLogging
 
 
-class MachineLearningPost(object):
+class MachineLearningPost(BaseLogging):
     """
-    Implements a simple REST API which handles
+    Implements a simple :epkg:`REST API` which handles
     a post request, no authentification
     is required. The model ingests a vector *X*
     and outputs another one or a number *Y*.
@@ -18,11 +22,30 @@ class MachineLearningPost(object):
     @see fn dummy_application.
     """
 
-    def __init__(self, predict_function):
+    def __init__(self, predict_function, secret=None, folder='.',
+                 log_features=True, log_prediction=True):
         """
         @param      predict_function    predict function
+        @param      secret              see @see cl BaseLogging
+        @param      folder              see @see cl BaseLogging
+        @param      log_features        log the features
+        @param      log_prediction      log the prediction
         """
+        BaseLogging.__init__(self, secret=secret, folder=folder)
         self._predict = predict_function
+        self._log_features = log_features
+        self._log_prediction = log_prediction
+    
+    @staticmethod
+    def data2json(data):
+        """
+        :epkg:`numpy:array` cannot be converted into
+        :epkg:`json`. We change the type into a list.
+        """
+        if isinstance(data, numpy.ndarray):
+            return dict(shape=data.shape, data=data.tolist())
+        else:
+            return data
 
     def on_post(self, req, resp):
         """
@@ -34,6 +57,7 @@ class MachineLearningPost(object):
         js = req.stream.read()
         args = ujson.loads(js)
         X = args["X"]
+        self.save_time()
         try:
             res = self._predict([X])
         except Exception as e:
@@ -43,7 +67,18 @@ class MachineLearningPost(object):
                 es = es[:200] + '...'
             raise falcon.HTTPBadRequest(
                 'Unable to predict due to: {0}'.format(es), excs)
-
+        duration = self.duration()
+        
+        self.save_time()
+        log_data = {'duration': duration}
+        if self._log_features:
+            log_data['X'] = MachineLearningPost.data2json(X)
+        if self._log_prediction:
+            log_data['Y'] = MachineLearningPost.data2json(res)
+        duration_log = self.duration()
+        log_data['logging'] = duration_log
+        self.info("ML", log_data)
+        
         resp.status = falcon.HTTP_201
         try:
             js = ujson.dumps({"Y": res})

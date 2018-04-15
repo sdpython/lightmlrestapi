@@ -10,7 +10,7 @@ from ..mlapp import MachineLearningPost
 from ..args import base642image, image2array
 
 
-def dummy_application(app=None):
+def dummy_application(app=None, **params):
     """
     Defines a dummy application using this API.
     It returns a score produced by a model trained
@@ -18,12 +18,13 @@ def dummy_application(app=None):
     and two features.
 
     @param      app     application, if None, creates one
+    @param      params  parameters sent to @see cl MachineLearningPost
     @return             app
 
     .. exref::
         :title: Query a REST API with features
 
-        This example shows how to query a REST API
+        This example shows how to query a :epkg:`REST API`
         by sending a vector of features.
         You can start it by running:
 
@@ -59,7 +60,7 @@ def dummy_application(app=None):
 
     if app is None:
         app = falcon.API()
-    app.add_route('/', MachineLearningPost(clf.predict_proba))
+    app.add_route('/', MachineLearningPost(clf.predict_proba, **params))
     return app
 
 
@@ -109,7 +110,7 @@ def _distance_img_b64(img1, img2, arr1=None):
     return _distance_img(img1, img2, arr1)
 
 
-def dummy_application_image(app=None, options=None):
+def dummy_application_image(app=None, options=None, **params):
     """
     Defines a dummy application using this API
     and processing one image. The API ingests
@@ -253,6 +254,7 @@ def dummy_application_neighbors_image(app=None, options=None):
 
     @param      app         application, if None, creates one
     @param      options     if not empty, path to an image
+    @param      params      parameters sent to @see cl MachineLearningPost
     @return                 app
 
     You can start it by running:
@@ -303,5 +305,5 @@ def dummy_application_neighbors_image(app=None, options=None):
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(mypredict))
+        '/', MachineLearningPost(mypredict, **params))
     return app
