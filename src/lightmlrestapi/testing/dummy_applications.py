@@ -246,7 +246,7 @@ def dummy_application_neighbors(app=None):
     return app
 
 
-def dummy_application_neighbors_image(app=None, options=None):
+def dummy_application_neighbors_image(app=None, options=None, **params):
     """
     Defines a dummy application using this API.
     It returns a list of one neighbor for an image
