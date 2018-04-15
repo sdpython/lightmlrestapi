@@ -120,6 +120,7 @@ def dummy_application_image(app=None, options=None, **params):
 
     @param      app         application, if None, creates one
     @param      options     if not empty, path to an image
+    @param      params      parameters sent to @see cl MachineLearningPost
     @return                 app
 
     .. exref::
@@ -167,32 +168,34 @@ def dummy_application_image(app=None, options=None, **params):
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(lambda X: _distance_img_b64(img_base, X)))
+        '/', MachineLearningPost(lambda X: _distance_img_b64(img_base, X), **params))
     return app
 
 
-def dummy_application_fct(restapi_predict, app=None):
+def dummy_application_fct(restapi_predict, app=None, **params):
     """
     Defines an application as defined in the tutorial
     :ref:`l-dummy-function-application`.
 
     @param      restapi_predict     predict function
+    @param      params              parameters sent to @see cl MachineLearningPost
     @param      app                 application, if None, creates one
     """
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(lambda X: restapi_predict))
+        '/', MachineLearningPost(lambda X: restapi_predict, **params))
     return app
 
 
-def dummy_application_neighbors(app=None):
+def dummy_application_neighbors(app=None, **params):
     """
     Defines a dummy application using this API.
     It returns a list of neighbors with a score
     on `Iris datasets <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_.
 
     @param      app     application, if None, creates one
+    @param      params  parameters sent to @see cl MachineLearningPost
     @return             app
 
     .. exref::
@@ -242,7 +245,7 @@ def dummy_application_neighbors(app=None):
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(lambda x: to_serie(x)))
+        '/', MachineLearningPost(lambda x: to_serie(x), **params))
     return app
 
 
