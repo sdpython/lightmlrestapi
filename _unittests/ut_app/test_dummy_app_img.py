@@ -9,8 +9,8 @@ import unittest
 import falcon
 import falcon.testing as testing
 from PIL import Image
-import ujson
 from pyquickhelper.loghelper import fLOG
+import ujson
 
 
 try:

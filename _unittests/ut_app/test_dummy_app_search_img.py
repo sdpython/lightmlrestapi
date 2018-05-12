@@ -8,8 +8,8 @@ import os
 import unittest
 import falcon
 import falcon.testing as testing
-import ujson
 from pyquickhelper.loghelper import fLOG
+import ujson
 
 try:
     import src
