@@ -5,7 +5,7 @@ jyquickhelper
 keyring
 Pillow
 PyJWT
-pyquickhelper>=1.7.2539
+pyquickhelper>=1.8
 scikit-learn
 scipy
 sphinxjp.themes.sphinxjp

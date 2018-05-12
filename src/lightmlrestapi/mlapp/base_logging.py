@@ -4,9 +4,9 @@
 """
 from datetime import datetime
 import os
+from time import perf_counter
 import logging
 from logging import Formatter
-from time import perf_counter
 from logging.handlers import TimedRotatingFileHandler
 
 import jwt
@@ -24,7 +24,9 @@ class BaseLogging(object):
         @param      folder      folder where to write the logs
         @param      level       logging level
         @param      when        when rotating the logs,
-                                see `TimedRotatingFileHandler <https://docs.python.org/3/library/logging.handlers.html?highlight=streamhandler#logging.handlers.TimedRotatingFileHandler>`_
+                                see `TimedRotatingFileHandler
+                                <https://docs.python.org/3/library/logging.handlers.html?
+                                highlight=streamhandler#logging.handlers.TimedRotatingFileHandler>`_
         @param      encoding    encoding
         """
         if secret is None:
@@ -79,7 +81,7 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
     @param      encoding    encoding
     @return                 iterator on decrypted data
     """
-    for root, dirs, files in os.walk(folder):
+    for root, _, files in os.walk(folder):
         for name in files:
             full = os.path.join(root, name)
             with open(full, 'r', encoding=encoding) as f:

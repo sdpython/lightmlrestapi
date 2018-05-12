@@ -4,11 +4,9 @@
 """
 import traceback
 import json
-import ujson
 import falcon
-import logging
-import logging.handlers
 import numpy
+import ujson
 from .base_logging import BaseLogging
 
 

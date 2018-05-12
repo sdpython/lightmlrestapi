@@ -7,26 +7,10 @@ import sys
 import os
 import unittest
 from datetime import datetime
-import ujson
 import falcon
 import falcon.testing as testing
-
-
-try:
-    import pyquickhelper as skip_
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import pyquickhelper as skip_
+import ujson
+from pyquickhelper.pycode import get_temp_folder
 
 
 try:
@@ -42,7 +26,6 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from pyquickhelper.pycode import get_temp_folder
 from src.lightmlrestapi.testing import dummy_application
 from src.lightmlrestapi.mlapp import enumerate_parsed_logs
 
@@ -64,7 +47,7 @@ class TestDummyAppLogging(testing.TestBase):
         self.assertEqual(len(d['Y'][0]), 3)
         res = list(enumerate_parsed_logs(temp, secret='dummys'))
         self.assertEqual(len(res), 1)
-        for i in range(0, 10):
+        for _ in range(0, 10):
             body = self.simulate_request(
                 '/', decode='utf-8', method="POST", body=bodyin)
             self.assertEqual(self.srmock.status, falcon.HTTP_201)

@@ -235,6 +235,7 @@ def dummy_application_neighbors(app=None, **params):
     knn.fit(X)
 
     def to_serie(x):
+        "converts into series"
         dist, ind = knn.kneighbors(x)
         res = []
         for i in range(0, len(x)):
@@ -298,6 +299,7 @@ def dummy_application_neighbors_image(app=None, options=None, **params):
             img_base = img_base.convert('RGB')
 
     def mypredict(X):
+        "overwrites predict"
         res = _distance_img_b64(img_base, X)
         final = []
         for r, x in zip(res, X):
