@@ -24,6 +24,7 @@ install:
   - "%PYTHON%\\Scripts\\pip install wcwidth backcall packaging"
   - "%PYTHON%\\Scripts\\pip install falcon falcon-auth waitress PyJWT"
   - "%PYTHON%\\Scripts\\pymy_install3 scikit-learn scipy ujson psutil"
+  - "%PYTHON%\\Scripts\\pip install -r requirements"
   - "set PATH=%PATH%;C:\\projects\\jyquickhelper\\build\\update_modules\\Graphviz\\bin"
 build: off
 
