@@ -4,6 +4,7 @@ falcon-auth
 jyquickhelper
 keyring
 Pillow
+psutil
 PyJWT
 pyquickhelper>=1.8
 scikit-learn
