@@ -12,7 +12,7 @@ from logging.handlers import TimedRotatingFileHandler
 import jwt
 
 
-class BaseLogging(object):
+class BaseLogging:
     """
     Simplifies logging. Logging is encrypted
     with module :epkg:`pyjwt`.
