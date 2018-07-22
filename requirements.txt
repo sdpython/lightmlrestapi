@@ -8,7 +8,7 @@ PyJWT
 pyquickhelper>=1.8
 scikit-learn
 scipy
-sphinxjp.themes.sphinxjp
+sphinx_rtd_theme
 tornado
 ujson
 waitress
