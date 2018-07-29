@@ -17,8 +17,7 @@ def image2array(img):
     @return             :epkg:`numpy:array`
     """
     im_arr = numpy.fromstring(img.tobytes(), dtype=numpy.uint8)
-    im_arr = im_arr.reshape((img.size[1], img.size[0], 3))
-    return im_arr
+    return im_arr.reshape((img.size[1], img.size[0], 3))
 
 
 def image2base64(path, format='png'):
