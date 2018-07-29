@@ -39,6 +39,7 @@ class TestCodeStyle(ExtTestCase):
                          "dummy_applications.py:305: W0612",
                          "base_logging.py:92: W0123",
                          "base_logging.py:93",
+                         "args_images.py:20: E1121: Too many positional arguments for method call",
                          ])
 
     def test_style_test(self):
@@ -56,6 +57,7 @@ class TestCodeStyle(ExtTestCase):
                          "Unused import src",
                          "Instance of 'tuple' has no ",
                          "Module 'ujson' has no ",
+                         "args_images.py:20: E1121: Too many positional arguments for method call",
                          ])
 
 
