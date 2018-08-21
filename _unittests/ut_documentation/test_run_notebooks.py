@@ -50,12 +50,6 @@ class TestRunNotebooksPython(ExtTestCase):
 
         # function to tell that a can be run
         def valid(cell):
-            if "open_html_form" in cell:
-                return False
-            if "open_window_params" in cell:
-                return False
-            if '<div style="position:absolute' in cell:
-                return False
             return True
 
         # additionnal path to add
