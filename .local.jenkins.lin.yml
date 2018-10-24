@@ -14,7 +14,7 @@ install:
   - $PYINT -c "from pip._internal import main;main([\"freeze\"])"
 
 script:
-  - { CMD: "$PYINT -u setup.py unittests", NAME: "UT" }
+  - { CMD: "$PYINT -u setup.py unittests", NAME: "UT", TIMEOUT: 900 }
 
 after_script:
   - $PYINT -u setup.py bdist_wheel
