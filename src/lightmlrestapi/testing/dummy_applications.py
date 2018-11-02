@@ -315,7 +315,7 @@ def dummy_application_neighbors_image(app=None, options=None, **params):
         final = []
         for r, x in zip(res, X):
             final.append([(0, r, dict(name=os.path.split(options)[1],
-                                      description="image from wikipedia: {0}".format(x.shape)))])
+                                      description="image from wikipedia: {0}".format(len(x))))])
         return final
 
     if app is None:

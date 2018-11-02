@@ -53,7 +53,7 @@ class TestDummyAppSearchImg(testing.TestBase):
         self.assertEqual(d['Y'][0][0][0], 0)
         self.assertGreater(d['Y'][0][0][1], 0.21)
         self.assertEqual(d['Y'][0][0][2], {
-                         'description': 'image from wikipedia', 'name': 'wiki.png'})
+                         'description': 'image from wikipedia: 114064', 'name': 'wiki.png'})
 
     def test_dummy_error_img(self):
         img = get_wiki_img()
