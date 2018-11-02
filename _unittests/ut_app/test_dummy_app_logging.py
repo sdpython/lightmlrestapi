@@ -52,6 +52,30 @@ class TestDummyAppLogging(testing.TestBase):
                 '/', decode='utf-8', method="POST", body=bodyin)
             self.assertEqual(self.srmock.status, falcon.HTTP_201)
 
+    def test_dummy_app_logging_nosecret(self):
+        temp = get_temp_folder(__file__, 'temp_dummy_app_logging_nosecret')
+        dummy_application(self.api, secret=None, folder=temp)
+
+        bodyin = ujson.dumps({'X': [0.1, 0.2]})
+        body = self.simulate_request(
+            '/', decode='utf-8', method="POST", body=bodyin)
+        self.assertEqual(self.srmock.status, falcon.HTTP_201)
+        d = ujson.loads(body)
+        self.assertTrue('Y' in d)
+        self.assertIsInstance(d['Y'], list)
+        self.assertEqual(len(d['Y']), 1)
+        self.assertEqual(len(d['Y'][0]), 3)
+        res = list(enumerate_parsed_logs(temp, secret=None))
+        self.assertEqual(len(res), 2)
+        for r in res:
+            self.assertIn('dt', r)
+            self.assertIn('code', r)
+            self.assertIn('data', r)
+        for _ in range(0, 10):
+            body = self.simulate_request(
+                '/', decode='utf-8', method="POST", body=bodyin)
+            self.assertEqual(self.srmock.status, falcon.HTTP_201)
+
     def test_parsed_logs(self):
         data = os.path.join(os.path.dirname(__file__), 'data', 'logs')
         res = list(enumerate_parsed_logs(data, 'dummys'))
