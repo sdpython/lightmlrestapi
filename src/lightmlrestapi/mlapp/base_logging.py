@@ -37,11 +37,10 @@ class BaseLogging:
             filename = "{0}-{1}.log".format(
                 self.__class__.__name__, current_date)
             file_location = os.path.join(folder, filename)
-            format = Formatter(
-                '%(asctime)s,%(levelname)s,%(message)s,%(data)s')
+            form = Formatter('%(asctime)s,%(levelname)s,%(message)s,%(data)s')
             self.handler = TimedRotatingFileHandler(
                 file_location, encoding=encoding, delay=True, when=when)
-            self.handler.setFormatter(format)
+            self.handler.setFormatter(form)
             self.logger = logging.getLogger(self.__class__.__name__)
             self.logger.setLevel(level)
             self.logger.addHandler(self.handler)
@@ -70,6 +69,17 @@ class BaseLogging:
             enc_data = jwt.encode(data, self.secret, algorithm='HS256')
             self.logger.info(msg, extra=dict(data=enc_data))
 
+    def error(self, msg, data):
+        """
+        Logs any king of data into the logs.
+
+        @param  msg         message
+        @param  data        data to log
+        """
+        if self.secret is not None:
+            enc_data = jwt.encode(data, self.secret, algorithm='HS256')
+            self.logger.error(msg, extra=dict(data=enc_data))
+
 
 def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
     """
@@ -90,7 +100,11 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
                     if len(spl) != 5:
                         raise ValueError(
                             "Format issue in\n    File \"{0}\", line {1}".format(full, i + 1))
-                    data = eval(spl[4])
+                    if spl[4].startswith("b'") and spl[4].endswith("'"):
+                        data = spl[4][2:-1]
+                    else:
+                        raise ValueError(
+                            "Corrupted logs due to: '{0}'".format(spl[4]))
                     dec = jwt.decode(data, secret, algorithms=['HS256'])
                     dt = datetime.strptime(spl[0], '%Y-%m-%d %H:%M:%S')
                     rec = dict(dt=dt, code=spl[1], level=spl[2],

@@ -20,19 +20,42 @@ class MachineLearningPost(BaseLogging):
     @see fn dummy_application.
     """
 
-    def __init__(self, predict_function, secret=None, folder='.',
-                 log_features=True, log_prediction=True):
+    _call_convention = {'single': 0, 'multi': 1, 'both': 2}
+
+    def __init__(self, load_function, predict_function,
+                 secret=None, folder='.',
+                 log_features=True, log_prediction=True,
+                 load_params=None, ccall='single'):
         """
         @param      predict_function    predict function
+        @param      load_function       load function
         @param      secret              see @see cl BaseLogging
         @param      folder              see @see cl BaseLogging
         @param      log_features        log the features
         @param      log_prediction      log the prediction
+        @param      load_params         given to the loading function
+        @param      ccall               see below
+
+        Some models can only computes predictions for a sequence
+        of observations, not just one. Parameter *ccall* defines what
+        the prediction function can ingest.
+        * single: only one observation
+        * multi: only multiple ones
+        * both: the function determines what it must do
         """
         BaseLogging.__init__(self, secret=secret, folder=folder)
-        self._predict = predict_function
+        self._predict_fct = predict_function
         self._log_features = log_features
         self._log_prediction = log_prediction
+        self._load_fct = load_function
+        self._load_params = {} if load_params is None else load_params
+        self._loaded_results = None
+        if ccall not in MachineLearningPost._call_convention:
+            raise ValueError("ccall '{0}' must be in {1}".format(
+                ccall, MachineLearningPost._call_convention))
+        self._ccall = MachineLearningPost._call_convention[ccall]
+        if not isinstance(self._load_params, dict):
+            raise TypeError("load_params must be a dictionary.")
 
     @staticmethod
     def data2json(data):
@@ -45,6 +68,23 @@ class MachineLearningPost(BaseLogging):
         else:
             return data
 
+    def _load(self):
+        return self._load_fct(**(self._load_params))
+
+    def _predict_single(self, obj, features):
+        if self._ccall == 1:
+            return self._predict_fct(obj, [features])
+        else:
+            return self._predict_fct(obj, features)
+
+    def check_single(self, features):
+        """
+        Checks the sequence load + predict returns
+        something with the given observations.
+        """
+        obj = self._load()
+        return self._predict_single(obj, features)
+
     def on_post(self, req, resp):
         """
         @param      req         request
@@ -55,26 +95,57 @@ class MachineLearningPost(BaseLogging):
         js = req.stream.read()
         args = ujson.loads(js)
         X = args["X"]
+
+        # load the model
+        if self._loaded_results is None:
+            self.save_time()
+            try:
+                self._loaded_results = self._load()
+            except Exception as e:
+                excs = traceback.format_exc()
+                es = str(e)
+                if len(es) > 200:
+                    es = es[:200] + '...'
+                duration = self.duration()
+                log_data = dict(duration=duration, ip=req.access_route)
+                if self._load_params:
+                    log_data['load_params'] = self._load_params
+                log_data["error"] = str(e)
+                self.error("ML.load", log_data)
+                raise falcon.HTTPBadRequest(
+                    'Unable to load due to: {0}'.format(es), excs)
+            duration = self.duration()
+            log_data = dict(duration=duration, ip=req.access_route)
+            if self._load_params:
+                log_data['load_params'] = self._load_params
+            self.info("ML.load", log_data)
+
+        # predict
         self.save_time()
         try:
-            res = self._predict([X])
+            res = self._predict_single(self._loaded_results, X)
         except Exception as e:
             excs = traceback.format_exc()
             es = str(e)
             if len(es) > 200:
                 es = es[:200] + '...'
+            duration = self.duration()
+            log_data = dict(duration=duration, ip=req.access_route)
+            if self._log_features:
+                log_data['X'] = MachineLearningPost.data2json(X)
+            log_data["error"] = str(e)
+            self.error("ML.predict", log_data)
             raise falcon.HTTPBadRequest(
                 'Unable to predict due to: {0}'.format(es), excs)
         duration = self.duration()
 
         # see http://falcon.readthedocs.io/en/stable/api/request_and_response.html
-        log_data = dict(duration=duration,
-                        ip=req.access_route)
+        log_data = dict(duration=duration, ip=req.access_route)
         if self._log_features:
             log_data['X'] = MachineLearningPost.data2json(X)
         if self._log_prediction:
             log_data['Y'] = MachineLearningPost.data2json(res)
-        self.info("ML", log_data)
+        self.info("ML.predict", log_data)
 
         resp.status = falcon.HTTP_201
         try:

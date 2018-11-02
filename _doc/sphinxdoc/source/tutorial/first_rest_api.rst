@@ -48,17 +48,20 @@ Let's choose ``mymlrestapi.py``.
 
     import pickle
 
-    # We load the model
-    with open("iris2.pickle", "rb") as f:
-        loaded_model = pickle.load(f)
+    # We declare a loading function.
+    def restapi_load():
+        with open("iris2.pickle", "rb") as f:
+            loaded_model = pickle.load(f)
+        return loaded_model
 
     # We declare a predict function.
-    def restapi_predict(X):
+    def restapi_predict(clf, X):
         return clf.predict_proba(X)
 
     # We test it works.
     if __name__ == "__main__":
-        print(restapi_predict([0.1, 0.2]))
+        clf = restapi_load()
+        print(restapi_predict(clf, [0.1, 0.2]))
 
 Start the REST API server
 =========================

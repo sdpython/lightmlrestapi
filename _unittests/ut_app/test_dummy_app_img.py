@@ -56,9 +56,7 @@ class TestDummyAppImg(testing.TestBase):
         self.assertEqual(self.srmock.status, falcon.HTTP_201)
         d = ujson.loads(body)
         self.assertTrue('Y' in d)
-        self.assertIsInstance(d['Y'], list)
-        self.assertEqual(len(d['Y']), 1)
-        self.assertGreater(d['Y'][0], 0.21)
+        self.assertGreater(d['Y'], 0.21)
 
         # With the same image.
         img = get_wiki_img()
@@ -73,9 +71,7 @@ class TestDummyAppImg(testing.TestBase):
         self.assertEqual(self.srmock.status, falcon.HTTP_201)
         d = ujson.loads(body)
         self.assertTrue('Y' in d)
-        self.assertIsInstance(d['Y'], list)
-        self.assertEqual(len(d['Y']), 1)
-        self.assertEqual(d['Y'][0], 0)
+        self.assertEqual(d['Y'], 0)
 
     def test_dummy_error_img(self):
         fLOG(

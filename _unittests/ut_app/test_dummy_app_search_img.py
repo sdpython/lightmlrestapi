@@ -8,7 +8,6 @@ import os
 import unittest
 import falcon
 import falcon.testing as testing
-from pyquickhelper.loghelper import fLOG
 import ujson
 
 try:
@@ -35,11 +34,6 @@ class TestDummyAppSearchImg(testing.TestBase):
         dummy_application_neighbors_image(self.api)
 
     def test_dummy_search_app_search_img(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         # With a different image than the original.
         img2 = os.path.join(os.path.dirname(__file__),
                             "data", "wiki_modified.png")
@@ -62,11 +56,6 @@ class TestDummyAppSearchImg(testing.TestBase):
                          'description': 'image from wikipedia', 'name': 'wiki.png'})
 
     def test_dummy_error_img(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__ma²in__")
-
         img = get_wiki_img()
         ext_b64 = image2base64(img)
         img2 = base642image(ext_b64[1])

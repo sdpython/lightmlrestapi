@@ -9,7 +9,7 @@ from pyquickhelper.cli.cli_helper import call_cli_function
 
 
 def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
-                    options='', secret='', fLOG=print):
+                    options='', secret='', ccall='single', fLOG=print):
     """
     Creates an :epkg:`falcon` application and
     runs it through a :epkg:`wsgi` server.
@@ -20,6 +20,9 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     :param nostart: do not start the wsgi server
     :param wsgi: wsgi framework which runs the falcon application
     :param options: additional options as a string (depends on the application)
+    :param ccall: calling convention, 'single', 'multi' or 'both' depending on the
+        fact that the prediction function can predict for only one observation,
+        multiple ones or both
     :param secret: secret used to encrypt the logging, logging is disabled without the secret
     :param fLOG: logging function
 
@@ -66,6 +69,11 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
                 "Unable to compile file '{0}'\n{1}".format(name, code)) from e
         if rem:
             sys.path.pop()
+        if not hasattr(mod, 'restapi_load'):
+            with open(name, "r") as f:
+                code = f.read()
+            raise AttributeError(
+                "Unable to find function 'restapi_load' in file '{0}'\n{1}".format(name, code))
         if not hasattr(mod, 'restapi_predict'):
             with open(name, "r") as f:
                 code = f.read()
@@ -73,7 +81,8 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
                 "Unable to find function 'restapi_predict' in file '{0}'\n{1}".format(name, code))
         if secret == '':
             secret = None
-        app = dummy_application_fct(mod.restapi_predict, secret=secret)
+        app = dummy_application_fct(
+            mod.restapi_load, mod.restapi_predict, secret=secret)
 
     elif name == "dummyimg":
         # Dummy application with an image.

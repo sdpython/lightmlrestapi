@@ -60,7 +60,17 @@ def dummy_application(app=None, **params):
 
     if app is None:
         app = falcon.API()
-    app.add_route('/', MachineLearningPost(clf.predict_proba, **params))
+
+    route = MachineLearningPost(
+        lambda clf=clf: clf, LogisticRegression.predict_proba, ccall='multi', **params)
+
+    # Let's check it works.
+    one = clf.predict_proba(X[:1])
+    two = route.check_single(X[0])
+    if type(one) != type(two):  # pylint: disable=C0123
+        raise RuntimeError("Type mismath")
+
+    app.add_route('/', route)
     return app
 
 
@@ -168,11 +178,11 @@ def dummy_application_image(app=None, options=None, **params):
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(lambda X: _distance_img_b64(img_base, X), **params))
+        '/', MachineLearningPost(lambda: None, lambda model, X: _distance_img_b64(img_base, X), **params))
     return app
 
 
-def dummy_application_fct(restapi_predict, app=None, **params):
+def dummy_application_fct(restapi_load, restapi_predict, app=None, **params):
     """
     Defines an application as defined in the tutorial
     :ref:`l-dummy-function-application`.
@@ -184,7 +194,7 @@ def dummy_application_fct(restapi_predict, app=None, **params):
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(lambda X: restapi_predict, **params))
+        '/', MachineLearningPost(restapi_load, restapi_predict, **params))
     return app
 
 
@@ -234,7 +244,7 @@ def dummy_application_neighbors(app=None, **params):
     knn = NearestNeighbors(n_neighbors=5)
     knn.fit(X)
 
-    def to_serie(x):
+    def to_serie(knn, x):
         "converts into series"
         dist, ind = knn.kneighbors(x)
         res = []
@@ -246,7 +256,8 @@ def dummy_application_neighbors(app=None, **params):
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(lambda x: to_serie(x), **params))
+        '/', MachineLearningPost(lambda: knn, lambda knn, x: to_serie(knn, x),
+                                 ccall='multi', **params))
     return app
 
 
@@ -298,17 +309,17 @@ def dummy_application_neighbors_image(app=None, options=None, **params):
         if img_base.mode != 'RGB':
             img_base = img_base.convert('RGB')
 
-    def mypredict(X):
+    def mypredict(img_base, X):
         "overwrites predict"
         res = _distance_img_b64(img_base, X)
         final = []
         for r, x in zip(res, X):
             final.append([(0, r, dict(name=os.path.split(options)[1],
-                                      description="image from wikipedia"))])
+                                      description="image from wikipedia: {0}".format(x.shape)))])
         return final
 
     if app is None:
         app = falcon.API()
     app.add_route(
-        '/', MachineLearningPost(mypredict, **params))
+        '/', MachineLearningPost(lambda: img_base, mypredict, ccall='multi', **params))
     return app

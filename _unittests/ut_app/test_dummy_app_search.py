@@ -8,7 +8,6 @@ import os
 import unittest
 import falcon
 import falcon.testing as testing
-from pyquickhelper.loghelper import fLOG
 import ujson
 
 
@@ -34,11 +33,6 @@ class TestDummyAppSearch(testing.TestBase):
         dummy_application_neighbors(self.api)
 
     def test_dummy_app_search(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         bodyin = ujson.dumps({'X': [0.1, 0.2]})
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
@@ -50,11 +44,6 @@ class TestDummyAppSearch(testing.TestBase):
         self.assertEqual(len(d['Y'][0]), 5)
 
     def test_dummy_error_search(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         bodyin = ujson.dumps({'X': [0.1, 0.2, 0.3]})
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)

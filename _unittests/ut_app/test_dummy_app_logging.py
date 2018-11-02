@@ -46,7 +46,7 @@ class TestDummyAppLogging(testing.TestBase):
         self.assertEqual(len(d['Y']), 1)
         self.assertEqual(len(d['Y'][0]), 3)
         res = list(enumerate_parsed_logs(temp, secret='dummys'))
-        self.assertEqual(len(res), 1)
+        self.assertEqual(len(res), 2)
         for _ in range(0, 10):
             body = self.simulate_request(
                 '/', decode='utf-8', method="POST", body=bodyin)

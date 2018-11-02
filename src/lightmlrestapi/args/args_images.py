@@ -20,12 +20,12 @@ def image2array(img):
     return im_arr.reshape((img.size[1], img.size[0], 3))
 
 
-def image2base64(path, format='png'):
+def image2base64(path, fmt='png'):
     """
     Encodes an image into :epkg:`*pyf:base64`.
 
     @param      path        filename or an image
-    @param      format      if the image is given as an image (:epkg:`Pillow`),
+    @param      fmt         if the image is given as an image (:epkg:`Pillow`),
                             it must be first saved in a specific format (png, jpg, ...)
     @return                 format, base64
 
@@ -37,7 +37,7 @@ def image2base64(path, format='png'):
     elif hasattr(path, 'convert'):
         # Most probably a Pillow object
         st = io.BytesIO()
-        path.save(st, format=format)
+        path.save(st, format=fmt)
         content = st.getvalue()
         ext = 'png'
     else:

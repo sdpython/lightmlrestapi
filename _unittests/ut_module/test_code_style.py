@@ -34,13 +34,7 @@ class TestCodeStyle(ExtTestCase):
         src_ = os.path.normpath(os.path.join(thi, "..", "..", "src"))
         check_pep8(src_, fLOG=fLOG,
                    pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
-                                  'E1101', 'W0201'),
-                   skip=["Redefining built-in 'format'",
-                         "dummy_applications.py:305: W0612",
-                         "base_logging.py:92: W0123",
-                         "base_logging.py:93",
-                         "args_images.py:20: E1121: Too many positional arguments for method call",
-                         ])
+                                  'E1101', 'W0201'))
 
     def test_style_test(self):
         thi = os.path.abspath(os.path.dirname(__file__))
@@ -57,7 +51,6 @@ class TestCodeStyle(ExtTestCase):
                          "Unused import src",
                          "Instance of 'tuple' has no ",
                          "Module 'ujson' has no ",
-                         "args_images.py:20: E1121: Too many positional arguments for method call",
                          ])
 
 
