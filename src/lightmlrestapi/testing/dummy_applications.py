@@ -5,8 +5,9 @@
 import os
 import falcon
 import numpy
+import jwt
 from .data import get_wiki_img
-from ..mlapp import MachineLearningPost
+from ..mlapp import MachineLearningPost, AuthMiddleware
 from ..args import base642image, image2array
 
 
@@ -322,4 +323,44 @@ def dummy_application_neighbors_image(app=None, options=None, **params):
         app = falcon.API()
     app.add_route(
         '/', MachineLearningPost(lambda: img_base, mypredict, ccall='multi', **params))
+    return app
+
+
+def dummy_application_auth(secret, app=None, **params):
+    """
+    Defines a dummy application using this API
+    including authentification.
+    It returns a score produced by a model trained
+    on `Iris datasets <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_
+    and two features.
+
+    @param      secret  password
+    @param      app     application, if None, creates one
+    @param      params  parameters sent to @see cl MachineLearningPost
+    @return             app
+    """
+    from sklearn import datasets
+    from sklearn.linear_model import LogisticRegression
+
+    iris = datasets.load_iris()
+    X = iris.data[:, :2]  # we only take the first two features.
+    y = iris.target
+    clf = LogisticRegression()
+    clf.fit(X, y)
+
+    if app is None:
+        zoo = jwt.encode({'token': "dummy"}, secret, algorithm='HS256')
+        data = "login,pwd\nme,{0}".format(zoo)
+        app = falcon.API(middleware=[AuthMiddleware(data, secret)])
+
+    route = MachineLearningPost(
+        lambda clf=clf: clf, LogisticRegression.predict_proba, ccall='multi', **params)
+
+    # Let's check it works.
+    one = clf.predict_proba(X[:1])
+    two = route.check_single(X[0])
+    if type(one) != type(two):  # pylint: disable=C0123
+        raise RuntimeError("Type mismath")
+
+    app.add_route('/', route)
     return app

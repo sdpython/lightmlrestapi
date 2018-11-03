@@ -48,6 +48,10 @@ Let's choose ``mymlrestapi.py``.
 
     import pickle
 
+    # We declare an id for the REST API.
+    def restapi_version():
+        return "0.1.1234"
+
     # We declare a loading function.
     def restapi_load():
         with open("iris2.pickle", "rb") as f:
@@ -67,7 +71,7 @@ Start the REST API server
 =========================
 
 We first run the server locally.
-The command line :ref:`start_mlrestapi`:
+The command line :ref:`cmd_start_mlrestapi_cmd`:
 
 ::
 
@@ -87,3 +91,32 @@ the prediction by calling the server.
     r = requests.post('http://127.0.0.1:8081', data=features)
     print(r)
     print(r.json())
+
+REST API with authentification
+==============================
+
+To query the REST API with an authentified user:
+
+::
+
+    import requests
+    import ujson
+    features = ujson.dumps({'X': [0.1, 0.2]})
+    r = requests.post('http://127.0.0.1:8081', data=features, protocol='https',
+                      headers=dict(uid="user", token="password"))
+    print(r)
+    print(r.json())
+
+The command line :ref:`cmd_start_mlrestapi_cmd` can launch the
+application which requires authentification:
+
+::
+
+    start_mlrestapi --name=dummyfct --options=mymlrestapi.py --users=encrypted_passwords.txt
+
+There is an first step which consists in encrypting the password
+with command :ref:`cmd_encrypt4mlrestapi_cmd`.
+
+::
+
+    encrypt4mlrestapi --input==users.txt --output=encrypted_passwords.txt

@@ -18,7 +18,7 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     :param host: host
     :param port: port
     :param nostart: do not start the wsgi server
-    :param wsgi: wsgi framework which runs the falcon application
+    :param wsgi: :epkg:`wsgi` framework which runs the falcon application
     :param options: additional options as a string (depends on the application)
     :param ccall: calling convention, 'single', 'multi' or 'both' depending on the
         fact that the prediction function can predict for only one observation,
@@ -69,6 +69,12 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
                 "Unable to compile file '{0}'\n{1}".format(name, code)) from e
         if rem:
             sys.path.pop()
+
+        if not hasattr(mod, 'restapi_version'):
+            with open(name, "r") as f:
+                code = f.read()
+            raise AttributeError(
+                "Unable to find function 'restapi_version' in file '{0}'\n{1}".format(name, code))
         if not hasattr(mod, 'restapi_load'):
             with open(name, "r") as f:
                 code = f.read()
@@ -79,10 +85,11 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
                 code = f.read()
             raise AttributeError(
                 "Unable to find function 'restapi_predict' in file '{0}'\n{1}".format(name, code))
+
         if secret == '':
             secret = None
         app = dummy_application_fct(
-            mod.restapi_load, mod.restapi_predict, secret=secret)
+            mod.restapi_load, mod.restapi_predict, secret=secret, version=mod.restapi_version)
 
     elif name == "dummyimg":
         # Dummy application with an image.
