@@ -5,9 +5,11 @@
 History
 =======
 
-current - 2018-04-15 - 0.00Mb
+current - 2018-11-05 - 0.00Mb
 =============================
 
+* `8`: allow clear logs (2018-11-02)
+* `5`: add a load function (2018-11-02)
 * `3`: add ip address in the logging (2018-04-15)
 * `2`: add encrypted logging (2018-04-15)
 * `1`: fix gallery of examples (style) (2018-01-05)
