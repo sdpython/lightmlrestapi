@@ -104,7 +104,7 @@ class BaseLogging:
 def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
     """
     Goes through a list of logged files,
-    reads and decrypt the content.
+    reads and decrypts the content.
 
     @param      folder      folder which contains the logs
     @param      secret      secret
