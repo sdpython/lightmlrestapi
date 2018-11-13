@@ -35,6 +35,7 @@ epkg_dictionary.update({
     'Apache': 'https://httpd.apache.org/',
     'falcon': "https://falconframework.org/",
     'Iris dataset': 'http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html',
+    'json': 'https://docs.python.org/fr/3/library/json.html',
     'mod_wsgi': 'https://github.com/GrahamDumpleton/mod_wsgi',
     'PIL': ("https://pillow.readthedocs.io/en/4.3.x/",
             ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html", 1),

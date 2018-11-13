@@ -7,8 +7,13 @@ Main Classes
 
 This describes functionalities about :epkg:`API REST`.
 
-.. content::
+.. contents::
     :local:
+
+Encryption
+==========
+
+.. autosignature:: lightmlrestapi.mlapp.encrypt_helper import encrypt_passwords
 
 Logging
 =======
@@ -21,3 +26,10 @@ Machine Learning
 ================
 
 .. autosignature:: lightmlrestapi.mlapp.mlpost.MachineLearningPost
+
+Storage
+=======
+
+.. autosignature:: lightmlrestapi.mlapp.mlstorage.ZipStorage
+
+.. autosignature:: lightmlrestapi.mlapp.mlstorage.MLStorage

@@ -52,7 +52,7 @@ def _encrypt_pwd(fLOG=print, args=None):
 
     .. cmdref::
         :title: Encrypts password
-        :cmd: encrypt_pwd --input=users.txt --output=encrypted_users.txt --secret=pwd
+        :cmd: encrypt_pwd=lightmlrestapi.cli.encrypt_pwd:_encrypt_pwd
         :lid: cmd_encrypt_pwd_cmd
 
         Encrypts passwords for a REST API created by *lightmlrestapi*.

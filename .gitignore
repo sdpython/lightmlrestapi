@@ -277,3 +277,4 @@ _doc/sphinxdoc/iris2.pickle
 zpwd.txt
 zzpwd.txt
 test_commandline.bat
+_doc/sphinxdoc/source/nbcov*.png
