@@ -31,7 +31,7 @@ from src.lightmlrestapi.mlapp.mlstorage import MLStorage, ZipStorage
 
 class TestStorage(ExtTestCase):
 
-    def _test_storage(self):
+    def test_storage(self):
         temp = get_temp_folder(__file__, "temp_zip_storage")
         stor = ZipStorage(temp)
         data = {'one.txt': b"1", 'two.txt': b"2"}
