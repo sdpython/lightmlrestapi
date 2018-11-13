@@ -274,3 +274,6 @@ _doc/notebooks/example.txt
 _doc/notebooks/example.train.txt
 _doc/sphinxdoc/iris2.pickle
 .eggs
+zpwd.txt
+zzpwd.txt
+test_commandline.bat

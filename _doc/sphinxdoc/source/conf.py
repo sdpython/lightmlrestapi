@@ -31,16 +31,20 @@ language = "en"
 
 mathdef_link_only = True
 
-epkg_dictionary['Apache'] = 'https://httpd.apache.org/'
-epkg_dictionary['falcon'] = "https://falconframework.org/"
-epkg_dictionary['Iris dataset'] = 'http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html'
-epkg_dictionary['mod_wsgi'] = 'https://github.com/GrahamDumpleton/mod_wsgi'
-epkg_dictionary['PIL'] = ("https://pillow.readthedocs.io/en/4.3.x/",
-                          ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html", 1),
-                          ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html#PIL.{0}.{1}", 2))
-epkg_dictionary['pyjwt'] = 'https://pyjwt.readthedocs.io/en/latest/index.html'
-epkg_dictionary['REST API'] = "https://en.wikipedia.org/wiki/Representational_state_transfer"
-epkg_dictionary['uwsgi'] = 'http://uwsgi-docs.readthedocs.io/en/latest/'
-epkg_dictionary['waitress'] = 'https://docs.pylonsproject.org/projects/waitress/en/latest/'
-epkg_dictionary['wsgi'] = 'https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface'
-epkg_dictionary['WSGI'] = 'https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface'
+epkg_dictionary.update({
+    'Apache': 'https://httpd.apache.org/',
+    'falcon': "https://falconframework.org/",
+    'Iris dataset': 'http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html',
+    'mod_wsgi': 'https://github.com/GrahamDumpleton/mod_wsgi',
+    'PIL': ("https://pillow.readthedocs.io/en/4.3.x/",
+            ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html", 1),
+            ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html#PIL.{0}.{1}", 2)),
+    'pyjwt': 'https://pyjwt.readthedocs.io/en/latest/index.html',
+    'reservoir sampling': 'https://en.wikipedia.org/wiki/Reservoir_sampling',
+    'REST API': "https://en.wikipedia.org/wiki/Representational_state_transfer",
+    'urllib3': 'https://urllib3.readthedocs.io/en/latest/',
+    'uwsgi': 'http://uwsgi-docs.readthedocs.io/en/latest/',
+    'waitress': 'https://docs.pylonsproject.org/projects/waitress/en/latest/',
+    'wsgi': 'https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface',
+    'WSGI': 'https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface',
+})

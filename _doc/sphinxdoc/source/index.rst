@@ -83,6 +83,37 @@ It should return:
 
 The command line is described at
 :ref:`cmd_start_mlrestapi_cmd <Creates an falcon application and starts it through a wsgi application>`.
+The purpose is to start a :epkg:`REST API` based on a custom model.
+
+::
+
+    start_mlrestapi <filename.py>
+
+``<filename>.py`` must contain a predict function described
+as follows:
+
+::
+
+    import pickle
+
+    # We declare an id for the REST API.
+    def restapi_version():
+        return "0.1.1234"
+
+    # We declare a loading function.
+    def restapi_load():
+        with open("iris2.pickle", "rb") as f:
+            loaded_model = pickle.load(f)
+        return loaded_model
+
+    # We declare a predict function.
+    def restapi_predict(clf, X):
+        return clf.predict_proba(X)
+
+    # We test it works.
+    if __name__ == "__main__":
+        clf = restapi_load()
+        print(restapi_predict(clf, [0.1, 0.2]))
 
 **Links:** `github <https://github.com/sdpython/lightmlrestapi/>`_,
 `documentation <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html>`_,

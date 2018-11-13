@@ -37,6 +37,8 @@ Let's train and save a simple model based on
 The model could be anything not from :epkg:`scikit-learn`
 or any other machine learning library not even a model.
 
+.. _l-mlapp-def:
+
 Implement your predict function
 ===============================
 
@@ -119,4 +121,4 @@ with command :ref:`cmd_encrypt4mlrestapi_cmd`.
 
 ::
 
-    encrypt4mlrestapi --input==users.txt --output=encrypted_passwords.txt
+    encrypt_pwd --input==users.txt --output=encrypted_passwords.txt

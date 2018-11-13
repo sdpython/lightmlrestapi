@@ -3,6 +3,10 @@
 @brief Machine Learning Post request
 """
 import os
+import sys
+import json
+import threading
+from datetime import datetime
 # from filelock import Timeout, FileLock
 from .zip_helper import unzip_bytes
 
@@ -14,9 +18,9 @@ class AlreadyExistsException(Exception):
     pass
 
 
-class MLStorage:
+class ZipStorage:
     """
-    Stores machine learned models into folders.
+    Stores and restores zipped files.
     """
 
     def __init__(self, folder):
@@ -73,6 +77,25 @@ class MLStorage:
             raise ValueError(
                 "A name contains a forbidden character '{0}'".format(name))
 
+    def verify_data(self, data):
+        """
+        Performs verifications to ensure the data to store
+        is ok.
+
+        @param      data    dictionary
+        @return             None or information about the data
+        @raises             raises an exception if not ok
+        """
+        if not isinstance(data, dict):
+            raise TypeError("data must be a dictionary.")
+        for k, v in data.items():
+            if not isinstance(k, str):
+                raise TypeError("Key must be a string.")
+            self._check_name(k)
+            if not isinstance(v, bytes):
+                raise TypeError("Values must be bytes.")
+        return {}
+
     def add(self, name, data):
         """
         Adds a project based on the data.
@@ -83,23 +106,28 @@ class MLStorage:
         @param      data        dictionary or bytes produced by
                                 function @see fn zip_dict
         """
-        if not isinstance(data, dict) and not isinstance(data, dict):
-            raise TypeError("data should of bytes or a dictionary")
-        if isinstance(data, bytes):
-            data = unzip_bytes(data)
+        # Verifications.
         self._check_name(name)
         if self.exists(name):
             raise AlreadyExistsException(
                 "Project '{0}' already exists.".format(name))
-        full = self.get_full_name(name)
+        if isinstance(data, bytes):
+            data = unzip_bytes(data)
+        dump = self.verify_data(data)
 
+        # Creates dictionary.
+        full = self.get_full_name(name)
         if not os.path.exists(full):
             os.makedirs(full)
         desc = os.path.join(full, ".desc")
-        with open(desc, "w") as fd:
-            pass
+        with open(desc, "w", encoding="utf-8") as fd:
+            fd.write("# ")
+            if dump is not None:
+                json.dump(dump, fd)
+            fd.write("\n")
 
-        #lock = FileLock(desc, timeout=2)
+        # Stores.
+        # lock = FileLock(desc, timeout=2)
         # with lock:
         with open(desc, "a") as fd:
             for k, v in sorted(data.items()):
@@ -130,6 +158,7 @@ class MLStorage:
         # with lock.acquire():
         with open(desc, "r") as fd:
             lines = fd.readlines()
+            lines = [_ for _ in lines if not _.startswith("#")]
         for line in lines:
             line = line.strip("\r\n ")
             if line:
@@ -137,3 +166,132 @@ class MLStorage:
                 with open(n, "rb") as f:
                     res[line] = f.read()
         return res
+
+    def get_metadata(self, name):
+        """
+        Restores the data procuded by *verify_data*.
+        """
+        if not self.exists(name):
+            raise FileNotFoundError(
+                "Project '{0}' does not exist.".format(name))
+        full = self.get_full_name(name)
+        desc = os.path.join(full, ".desc")
+        if not os.path.exists(desc):
+            raise FileNotFoundError(
+                "Project '{0}' does not exist.".format(name))
+        with open(desc, "r", encoding="utf-8") as f:
+            first_line = f.readline().strip("# \n")
+            return json.loads(first_line)
+
+
+class MLStorage(ZipStorage):
+    """
+    Stores machine learned models into folders. The storages
+    expects to find at least one :epkg:`python` following
+    the specifications described at :ref:`l-mlapp-def`.
+    """
+
+    def __init__(self, folder, cache_size=10):
+        """
+        @param      folder      folder
+        @param      cache_size  cache size
+        """
+        ZipStorage.__init__(self, folder)
+        self._cache_size = cache_size
+        self._cache = {}
+        self._lock = threading.Lock()
+
+    def verify_data(self, data):
+        """
+        Performs verifications to ensure the data to store
+        is ok. The storages expects to find at least one script
+        python with
+
+        @param      data    dictionary
+        @return             python file which describes the model
+        @raises             raises an exception if not ok
+        """
+        res = ZipStorage.verify_data(self, data)
+        main_script = None
+        for k, v in data.items():
+            if k.endswith(".py"):
+                content = v.decode("utf-8")
+                if "def restapi_version():" in content:
+                    main_script = k
+                    break
+        if main_script is None:
+            raise RuntimeError(
+                "Unable to find a script with 'def restapi_version():' inside.")
+        res.update(dict(main_script=main_script))
+        return res
+
+    def empty_cache(self):
+        """
+        Removes one place in the cache if the cache
+        is full. Sort them by last access.
+        """
+        if len(self._cache) < self._cache_size:
+            return
+        els = [(v['last'], k) for k, v in self._cache.items()]
+        els.sort()
+        self._lock.acquire()
+        del self._cache[els[0][1]]
+        self._lock.release()
+
+    def load_model(self, name):
+        """
+        Loads a model into the cache if not loaded
+        and returns it.
+
+        @param      name        cache name
+        @return                 dictionary with keys: *last*, *model*, *module*.
+        """
+        if name in self._cache:
+            self._lock.acquire()
+            res = self._cache[name]
+            res['last'] = datetime.now()
+            self._lock.release()
+            return res
+
+        self.empty_cache()
+        meta = self.get_metadata(name)
+        loc = self.get_full_name(name)
+        script = os.path.join(loc, meta['main_script'])
+        if not os.path.exists(script):
+            raise FileNotFoundError(
+                "Unable to find script '{0}'".format(script))
+
+        # Imports the module.
+        self._lock.acquire()
+        fold, modname = os.path.split(script)
+        sys.path.insert(0, fold)
+        try:
+            mod = __import__(os.path.splitext(modname)[0])
+        except ImportError as e:
+            with open(script, "r") as f:
+                code = f.read()
+            del sys.path[0]
+            self._lock.release()
+            raise ImportError(
+                "Unable to compile file '{0}'\n{1}".format(script, code)) from e
+
+        # Loads the models.
+        cur = os.getcwd()
+        os.chdir(fold)
+        model = mod.restapi_load()
+        os.chdir(cur)
+        del sys.path[0]
+        self._lock.release()
+
+        res = dict(last=datetime.now(), model=model, module=mod)
+        self._lock.acquire()
+        self._cache[name] = res
+        self._lock.release()
+        return res
+
+    def call_predict(self, name, data):
+        """
+        Calls method *restapi_predict* from a stored script *python*.
+        """
+        res = self.load_model(name)
+        return res['module'].restapi_predict(res['model'], data)

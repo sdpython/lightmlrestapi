@@ -23,7 +23,8 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     :param ccall: calling convention, 'single', 'multi' or 'both' depending on the
         fact that the prediction function can predict for only one observation,
         multiple ones or both
-    :param secret: secret used to encrypt the logging, logging is disabled without the secret
+    :param secret: secret used to encrypt the logging, default is empty which
+        disables the encryption.
     :param fLOG: logging function
 
     Only :epkg:`waitress` is implemented right now.

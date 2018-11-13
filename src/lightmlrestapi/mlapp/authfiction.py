@@ -15,6 +15,8 @@ class AuthMiddleware:
     a file. The file must store encrypted password.
     """
 
+    help_url = "http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/tutorial/first_rest_api.html"
+
     def __init__(self, source, secret):
         """
         @param      source      filename or dataframe
@@ -69,14 +71,14 @@ class AuthMiddleware:
                 'Please provide an auth token as part of the request.')
             raise falcon.HTTPUnauthorized('Authentification token required',
                                           description, challenges,
-                                          href='http://docs.example.com/auth')
+                                          href=AuthMiddleware.help_url)
 
         if not self._token_is_valid(token, account_id):
             description = (
                 'The provided auth token is not valid. Please request a new token and try again.')
             raise falcon.HTTPUnauthorized('Authentication required',
                                           description, challenges,
-                                          href='http://docs.example.com/auth')
+                                          href=AuthMiddleware.help_url)
 
     def _token_is_valid(self, token, account_id):
         """
