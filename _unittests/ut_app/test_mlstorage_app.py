@@ -10,8 +10,8 @@ import pickle
 import textwrap
 import falcon
 import falcon.testing as testing
-import ujson
 from pyquickhelper.pycode import get_temp_folder
+import ujson
 
 
 try:
