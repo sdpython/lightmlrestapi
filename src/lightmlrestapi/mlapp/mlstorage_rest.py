@@ -3,27 +3,30 @@
 @brief Machine Learning Post request
 """
 import traceback
-import json
 import falcon
 import numpy
 import ujson
 from .base_logging import BaseLogging
+from .mlstorage import MLStorage
+from ..args.args_images import string2bytes
 
 
-class MLBoardUpload(BaseLogging):
+class MLStoragePost(BaseLogging):
     """
     Implements a simple :epkg:`REST API` to
-    upload, download zip files.
+    upload zip files.
     """
 
     def __init__(self, secret=None, folder='.',
-                 version=None):
+                 folder_storage='.', version=None):
         """
         @param      secret              see @see cl BaseLogging
         @param      folder              see @see cl BaseLogging
+        @param      folder_storage      see @see cl MLStorage
         @param      version             API REST version
         """
         BaseLogging.__init__(self, secret=secret, folder=folder)
+        self._storage = MLStorage(folder_storage)
         self._version = version
 
     @staticmethod
@@ -69,21 +72,42 @@ class MLBoardUpload(BaseLogging):
         log_data = dict(duration=duration)
         self.info("MLB.load", log_data)
 
-        self.save_time()
-        res = self._store(args)
-        log_data = dict(duration=duration)
-        self.info("MLB.store", log_data)
+        command = args.pop('cmd', None)
+        if command == 'upload':
 
-        resp.status = falcon.HTTP_201
-        answer = {"name": res["name"]}
+            self.save_time()
+            name = self._store(args)
+            log_data = dict(duration=duration)
+            self.info("MLB.store", log_data)
+
+            resp.status = falcon.HTTP_201
+            answer = {"name": name}
+        elif command == 'predict':
+            raise NotImplementedError("cannot predict")
+        else:
+            es = "Unknown command '{0}'".format(command)
+            log_data = dict(msg=es)
+            if self._load_params:
+                log_data['load_params'] = self._load_params
+            self.error("MLStorage", log_data)
+            raise falcon.HTTPBadRequest(
+                'Unable to retrieve request content due to: {0}'.format(es))
+
         try:
             js = ujson.dumps(answer)
         except OverflowError as e:
-            try:
-                json.dumps(answer)
-            except Exception as ee:
-                raise OverflowError(
-                    'res probably contains numpy arrays or numpy.types ({0}), they cannot be serialized.'.format(type(res))) from ee
-            raise OverflowError(
-                'res probably contains numpy arrays ({0}), they cannot be serialized with ujson but with json.'.format(type(res))) from e
+            raise OverflowError('Answer cannot be serialized.') from e
         resp.body = js
+
+    def _store(self, args):
+        """
+        Stores the model in the storage.
+        """
+        name = args.pop('name', None)
+        if name is None:
+            raise KeyError("Unable to find a model name")
+        keys = list(args.keys())
+        for k in keys:
+            args[k] = string2bytes(args[k])
+        self._storage.add(name, args)
+        return name

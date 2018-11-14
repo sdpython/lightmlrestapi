@@ -7,7 +7,7 @@ import falcon
 import numpy
 import jwt
 from .data import get_wiki_img
-from ..mlapp import MachineLearningPost, AuthMiddleware
+from ..mlapp import MachineLearningPost, AuthMiddleware, MLStoragePost
 from ..args import base642image, image2array
 
 
@@ -361,6 +361,27 @@ def dummy_application_auth(secret, app=None, **params):
     two = route.check_single(X[0])
     if type(one) != type(two):  # pylint: disable=C0123
         raise RuntimeError("Type mismath")
+
+    app.add_route('/', route)
+    return app
+
+
+def dummy_mlstorage(app=None, **params):
+    """
+    Defines a dummy application using this API.
+    It stores a model and it returns a score produced by a model trained
+    on `Iris datasets <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_
+    and two features.
+
+    @param      app     application, if None, creates one
+    @param      params  parameters sent to @see cl MLStoragePost
+    @return             app
+    """
+
+    if app is None:
+        app = falcon.API()
+
+    route = MLStoragePost(**params)
 
     app.add_route('/', route)
     return app

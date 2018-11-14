@@ -4,5 +4,6 @@
 """
 
 from .authfiction import AuthMiddleware
-from .mlpost_rest import MachineLearningPost
 from .base_logging import enumerate_parsed_logs
+from .mlpost_rest import MachineLearningPost
+from .mlstorage_rest import MLStoragePost

@@ -58,3 +58,17 @@ def base642image(encoded):
     """
     cont = base64.b64decode(encoded)
     return Image.open(io.BytesIO(cont))
+
+
+def bytes2string(content):
+    """
+    Converts bytes to string.
+    """
+    return base64.b64encode(content)
+
+
+def string2bytes(content):
+    """
+    Converts string to bytes.
+    """
+    return base64.b64decode(content)

@@ -8,7 +8,7 @@ import json
 import threading
 from datetime import datetime
 # from filelock import Timeout, FileLock
-from .zip_helper import unzip_bytes
+from ..args.zip_helper import unzip_bytes
 
 
 class AlreadyExistsException(Exception):
@@ -93,7 +93,8 @@ class ZipStorage:
                 raise TypeError("Key must be a string.")
             self._check_name(k)
             if not isinstance(v, bytes):
-                raise TypeError("Values must be bytes.")
+                raise TypeError(
+                    "Values must be bytes for key '{0}'.".format(k))
         return {}
 
     def add(self, name, data):

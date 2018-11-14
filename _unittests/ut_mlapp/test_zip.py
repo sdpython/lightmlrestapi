@@ -22,7 +22,7 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.lightmlrestapi.mlapp.zip_helper import unzip_bytes, zip_dict
+from src.lightmlrestapi.args.zip_helper import unzip_bytes, zip_dict
 
 
 class TestZip(ExtTestCase):
