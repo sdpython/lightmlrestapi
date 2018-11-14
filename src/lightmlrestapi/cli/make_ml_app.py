@@ -9,7 +9,7 @@ from pyquickhelper.cli.cli_helper import call_cli_function
 
 
 def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
-                    options='', secret='', ccall='single', fLOG=print):
+                    options='', secret='', ccall='single', users='', fLOG=print):
     """
     Creates an :epkg:`falcon` application and
     runs it through a :epkg:`wsgi` server.
@@ -24,7 +24,9 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
         fact that the prediction function can predict for only one observation,
         multiple ones or both
     :param secret: secret used to encrypt the logging, default is empty which
-        disables the encryption.
+        disables the encryption
+    :param users: registred users, file with two columns login, encrypted password,
+        and no header
     :param fLOG: logging function
 
     Only :epkg:`waitress` is implemented right now.
@@ -45,6 +47,8 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
 
     if name == "dummy":
         # Dummy application.
+        if users:
+            raise NotImplementedError("users not None, not implemented")
         app = dummy_application()
 
     elif name == "dummyfct":
@@ -89,19 +93,25 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
 
         if secret == '':
             secret = None
-        app = dummy_application_fct(
-            mod.restapi_load, mod.restapi_predict, secret=secret, version=mod.restapi_version)
+        app = dummy_application_fct(mod.restapi_load, mod.restapi_predict, secret=secret,
+                                    version=mod.restapi_version, users=users)
 
     elif name == "dummyimg":
         # Dummy application with an image.
+        if users:
+            raise NotImplementedError("users not None, not implemented")
         app = dummy_application_image(options=options, secret=secret)
 
     elif name == "dummyknn":
         # Dummy application with neighbors.
+        if users:
+            raise NotImplementedError("users not None, not implemented")
         app = dummy_application_neighbors()
 
     elif name == "dummyknnimg":
         # Dummy application with neighbors and an image.
+        if users:
+            raise NotImplementedError("users not None, not implemented")
         app = dummy_application_neighbors_image(options=options, secret=secret)
 
     elif '.py' in name:

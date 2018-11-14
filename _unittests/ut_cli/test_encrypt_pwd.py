@@ -21,7 +21,7 @@ except ImportError:
     import src
 
 
-from src.lightmlrestapi.cli.encrypt_pwd import _encrypt_pwd
+from src.lightmlrestapi.cli.make_encrypt_pwd import _encrypt_pwd
 
 
 class TestEncryptPwd(unittest.TestCase):
@@ -35,7 +35,7 @@ class TestEncryptPwd(unittest.TestCase):
         _encrypt_pwd(args=['-h'], fLOG=flog)
 
         r = rows[0][0]
-        if not r.startswith("usage: encrypt_pwd [-h] [-i INPUT] [-o OUTPUT] [-s SECRET]"):
+        if not r.startswith("usage: encrypt_pwd [-h] [-i INPUT] [-o OUTPUT] [-a ALGO]"):
             raise Exception(r)
 
 

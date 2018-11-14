@@ -41,7 +41,7 @@ def main():
             from .cli.make_ml_app import _start_mlrestapi
             _start_mlrestapi(args=cp)
         elif cmd == 'encrypt_pwd':
-            from .cli.encrypt_pwd import _encrypt_pwd
+            from .cli.make_encrypt_pwd import _encrypt_pwd
             _encrypt_pwd(args=cp)
         else:
             print("Command not found: '{0}'.".format(cmd))

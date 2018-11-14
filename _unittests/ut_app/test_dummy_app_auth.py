@@ -35,7 +35,7 @@ class TestDummyAppAuth(testing.TestBase):
             warnings.filterwarnings('ignore', category=ImportWarning)
             warnings.filterwarnings('ignore', category=DeprecationWarning)
             warnings.filterwarnings('ignore', category=FutureWarning)
-            app = dummy_application_auth("zoompwd")
+            app = dummy_application_auth()
             client = testing.TestClient(app)
         return client
 

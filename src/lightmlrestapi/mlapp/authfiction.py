@@ -2,11 +2,8 @@
 @file
 @brief Authentification part.
 """
-import io
-import os
-import pandas
-import jwt
 import falcon
+from ..args import encrypt_password, load_passwords
 
 
 class AuthMiddleware:
@@ -17,37 +14,15 @@ class AuthMiddleware:
 
     help_url = "http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/tutorial/first_rest_api.html"
 
-    def __init__(self, source, secret):
+    def __init__(self, source, algo="sha224"):
         """
-        @param      source      filename or dataframe
-        @param      secret      used to encrypt password and check equality
+        @param      source      filename or dataframe for encrypted password
+        @param      algo        algorithm used to hash the passwords
         """
-        if secret is None:
-            raise ValueError("secret cannot be None")
-        if isinstance(source, str):
-            if ',' in source:
-                df = pandas.read_csv(io.StringIO(source))
-            elif os.path.exists(source):
-                df = pandas.read_csv(source)
-            else:
-                raise FileNotFoundError("Unable to find '{0}'.".format(source))
-        else:
-            df = source
-        if not isinstance(df, dict):
-            for col in ['login', 'pwd']:
-                if col not in df.columns:
-                    raise ValueError(
-                        "source must have a column '{0}'".format(col))
-            memo = df
-            df = {}
-            for i in range(memo.shape[0]):
-                login = memo.loc[i, 'login']
-                pwd = memo.loc[i, 'pwd']
-                if login in df:
-                    raise KeyError("Duplicated login '{0}'.".format(login))
-                df[login] = pwd
-        self.allowed = df
-        self.secret = secret
+        if source is None:
+            raise ValueError("source cannot be empty")
+        self.allowed = load_passwords(source)
+        self.algo = algo
 
     def process_request(self, req, resp):
         """
@@ -86,5 +61,5 @@ class AuthMiddleware:
         """
         if account_id not in self.allowed:
             return False
-        enc_pwd = jwt.encode({'token': token}, self.secret, algorithm='HS256')
-        return self.allowed[account_id] != enc_pwd
+        enc = encrypt_password(token, algo=self.algo)
+        return self.allowed[account_id] == enc

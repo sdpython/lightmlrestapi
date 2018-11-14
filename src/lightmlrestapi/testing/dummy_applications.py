@@ -5,10 +5,9 @@
 import os
 import falcon
 import numpy
-import jwt
 from .data import get_wiki_img
 from ..mlapp import MachineLearningPost, AuthMiddleware, MLStoragePost
-from ..args import base642image, image2array
+from ..args import base642image, image2array, encrypt_password
 
 
 def dummy_application(app=None, **params):
@@ -183,17 +182,24 @@ def dummy_application_image(app=None, options=None, **params):
     return app
 
 
-def dummy_application_fct(restapi_load, restapi_predict, app=None, **params):
+def dummy_application_fct(restapi_load, restapi_predict, users=None, algo='sha224', app=None, **params):
     """
     Defines an application as defined in the tutorial
     :ref:`l-dummy-function-application`.
 
     @param      restapi_predict     predict function
     @param      params              parameters sent to @see cl MachineLearningPost
+    @param      users               restrict to authenticated users,
+                                    @see fn load_passwords
+    @param      algo                algorithm used to encrypt password
     @param      app                 application, if None, creates one
     """
     if app is None:
-        app = falcon.API()
+        if users:
+            middleware = [AuthMiddleware(users, algo=algo)]
+            app = falcon.API(middleware=middleware)
+        else:
+            app = falcon.API()
     app.add_route(
         '/', MachineLearningPost(restapi_load, restapi_predict, **params))
     return app
@@ -326,7 +332,7 @@ def dummy_application_neighbors_image(app=None, options=None, **params):
     return app
 
 
-def dummy_application_auth(secret, app=None, **params):
+def dummy_application_auth(app=None, algo="sha224", **params):
     """
     Defines a dummy application using this API
     including authentification.
@@ -334,10 +340,12 @@ def dummy_application_auth(secret, app=None, **params):
     on `Iris datasets <http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html>`_
     and two features.
 
-    @param      secret  password
     @param      app     application, if None, creates one
+    @param      algo    algorithm used to encrypt the passwords
     @param      params  parameters sent to @see cl MachineLearningPost
     @return             app
+
+    It adds one users with the login 'me' and the password 'dummy'.
     """
     from sklearn import datasets
     from sklearn.linear_model import LogisticRegression
@@ -349,9 +357,9 @@ def dummy_application_auth(secret, app=None, **params):
     clf.fit(X, y)
 
     if app is None:
-        zoo = jwt.encode({'token': "dummy"}, secret, algorithm='HS256')
+        zoo = encrypt_password("dummy", algo=algo)
         data = "login,pwd\nme,{0}".format(zoo)
-        app = falcon.API(middleware=[AuthMiddleware(data, secret)])
+        app = falcon.API(middleware=[AuthMiddleware(data, algo=algo)])
 
     route = MachineLearningPost(
         lambda clf=clf: clf, LogisticRegression.predict_proba, ccall='multi', **params)

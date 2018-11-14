@@ -25,8 +25,7 @@ class MachineLearningPost(BaseLogging):
     def __init__(self, load_function, predict_function,
                  secret=None, folder='.',
                  log_features=True, log_prediction=True,
-                 load_params=None, ccall='single',
-                 version=None):
+                 load_params=None, ccall='single', version=None):
         """
         @param      predict_function    predict function
         @param      load_function       load function

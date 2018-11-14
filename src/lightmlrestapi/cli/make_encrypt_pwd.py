@@ -8,7 +8,7 @@ import pandas
 from pyquickhelper.cli.cli_helper import call_cli_function
 
 
-def encrypt_pwd(input="", output="", secret="", fLOG=print):  # pylint: disable=W0622
+def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disable=W0622
     """
     Encrypts passwords to setup a REST API
     with *lightmlrestapi*.
@@ -17,7 +17,7 @@ def encrypt_pwd(input="", output="", secret="", fLOG=print):  # pylint: disable=
         (comma separated values), no header, encoding is *utf-8*
     :param output: file containing two columns <login>,<encrypted password>,
         csv, encoding is *utf-8*
-    :param secret: secret used to encrypt password
+    :param algo: algorithm used to hash the passwords
     :param fLOG: logging function
     """
     try:
@@ -34,7 +34,7 @@ def encrypt_pwd(input="", output="", secret="", fLOG=print):  # pylint: disable=
     if fLOG:
         fLOG("[encrypt_pwd] encrypt '{0}'".format(input))
     df = pandas.read_csv(input, sep=',', encoding='utf-8', header=None)
-    df2 = encrypt_passwords(df, secret)
+    df2 = encrypt_passwords(df, algo=algo)
     if fLOG:
         fLOG("[encrypt_pwd] to      '{0}'".format(output))
     df2.to_csv(output, sep=',', encoding='utf-8')
