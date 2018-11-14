@@ -221,8 +221,9 @@ class MLStorage(ZipStorage):
                     main_script = k
                     break
         if main_script is None:
+            sorted_keys = ", ".join(sorted(data.keys()))
             raise RuntimeError(
-                "Unable to find a script with 'def restapi_version():' inside.")
+                "Unable to find a script with 'def restapi_version():' inside.. List of found keys is {0}.".format(sorted_keys))
         res.update(dict(main_script=main_script))
         return res
 

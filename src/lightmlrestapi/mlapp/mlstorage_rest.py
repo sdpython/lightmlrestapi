@@ -60,8 +60,6 @@ class MLStoragePost(BaseLogging):
                 es = es[:200] + '...'
             log_data = dict(error=str(e))
             log_data.update(add_log_data)
-            if self._load_params:
-                log_data['load_params'] = self._load_params
             self.error("ML.load", log_data)
             raise falcon.HTTPBadRequest(
                 'Unable to retrieve request content due to: {0}'.format(es), excs)
@@ -74,21 +72,58 @@ class MLStoragePost(BaseLogging):
 
         command = args.pop('cmd', None)
         if command == 'upload':
-
             self.save_time()
-            name = self._store(args)
+            try:
+                name = self._store(args)
+            except Exception as e:
+                excs = traceback.format_exc()
+                es = str(e)
+                if len(es) > 200:
+                    es = es[:200] + '...'
+                duration = self.duration()
+                log_data = dict(error=str(e), duration=duration)
+                log_data.update(add_log_data)
+                self.error("MLB.load", log_data)
+                raise falcon.HTTPBadRequest(
+                    "Unable to upload model due to: {}".format(es), excs)
+
+            duration = self.duration()
             log_data = dict(duration=duration)
             self.info("MLB.store", log_data)
-
             resp.status = falcon.HTTP_201
             answer = {"name": name}
         elif command == 'predict':
-            raise NotImplementedError("cannot predict")
+            self.save_time()
+            try:
+                name = self._predict(args)
+            except Exception as e:
+                excs = traceback.format_exc()
+                es = str(e)
+                if len(es) > 200:
+                    es = es[:200] + '...'
+                name = args.get('name', None)
+                duration = self.duration()
+                log_data = dict(error=str(e), duration=duration)
+                log_data.update(add_log_data)
+                if name is not None:
+                    log_data['name'] = name
+                if format is not None:
+                    log_data['format'] = format
+                if input in args:
+                    log_data['input'] = args['input']
+                self.error("MLB.load", log_data)
+                raise falcon.HTTPBadRequest(
+                    "Unable to predict with model '{0}' due to: {1}, format='{2}'".format(name, es, format), excs)
+
+            duration = self.duration()
+            log_data = dict(duration=duration)
+            self.info("MLB.predict", log_data)
+            resp.status = falcon.HTTP_201
+            answer = {"output": name}
         else:
             es = "Unknown command '{0}'".format(command)
             log_data = dict(msg=es)
-            if self._load_params:
-                log_data['load_params'] = self._load_params
+            log_data.update(add_log_data)
             self.error("MLStorage", log_data)
             raise falcon.HTTPBadRequest(
                 'Unable to retrieve request content due to: {0}'.format(es))
@@ -96,7 +131,8 @@ class MLStoragePost(BaseLogging):
         try:
             js = ujson.dumps(answer)
         except OverflowError as e:
-            raise OverflowError('Answer cannot be serialized.') from e
+            raise falcon.HTTPBadRequest(
+                'Unable to retrieve request content due to: {0}'.format(e))
         resp.body = js
 
     def _store(self, args):
@@ -105,9 +141,32 @@ class MLStoragePost(BaseLogging):
         """
         name = args.pop('name', None)
         if name is None:
-            raise KeyError("Unable to find a model name")
-        keys = list(args.keys())
-        for k in keys:
-            args[k] = string2bytes(args[k])
-        self._storage.add(name, args)
+            raise KeyError("Unable to find a model name in sent data.")
+        zipped = args.pop('zip', None)
+        if zipped is None:
+            raise KeyError(
+                "The REST API expects to find a zip file data in field 'zip'.")
+        unstring = string2bytes(zipped)
+        self._storage.add(name, unstring)
         return name
+
+    def _predict(self, args):
+        """
+        Stores the model in the storage.
+        """
+        name = args.get('name', None)
+        if name is None:
+            raise KeyError("Unable to find a model name in sent data.")
+        form = args.get('format', 'json')
+        data = args.get('input', None)
+        if data is None:
+            raise KeyError("The REST API expects to find field 'input' which contains stringified data the "
+                           "machine learned model can process. Field 'format' indicates which "
+                           "preprocessing to do before calling the model which is currently '{0}'".format(form))
+        if form == 'json':
+            data = ujson.loads(data)
+        elif form == 'bytes':
+            data = string2bytes(data)
+        else:
+            raise ValueError("Unrecognized format '{0}'.".format(form))
+        return self._storage.call_predict(name, data)
