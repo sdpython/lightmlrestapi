@@ -39,7 +39,7 @@ from src.lightmlrestapi.testing.data import get_wiki_img
 class TestMLStorageAppImage(testing.TestBase):
 
     def before(self):
-        temp = get_temp_folder(__file__, "temp_dummy_app_storage")
+        temp = get_temp_folder(__file__, "temp_dummy_app_storage_img")
         dummy_mlstorage(self.api, folder_storage=temp, folder=temp)
 
     def _data_dl(self, tweak=False):
