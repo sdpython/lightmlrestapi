@@ -23,31 +23,29 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.lightmlrestapi.testing.template_dl_keras import restapi_version, restapi_load, restapi_predict
+from src.lightmlrestapi.testing.template_dl_torch import restapi_version, restapi_load, restapi_predict
 
 
-def get_keras():
+def get_torch():
     try:
-        import keras
-        return keras
+        import torch
+        return torch
     except ImportError:
         return None
 
 
-class TestTemplateDlKeras(ExtTestCase):
+class TestTemplateDlTorch(ExtTestCase):
 
-    @unittest.skipIf(get_keras() is None, reason="no keras")
+    @unittest.skipIf(get_torch() is None, reason="no torch")
     def test_template_dl_keras(self):
-        self.assertEqual(restapi_version(), "0.1.1237")
-        temp = get_temp_folder(__file__, "temp_template_dl_keras")
+        self.assertEqual(restapi_version(), "0.1.1238")
+        temp = get_temp_folder(__file__, "temp_template_dl_torch")
 
-        from keras.applications.mobilenet import MobileNet  # pylint: disable=E0401
-        model = MobileNet(input_shape=None, alpha=1.0, depth_multiplier=1,
-                          dropout=1e-3, include_top=True,
-                          weights='imagenet', input_tensor=None,
-                          pooling=None, classes=1000)
-        model_name = os.path.join(temp, "model.keras")
-        model.save(model_name)
+        import torchvision.models as models  # pylint: disable=E0401
+        import torch
+        model = models.squeezenet1_0(pretrained=True)
+        model_name = os.path.join(temp, "model.torch")
+        torch.save(model, model_name)
 
         img_input = os.path.join(temp, "..", "data", "wiki_modified2.png")
         img_input = numpy.array(Image.open(img_input))
