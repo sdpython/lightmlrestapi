@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import threading
+import importlib
 from datetime import datetime
 # from filelock import Timeout, FileLock
 from ..args.zip_helper import unzip_bytes
@@ -62,17 +63,23 @@ class ZipStorage:
         """
         return os.path.join(self._folder, name)
 
-    def _check_name(self, name):
+    def _check_name(self, name, data=False):
+        """
+        A name is valid if it is a variable name
+        or a filename if *data* is True.
+        """
         if name is None or not isinstance(name, str) or len(name) == 0:
             raise ValueError("name cannot be empty.")
-        for c in name:
+        for i, c in enumerate(name):
             if "a" <= c <= "z":
                 continue
             if "A" <= c <= "Z":
                 continue
-            if "0" <= c <= "9":
+            if "0" <= c <= "9" and i > 0:
                 continue
-            if c in '-_./':
+            if c in '_/':
+                continue
+            if c == '.' and data:
                 continue
             raise ValueError(
                 "A name contains a forbidden character '{0}'".format(name))
@@ -91,11 +98,25 @@ class ZipStorage:
         for k, v in data.items():
             if not isinstance(k, str):
                 raise TypeError("Key must be a string.")
-            self._check_name(k)
+            self._check_name(k, data=True)
             if not isinstance(v, bytes):
                 raise TypeError(
                     "Values must be bytes for key '{0}'.".format(k))
         return {}
+    
+    def _makedirs(self, subfold):
+        """
+        Creates a subfolder and add a file ``__init__.py``.
+        """
+        spl = subfold.replace("\\", "/").split("/")
+        fold = self._folder
+        for sp in spl:
+            fold = os.path.join(fold, sp)
+            if not os.path.exists(fold):
+                os.mkdir(fold)
+                init = os.path.join(fold, '__init__.py')
+                with open(init, 'w') as f:
+                    pass
 
     def add(self, name, data):
         """
@@ -118,8 +139,7 @@ class ZipStorage:
 
         # Creates dictionary.
         full = self.get_full_name(name)
-        if not os.path.exists(full):
-            os.makedirs(full)
+        self._makedirs(name)
         desc = os.path.join(full, ".desc")
         with open(desc, "w", encoding="utf-8") as fd:
             fd.write("# ")
@@ -133,7 +153,7 @@ class ZipStorage:
         with open(desc, "a") as fd:
             for k, v in sorted(data.items()):
                 subn = "{0}/{1}".format(name, k)
-                self._check_name(subn)
+                self._check_name(subn, data=True)
                 fd.write("{0}\n".format(k))
                 n = self.get_full_name(subn)
                 with open(n, "wb") as f:
@@ -241,6 +261,40 @@ class MLStorage(ZipStorage):
         self._lock.acquire()
         del self._cache[els[0][1]]
         self._lock.release()
+        
+    def _import(self, name):
+        """
+        Imports the main module for one model.
+        
+        @param      name        model name
+        @return                 imported module
+        """
+        meta = self.get_metadata(name)
+        loc = self.get_full_name(name)
+        script = os.path.join(loc, meta['main_script'])
+        if not os.path.exists(script):
+            raise FileNotFoundError(
+                "Unable to find script '{0}'".format(script))
+
+        fold, modname = os.path.split(script)
+        sys.path.insert(0, self._folder)
+        full_modname = ".".join([name.replace("/", "."), 
+                                 os.path.splitext(modname)[0]])
+        try:
+            mod = importlib.import_module(full_modname)
+            # mod = __import__(full_modname)
+        except ImportError as e:
+            with open(script, "r") as f:
+                code = f.read()
+            del sys.path[0]
+            values = "\n".join([self._folder, name, str(meta), loc, script, fold, modname, full_modname])
+            raise ImportError(
+                "Unable to compile file '{0}'\ndue to {1}\n{2}\n---\n{3}".format(script, e, code, values)) from e
+        del sys.path[0]
+        
+        if not hasattr(mod, "restapi_load"):
+            raise ImportError("Unable to find function 'restapi_load' in module '{0}'".format(mod.__name__))
+        return mod
 
     def load_model(self, name):
         """
@@ -258,35 +312,21 @@ class MLStorage(ZipStorage):
             return res
 
         self.empty_cache()
-        meta = self.get_metadata(name)
-        loc = self.get_full_name(name)
-        script = os.path.join(loc, meta['main_script'])
-        if not os.path.exists(script):
-            raise FileNotFoundError(
-                "Unable to find script '{0}'".format(script))
 
         # Imports the module.
         self._lock.acquire()
-        fold, modname = os.path.split(script)
-        sys.path.insert(0, fold)
         try:
-            mod = __import__(os.path.splitext(modname)[0])
-        except ImportError as e:
-            with open(script, "r") as f:
-                code = f.read()
-            del sys.path[0]
+            mod = self._import(name)
+        finally:
             self._lock.release()
-            raise ImportError(
-                "Unable to compile file '{0}'\n{1}".format(script, code)) from e
 
         # Loads the models.
-        cur = os.getcwd()
-        os.chdir(fold)
-        model = mod.restapi_load()
-        os.chdir(cur)
-        del sys.path[0]
-        self._lock.release()
-
+        self._lock.acquire()
+        try:
+            model = mod.restapi_load()
+        finally:
+            self._lock.release()
+        
         res = dict(last=datetime.now(), model=model, module=mod)
         self._lock.acquire()
         self._cache[name] = res

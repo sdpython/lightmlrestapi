@@ -35,15 +35,15 @@ class TestStorage(ExtTestCase):
         temp = get_temp_folder(__file__, "temp_zip_storage")
         stor = ZipStorage(temp)
         data = {'one.txt': b"1", 'two.txt': b"2"}
-        stor.add("dto-/k_", data)
-        data2 = stor.get("dto-/k_")
+        stor.add("dto/k_", data)
+        data2 = stor.get("dto/k_")
         self.assertEqual(data, data2)
         names = list(stor.enumerate_names())
-        self.assertEqual(names, ["dto-/k_"])
-        meta = stor.get_metadata("dto-/k_")
+        self.assertEqual(names, ["dto/k_"])
+        meta = stor.get_metadata("dto/k_")
         self.assertEqual(meta, {})
 
-    def mlstorage(self, n):
+    def mlstorage(self, n, suf):
 
         # Train a model
         iris = datasets.load_iris()
@@ -55,6 +55,7 @@ class TestStorage(ExtTestCase):
 
         # application
         code = textwrap.dedent("""
+        import os
         import pickle
 
         # We declare an id for the REST API.
@@ -63,7 +64,8 @@ class TestStorage(ExtTestCase):
 
         # We declare a loading function.
         def restapi_load():
-            with open("iris2.pkl", "rb") as f:
+            here = os.path.dirname(__file__)
+            with open(os.path.join(here, "iris2.pkl"), "rb") as f:
                 loaded_model = pickle.load(f)
             return loaded_model
 
@@ -71,15 +73,14 @@ class TestStorage(ExtTestCase):
         def restapi_predict(clf, X):
             return clf.predict_proba(X)
         """)
-        code = code.encode("utf-8")
-
-        app = {"iris2.pkl": model_data, "model.py": code}
-
-        temp = get_temp_folder(__file__, "temp_ml_storage")
+        temp = get_temp_folder(__file__, "temp_ml_storage" + suf)
         stor = MLStorage(temp, cache_size=3)
 
         for i in range(0, n):
-            name = "ml/iris%d" % i
+            app = {"iris_%d.pkl" % i: model_data, 
+                   "model.py": code.replace("iris2.pkl", "iris_%d.pkl" % i).encode("utf-8")}
+
+            name = "ml%s/iris%d" % (suf, i)
             stor.add(name, app)
             data2 = stor.get(name)
             self.assertEqual(app, data2)
@@ -97,10 +98,10 @@ class TestStorage(ExtTestCase):
         self.assertLesser(len(stor._cache), n)  # pylint: disable=W0212
 
     def test_mlstorage(self):
-        self.mlstorage(1)
+        self.mlstorage(1, "1")
 
     def test_mlstorage_multi(self):
-        self.mlstorage(6)
+        self.mlstorage(6, "6")
 
 
 if __name__ == "__main__":

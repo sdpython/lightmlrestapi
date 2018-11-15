@@ -39,7 +39,7 @@ from src.lightmlrestapi.testing.data import get_wiki_img
 class TestMLStorageAppImage(testing.TestBase):
 
     def before(self):
-        temp = get_temp_folder(__file__, "temp_dummy_app_storage_img")
+        temp = get_temp_folder(__file__, "temp_dummy_app_storage_imgn")
         dummy_mlstorage(self.api, folder_storage=temp, folder=temp)
 
     def _data_dl(self, tweak=False):
@@ -51,6 +51,7 @@ class TestMLStorageAppImage(testing.TestBase):
             code = f.read()
         if tweak:
             code = code.replace("def restapi", "def rest3api")
+        code = code.replace("iris2.pkl", "dlimg.pkl")
         code = code.encode("utf-8")
 
         img = get_wiki_img()
@@ -62,7 +63,7 @@ class TestMLStorageAppImage(testing.TestBase):
 
         zipped = zip_dict(data)
         ret = {'cmd': 'upload',
-               'name': 'ml/img',
+               'name': 'mlapi/imgn',
                'zip': bytes2string(zipped)}
         return ret, arr
 
@@ -74,15 +75,17 @@ class TestMLStorageAppImage(testing.TestBase):
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_201)
         d = ujson.loads(body)
-        self.assertEqual(d, {'name': 'ml/img'})
+        self.assertEqual(d, {'name': 'mlapi/imgn'})
 
         # test model
         ba = base64.b64encode(pickle.dumps(X))
-        obs = dict(cmd='predict', name='ml/img', input=ba, format='img')
+        obs = dict(cmd='predict', name='mlapi/imgn', input=ba, format='img')
         bodyin = ujson.dumps(obs)
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
         res = ujson.loads(body)
+        if 'description' in res:            
+            raise Exception(res["description"])
         self.assertIn('output', res)
         self.assertIn('version', res)
         pred = res['output']
@@ -98,14 +101,14 @@ class TestMLStorageAppImage(testing.TestBase):
 
         # test model
         js = base64.b64encode(b"r" + pickle.dumps(X))
-        obs = dict(cmd='predict', name='ml/img', input=js, format='img')
+        obs = dict(cmd='predict', name='mlapi/imgn', input=js, format='img')
         bodyin = ujson.dumps(obs)
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         res = ujson.loads(body)
         self.assertIn('title', res)
-        self.assertIn("Unable to predict with model 'ml/img'", res['title'])
+        self.assertIn("Unable to predict with model 'mlapi/imgn'", res['title'])
 
 
 if __name__ == "__main__":

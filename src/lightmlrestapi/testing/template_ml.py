@@ -4,6 +4,7 @@
 available through a REST API.
 """
 import pickle
+import os
 
 
 # Declare an id for the REST API.
@@ -18,7 +19,12 @@ def restapi_version():
 def restapi_load(model="iris2.pkl"):
     """
     Loads the model.
+    The model name is relative to this file.
     """
+    here = os.path.dirname(__file__)
+    model = os.path.join(here, model)
+    if not os.path.exists(model):
+        raise FileNotFoundError("Cannot find model '{0}' (full path is '{1}')".format(model, os.path.abspath(model)))
     with open(model, "rb") as f:
         loaded_model = pickle.load(f)
     return loaded_model
