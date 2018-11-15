@@ -39,7 +39,7 @@ def restapi_predict(model, X):
     """
     Computes the prediction for model *clf*.
 
-    :param clf: pipeline following :epkg:`scikit-learn` API
+    :param model: pipeline following :epkg:`scikit-learn` API
     :param X: image as a :epkg:`numpy` array
     :return: output of *predict_proba*
     """

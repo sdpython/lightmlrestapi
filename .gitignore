@@ -278,3 +278,5 @@ zpwd.txt
 zzpwd.txt
 test_commandline.bat
 _doc/sphinxdoc/source/nbcov*.png
+_doc/sphinxdoc/model_iris.pkl
+_doc/sphinxdoc/model_iris.py

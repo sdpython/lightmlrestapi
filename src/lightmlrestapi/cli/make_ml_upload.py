@@ -56,7 +56,14 @@ def _upload_model(fLOG=print, args=None):
         :lid: cmd_upload_model_cmd
 
         Uploads a machine learned model to a REST API
-        created with *lightmlrestapi*.
+        created with *lightmlrestapi*. The code of this command line is equivalent
+        to:
+
+        ::
+
+            from lightmlrestapi.netrest import submit_rest_request, json_upload_model
+            req = json_upload_model(name=name, pyfile=pyfile, data=data)
+            submit_rest_request(req, login=login, pwd=pwd, url=url)
     """
     epkg_dictionary = dict(falcon='https://falconframework.org/',
                            Apache='https://httpd.apache.org/',

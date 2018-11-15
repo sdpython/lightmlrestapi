@@ -10,11 +10,6 @@ This describes functionalities about :epkg:`API REST`.
 .. contents::
     :local:
 
-Encryption
-==========
-
-.. autosignature:: lightmlrestapi.mlapp.encrypt_helper import encrypt_passwords
-
 Logging
 =======
 
@@ -22,14 +17,16 @@ Logging
 
 .. autosignature:: lightmlrestapi.mlapp.base_logging.enumerate_parsed_logs
 
-Machine Learning
-================
-
-.. autosignature:: lightmlrestapi.mlapp.mlpost.MachineLearningPost
-
 Storage
 =======
 
 .. autosignature:: lightmlrestapi.mlapp.mlstorage.ZipStorage
 
 .. autosignature:: lightmlrestapi.mlapp.mlstorage.MLStorage
+
+Web Appplication for machine learning (REST API)
+================================================
+
+.. autosignature:: lightmlrestapi.mlapp.mlpost_rest.MachineLearningPost
+
+.. autosignature:: lightmlrestapi.mlapp.mlstorage_rest.MLStoragePost

@@ -102,7 +102,7 @@ def _start_mlreststor(fLOG=print, args=None):
     @param      args        to overwrite ``sys.args``
 
     .. cmdref::
-        :title: Creates an falcon application and starts it through a wsgi application
+        :title: Creates an falcon application to store machine learned models
         :cmd: start_mlreststor=lightmlrestapi.cli.make_ml_store:_start_mlreststor
         :lid: cmd_start_mlreststor_cmd
 

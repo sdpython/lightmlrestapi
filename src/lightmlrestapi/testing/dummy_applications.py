@@ -187,6 +187,7 @@ def dummy_application_fct(restapi_load, restapi_predict, users=None, algo='sha22
     Defines an application as defined in the tutorial
     :ref:`l-dummy-function-application`.
 
+    @param      restapi_load        function to load a model
     @param      restapi_predict     predict function
     @param      params              parameters sent to @see cl MachineLearningPost
     @param      users               restrict to authenticated users,

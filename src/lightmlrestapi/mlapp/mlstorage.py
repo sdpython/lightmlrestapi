@@ -298,12 +298,13 @@ class MLStorage(ZipStorage):
                 "Unable to find function 'restapi_load' in module '{0}'".format(mod.__name__))
         return mod
 
-    def load_model(self, name):
+    def load_model(self, name, was_loaded=False):
         """
         Loads a model into the cache if not loaded
         and returns it.
 
         @param      name        cache name
+        @param      was_loaded  if True, tells if the model was loaded again
         @return                 dictionary with keys: *last*, *model*, *module*.
         """
         if name in self._cache:
@@ -311,7 +312,10 @@ class MLStorage(ZipStorage):
             res = self._cache[name]
             res['last'] = datetime.now()
             self._lock.release()
-            return res
+            if was_loaded:
+                return res, False
+            else:
+                return res
 
         self.empty_cache()
 
@@ -333,24 +337,36 @@ class MLStorage(ZipStorage):
         self._lock.acquire()
         self._cache[name] = res
         self._lock.release()
-        return res
+        if was_loaded:
+            return res, True
+        else:
+            return res
 
-    def call_predict(self, name, data, version=False):
+    def call_predict(self, name, data, version=False, was_loaded=False):
         """
         Calls method *restapi_predict* from a stored script *python*.
 
         @param      name        model name
         @param      data        input data
         @param      version     returns the version as well
+        @param      was_loaded  if True, return if the model was loaded again
         @return                 *predictions* or *predictions, version*
         """
-        res = self.load_model(name)
+        res = self.load_model(name, was_loaded=was_loaded)
+        if was_loaded:
+            res, loaded = res
         pred = res['module'].restapi_predict(res['model'], data)
         if version:
             version = res['module'].restapi_version()
-            return pred, version
+            if was_loaded:
+                return pred, version, loaded
+            else:
+                return pred, version
         else:
-            return pred
+            if was_loaded:
+                return pred, loaded
+            else:
+                return pred
 
     def call_version(self, name):
         """

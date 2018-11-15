@@ -17,6 +17,54 @@ Every command line used below show can be run
 prefixed by ``python -m lightmlrestapi <command line>``
 once the model *lightmlrestapi* is installed.
 
+Train a model on Iris
+=====================
+
+We first need a machine learning model to test the whole
+process of publishing the model the web application and
+then call it to predict. We use the
+:epkg:`iris` dataset. The important part consists in saving
+the model with :epkg:`pickle`.
+
+.. runpython::
+    :showcode:
+
+    from sklearn import datasets
+    from sklearn.linear_model import LogisticRegression
+
+    iris = datasets.load_iris()
+    X = iris.data[:, :2]  # we only take the first two features.
+    y = iris.target
+    clf = LogisticRegression()
+    clf.fit(X, y)
+
+    # save with pickle
+    import pickle
+    model_data = pickle.dumps(clf)
+    model_file = "model_iris.pkl"
+    with open(model_file, "wb") as f:
+        f.write(model_data)
+
+Second step is to write the script which loads
+the model and then predict with a specific API.
+If the model follows :epkg:`scikit-learn`, the
+following code should work just by replacing the
+model name.
+
+.. runpython::
+    :showcode:
+
+    from lightmlrestapi.testing import template_ml
+    with open(template_ml.__file__, "r", encoding="utf-8") as f:
+        code = f.read()
+    code = code.replace("iris2.pkl", "model_iris.plk")
+    with open("model_iris.py", "w", encoding="utf-8") as f:
+        f.write(code)
+    print(code)
+
+The step created two files ``model_iris.pkl`` and ``model_iris.py``.
+Let's now switch to the REST API application.
+
 Set up authenticated users
 ==========================
 
@@ -60,7 +108,7 @@ machine learned models as follows:
 
 ::
 
-    start_mlreststor --location=. --users=encrypted_passwords.txt
+    start_mlreststor --location=. --users=encrypted_passwords.txt --host=127.0.0.1 --port=8095
 
 .. faqref::
     :title: Why the REST application does not log anything on screen?
@@ -74,5 +122,52 @@ machine learned models as follows:
 
         python -u -m lightmlrestapi start_mlreststor --location=. --users=encrypted_passwords.txt
 
+The web application cannot delete machine learned models or
+overwrite one. It can be stopped and restarted without losing
+models as they stored on disk.
+
 Upload a machine learned model
 ==============================
+
+We upload the two files as mentioned created in the first step.
+The name can only contains lower letters and digits
+except in the first position. The model is now uploaded.
+
+::
+
+    upload_model --name=xavier/iris1 --url=http://127.0.0.1:8095/ --pyfile=model_iris.py --data=model_iris.pkl --login=xavier --pwd=passWrd!
+
+The following code can be replaced by a :epkg:`python`
+maybe easier to automated from a notebook.
+
+::
+
+    from lightmlrestapi.netrest import submit_rest_request, json_upload_model
+    req = json_upload_model(name="xavier/iris1", pyfile="model_iris.py", data="model_iris.pkl")
+    submit_rest_request(req, login="xavier", pwd="passWrd!",
+                        url="http://127.0.0.1:8095/", fLOG=print)
+
+Compute prediction through the REST API
+=======================================
+
+The following piece of code calls the service and the prediction
+for many obersvation in one row.
+
+::
+
+    from lightmlrestapi.netrest import json_predict_model, submit_rest_request
+    from sklearn import datasets
+
+    iris = datasets.load_iris()
+    X = iris.data[:, :2]
+
+    req = json_predict_model("xavier/iris1", X)
+    res = submit_rest_request(req, login="xavier", pwd="passWrd!",
+                              url="http://127.0.0.1:8095/", fLOG=print)
+    print(res)
+
+::
+
+    {'output': [[0.8180557319, 0.1140978624, 0.06784640580000001],
+                [0.6427973036, 0.22443658900000002, 0.1327661074],
+     ...

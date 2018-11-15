@@ -51,7 +51,6 @@ class MLStoragePost(BaseLogging):
         @param      req         request
         @param      resp        ...
         """
-        print("received")
         add_log_data = dict(user=req.get_header('uid'), ip=req.access_route)
         if self._version is not None:
             add_log_data = self._version
@@ -75,7 +74,6 @@ class MLStoragePost(BaseLogging):
         self.save_time()
         duration = self.duration()
         log_data = dict(duration=duration)
-        self.info("MLB.load", log_data)
 
         command = args.pop('cmd', None)
         if command == 'upload':
@@ -96,14 +94,14 @@ class MLStoragePost(BaseLogging):
 
             duration = self.duration()
             log_data = dict(duration=duration, name=name)
-            self.info("MLB.store", log_data)
+            self.info("MLB.store '%s'" % name, log_data)
             resp.status = falcon.HTTP_201
             answer = {"name": name}
 
         elif command == 'predict':
             self.save_time()
             try:
-                name, pred, version = self._predict(args)
+                name, pred, version, loaded = self._predict(args)
             except Exception as e:
                 excs = traceback.format_exc()
                 es = str(e)
@@ -125,7 +123,10 @@ class MLStoragePost(BaseLogging):
 
             duration = self.duration()
             log_data = dict(duration=duration, version=version, name=name)
-            self.info("MLB.predict", log_data)
+            if loaded:
+                self.info("MLB.predict '%s' loaded again" % name, log_data)
+            else:
+                self.info("MLB.predict '%s'" % name, log_data)
             resp.status = falcon.HTTP_201
             answer = {"output": pred, "version": version}
         else:
@@ -188,4 +189,6 @@ class MLStoragePost(BaseLogging):
             data = string2bytes(data)
         else:
             raise ValueError("Unrecognized format '{0}'.".format(form))
-        return (name,) + self._storage.call_predict(name, data, version=True)
+        res, version, loaded = self._storage.call_predict(
+            name, data, version=True, was_loaded=True)
+        return name, res, version, loaded

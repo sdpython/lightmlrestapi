@@ -50,12 +50,12 @@ based on :epkg:`falcon`.
 
     tutorial/index
     gyexamples/index
+    all_notebooks
     api/index
     i_cmd
     i_ex
-    all_notebooks
+    i_faq
     blog/blogindex
-    index_modules
     i_index
 
 You can test a dummy :epkg:`wsgi` server by running:

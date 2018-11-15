@@ -20,10 +20,7 @@ def json_upload_model(name, pyfile, data=None):
         the file must follows the specification defined in
         :ref:`l-template-ml`
     :param data: binary file, usually everything the models pickled
-    :param host: ip address of the application
-    :param port: port
-    :param fLOG: logging function
-    :return: json as a dictionary ready to be jsonify (with ``ujson.dumps(request)``)
+    :return: dictionary ready to be jsonified
     """
     if name is None or name == '':
         raise ValueError("name cannot be empty.")
@@ -55,6 +52,25 @@ def json_upload_model(name, pyfile, data=None):
     return request
 
 
+def json_predict_model(name, data, format='json'):  # pylint: disable=W0622
+    """
+    Builds a REST request to compute the prediction of a machine learning model
+    upload with @see fn json_upload_model.
+    See also @see cl MLStoragePost.
+
+    :param name: name of the model, should be unique and not already used
+    :param data: any kind of data the model request
+    :param format: ``'json'`` or ``'image'``
+    :return: dictionary ready to be jsonified
+    """
+    if name is None or name == '':
+        raise ValueError("name cannot be empty.")
+
+    js = ujson.dumps(data)
+    obs = dict(cmd='predict', name=name, input=js, format=format)
+    return obs
+
+
 def submit_rest_request(request, login=None, pwd=None, url='http://127.0.0.1:8081/',
                         timeout=15, fLOG=None):
     """
@@ -64,8 +80,7 @@ def submit_rest_request(request, login=None, pwd=None, url='http://127.0.0.1:808
     :param login: login
     :param pwd: password
     :param request: request as a dictionary
-    :param host: host
-    :param port: port
+    :param url: url
     :param timeout: timeout
     :param fLOG: logging function
     :return: request results as dictionary

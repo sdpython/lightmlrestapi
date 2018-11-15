@@ -33,6 +33,7 @@ mathdef_link_only = True
 
 epkg_dictionary.update({
     'Apache': 'https://httpd.apache.org/',
+    'API REST': 'https://en.wikipedia.org/wiki/Representational_state_transfer',
     'falcon': "https://falconframework.org/",
     'Iris dataset': 'http://scikit-learn.org/stable/auto_examples/datasets/plot_iris_dataset.html',
     'json': 'https://docs.python.org/fr/3/library/json.html',

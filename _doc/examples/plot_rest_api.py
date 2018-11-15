@@ -11,7 +11,7 @@ on :epkg:`Iris dataset`.
 ####################
 # Settings.
 host = '127.0.0.1'
-port = 8081
+port = 8099
 
 ########################
 # Creates a dummy application and starts a server in a different process.
@@ -72,7 +72,7 @@ sleep(3)
 import requests
 import ujson
 features = ujson.dumps({'X': [0.1, 0.2]})
-r = requests.post('http://127.0.0.1:8081', data=features)
+r = requests.post('http://127.0.0.1:%d' % port, data=features)
 print(r.json())
 
 ####################

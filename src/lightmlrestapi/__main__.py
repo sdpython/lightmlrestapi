@@ -47,7 +47,7 @@ def main():
             from .cli.make_ml_store import _start_mlreststor
             _start_mlreststor(args=cp)
         elif cmd == 'upload_model':
-            from .cli.make_ml_submit import _upload_model
+            from .cli.make_ml_upload import _upload_model
             _upload_model(args=cp)
         else:
             print("Command not found: '{0}'.".format(cmd))

@@ -25,7 +25,7 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.lightmlrestapi.netrest import json_upload_model
+from src.lightmlrestapi.netrest import json_upload_model, json_predict_model
 from src.lightmlrestapi.testing import template_ml
 
 
@@ -59,6 +59,16 @@ class TestRestHelper(ExtTestCase):
         self.assertIn('name', js)
         self.assertIn('cmd', js)
         self.assertIn('zip', js)
+
+    def test_json_predict_model(self):
+        iris = datasets.load_iris()
+        X = iris.data[:, :2]  # we only take the first two features.
+        name = "m1"
+        req = json_predict_model(name, X)
+        self.assertIsInstance(req, dict)
+        self.assertIn('cmd', req)
+        self.assertIn('name', req)
+        self.assertIn('input', req)
 
 
 if __name__ == "__main__":
