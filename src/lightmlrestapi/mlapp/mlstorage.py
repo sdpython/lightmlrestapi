@@ -190,6 +190,8 @@ class MLStorage(ZipStorage):
     Stores machine learned models into folders. The storages
     expects to find at least one :epkg:`python` following
     the specifications described at :ref:`l-mlapp-def`.
+    More template for actionable machine learned models
+    through the following template: :ref:`l-template-ml`.
     """
 
     def __init__(self, folder, cache_size=10):
@@ -291,9 +293,26 @@ class MLStorage(ZipStorage):
         self._lock.release()
         return res
 
-    def call_predict(self, name, data):
+    def call_predict(self, name, data, version=False):
         """
         Calls method *restapi_predict* from a stored script *python*.
+
+        @param      name        model name
+        @param      data        input data
+        @param      version     returns the version as well
+        @return                 *predictions* or *predictions, version*
         """
         res = self.load_model(name)
-        return res['module'].restapi_predict(res['model'], data)
+        pred = res['module'].restapi_predict(res['model'], data)
+        if version:
+            version = res['module'].restapi_version()
+            return pred, version
+        else:
+            return pred
+
+    def call_version(self, name):
+        """
+        Calls method *restapi_version* from a stored script *python*.
+        """
+        res = self.load_model(name)
+        return res['module'].restapi_version()

@@ -7,9 +7,11 @@ import sys
 import os
 import unittest
 import pickle
+import base64
 import numpy
 import falcon
 import falcon.testing as testing
+from PIL import Image
 from pyquickhelper.pycode import get_temp_folder
 import ujson
 
@@ -30,57 +32,53 @@ except ImportError:
 from src.lightmlrestapi.testing import dummy_mlstorage
 from src.lightmlrestapi.args.args_images import bytes2string
 from src.lightmlrestapi.args import zip_dict
-from src.lightmlrestapi.testing import template_ml
+from src.lightmlrestapi.testing import template_dl_light
+from src.lightmlrestapi.testing.data import get_wiki_img
 
 
-class TestMLStorageApp(testing.TestBase):
+class TestMLStorageAppImage(testing.TestBase):
 
     def before(self):
         temp = get_temp_folder(__file__, "temp_dummy_app_storage")
         dummy_mlstorage(self.api, folder_storage=temp, folder=temp)
 
-    def _data_sklearn(self, tweak=False):
+    def _data_dl(self, tweak=False):
         # model
-        from sklearn import datasets
-        from sklearn.linear_model import LogisticRegression
-
-        iris = datasets.load_iris()
-        X = iris.data[:, :2]  # we only take the first two features.
-        y = iris.target
-        clf = LogisticRegression()
-        clf.fit(X, y)
-        model_data = pickle.dumps(clf)
 
         # file
-        name = template_ml.__file__
+        name = template_dl_light.__file__
         with open(name, "r", encoding="utf-8") as f:
             code = f.read()
         if tweak:
             code = code.replace("def restapi", "def rest3api")
         code = code.encode("utf-8")
 
-        data = {"iris2.pkl": model_data,
+        img = get_wiki_img()
+        arr = numpy.array(Image.open(img))
+        model_data = pickle.dumps(arr)
+
+        data = {"dlimg.pkl": model_data,
                 "model.py": code}
 
         zipped = zip_dict(data)
         ret = {'cmd': 'upload',
-               'name': 'ml/iris',
+               'name': 'ml/img',
                'zip': bytes2string(zipped)}
-        return ret, X, clf
+        return ret, arr
 
-    def test_dummy_app_storage(self):
+    def test_dummy_app_storage_img(self):
         # upload model
-        obs, X, clf = self._data_sklearn()
+        obs, X = self._data_dl()
         bodyin = ujson.dumps(obs)
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_201)
         d = ujson.loads(body)
-        self.assertEqual(d, {'name': 'ml/iris'})
+        self.assertEqual(d, {'name': 'ml/img'})
 
         # test model
-        js = ujson.dumps([list(X[0])])
-        obs = dict(cmd='predict', name='ml/iris', input=js, format='json')
+        ba = base64.b64encode(pickle.dumps(X))
+        obs = dict(cmd='predict', name='ml/img', input=ba, format='img')
         bodyin = ujson.dumps(obs)
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
@@ -88,16 +86,10 @@ class TestMLStorageApp(testing.TestBase):
         self.assertIn('output', res)
         self.assertIn('version', res)
         pred = res['output']
-        exp = clf.predict_proba(X[:1])
-        res = numpy.array(pred)
-        self.assertEqual(res.shape, exp.shape)
-        res = res.ravel()
-        exp = exp.ravel()
-        diff = numpy.abs(res - exp).sum()
-        self.assertTrue(diff < 1e-5)
+        self.assertEqual(pred, 0)
 
         # upload model
-        obs, X, clf = self._data_sklearn(tweak=True)
+        obs, X = self._data_dl(tweak=True)
         bodyin = ujson.dumps(obs)
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
@@ -105,15 +97,15 @@ class TestMLStorageApp(testing.TestBase):
         self.assertIn("Unable to upload model due to:", body)
 
         # test model
-        js = ujson.dumps([[list(X[0])]])
-        obs = dict(cmd='predict', name='ml/iris', input=js, format='json')
+        js = base64.b64encode(b"r" + pickle.dumps(X))
+        obs = dict(cmd='predict', name='ml/img', input=js, format='img')
         bodyin = ujson.dumps(obs)
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         res = ujson.loads(body)
         self.assertIn('title', res)
-        self.assertIn("Unable to predict with model 'ml/iris'", res['title'])
+        self.assertIn("Unable to predict with model 'ml/img'", res['title'])
 
 
 if __name__ == "__main__":

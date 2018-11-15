@@ -3,6 +3,8 @@
 @brief Machine Learning Post request
 """
 import traceback
+import pickle
+import base64
 import falcon
 import numpy
 import ujson
@@ -14,7 +16,9 @@ from ..args.args_images import string2bytes
 class MLStoragePost(BaseLogging):
     """
     Implements a simple :epkg:`REST API` to
-    upload zip files.
+    upload zip files. The application assumes
+    machine learning models are actionable through
+    the following template: :ref:`l-template-ml`.
     """
 
     def __init__(self, secret=None, folder='.',
@@ -92,10 +96,11 @@ class MLStoragePost(BaseLogging):
             self.info("MLB.store", log_data)
             resp.status = falcon.HTTP_201
             answer = {"name": name}
+
         elif command == 'predict':
             self.save_time()
             try:
-                name = self._predict(args)
+                name, pred, version = self._predict(args)
             except Exception as e:
                 excs = traceback.format_exc()
                 es = str(e)
@@ -116,10 +121,10 @@ class MLStoragePost(BaseLogging):
                     "Unable to predict with model '{0}' due to: {1}, format='{2}'".format(name, es, format), excs)
 
             duration = self.duration()
-            log_data = dict(duration=duration)
+            log_data = dict(duration=duration, version=version, name=name)
             self.info("MLB.predict", log_data)
             resp.status = falcon.HTTP_201
-            answer = {"output": name}
+            answer = {"output": pred, "version": version}
         else:
             es = "Unknown command '{0}'".format(command)
             log_data = dict(msg=es)
@@ -165,8 +170,11 @@ class MLStoragePost(BaseLogging):
                            "preprocessing to do before calling the model which is currently '{0}'".format(form))
         if form == 'json':
             data = ujson.loads(data)
+        elif form == 'img':
+            simg = base64.b64decode(data)
+            data = pickle.loads(simg)
         elif form == 'bytes':
             data = string2bytes(data)
         else:
             raise ValueError("Unrecognized format '{0}'.".format(form))
-        return self._storage.call_predict(name, data)
+        return (name,) + self._storage.call_predict(name, data, version=True)

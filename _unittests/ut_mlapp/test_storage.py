@@ -91,6 +91,8 @@ class TestStorage(ExtTestCase):
             exp = clf.predict_proba(X[:1, :2])
             predict = stor.call_predict(name, X[:1, :2])
             self.assertEqual(exp, predict)
+            version = stor.call_version(name)
+            self.assertEqual(version, "0.1.1234")
 
         self.assertLesser(len(stor._cache), n)  # pylint: disable=W0212
 

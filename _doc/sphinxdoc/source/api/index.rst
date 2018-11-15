@@ -6,3 +6,4 @@ API
 
     args
     mlapp
+    template
