@@ -22,7 +22,7 @@ def restapi_load(model="dlmodel.keras"):
     Loads the model.
     The model name is relative to this file.
     """
-    from keras.models import load_model
+    from keras.models import load_model  # pylint: disable=E0401
     here = os.path.dirname(__file__)
     model = os.path.join(here, model)
     if not os.path.exists(model):

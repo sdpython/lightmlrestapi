@@ -27,7 +27,7 @@ def restapi_load(model="dlmodel.torch"):
     if not os.path.exists(model):
         raise FileNotFoundError("Cannot find model '{0}' (full path is '{1}')".format(
             model, os.path.abspath(model)))
-    import torch
+    import torch  # pylint: disable=E0401
     loaded_model = torch.load(model)
     return loaded_model
 
@@ -42,7 +42,7 @@ def restapi_predict(model, X):
     :param X: image as a :epkg:`numpy` array
     :return: output of *predict_proba*
     """
-    from torch import from_numpy  # pylint: disable=E0611
+    from torch import from_numpy  # pylint: disable=E0611,E0401
     if not isinstance(X, numpy.ndarray):
         raise TypeError("X must be an array")
     im = X
