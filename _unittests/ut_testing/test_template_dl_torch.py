@@ -42,7 +42,7 @@ class TestTemplateDlTorch(ExtTestCase):
         temp = get_temp_folder(__file__, "temp_template_dl_torch")
 
         import torchvision.models as models  # pylint: disable=E0401
-        import torch
+        import torch  # pylint: disable=E0401
         model = models.squeezenet1_0(pretrained=True)
         model_name = os.path.join(temp, "model.torch")
         torch.save(model, model_name)
