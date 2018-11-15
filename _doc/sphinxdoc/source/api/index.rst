@@ -6,4 +6,5 @@ API
 
     args
     mlapp
+    netrest
     template

@@ -191,4 +191,6 @@ class MLStoragePost(BaseLogging):
             raise ValueError("Unrecognized format '{0}'.".format(form))
         res, version, loaded = self._storage.call_predict(
             name, data, version=True, was_loaded=True)
+        if isinstance(res, numpy.ndarray):
+            res = res.tolist()
         return name, res, version, loaded

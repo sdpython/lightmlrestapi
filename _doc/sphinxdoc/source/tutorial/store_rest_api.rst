@@ -171,3 +171,70 @@ for many obersvation in one row.
     {'output': [[0.8180557319, 0.1140978624, 0.06784640580000001],
                 [0.6427973036, 0.22443658900000002, 0.1327661074],
      ...
+
+Example with Keras
+==================
+
+Let's retrieve and save a model trained
+on :epkg:`ImageNet`.
+
+.. runpython::
+    :showcode:
+
+    import keras
+    from keras.applications.mobilenet import MobileNet
+    model = MobileNet(input_shape=None, alpha=1.0, depth_multiplier=1,
+                      dropout=1e-3, include_top=True,
+                      weights='imagenet', input_tensor=None,
+                      pooling=None, classes=1000)
+    model_name = "mobile.keras"
+    model.save(model_name)
+
+Then we create the :epkg:`python` application.
+
+.. runpython::
+    :showcode:
+
+    from lightmlrestapi.testing import template_dl_keras
+    with open(template_dl_keras.__file__, "r", encoding="utf-8") as f:
+        code = f.read()
+    code = code.replace("model.keras", "mobile.keras")
+    with open("model_keras.py", "w", encoding="utf-8") as f:
+        f.write(code)
+    print(code)
+
+Next we upload the model to the wep application:
+
+::
+
+    from lightmlrestapi.netrest import submit_rest_request, json_upload_model
+    req = json_upload_model(name="xavier/keras1", pyfile="model_keras.py", data="mobile.keras")
+    submit_rest_request(req, login="xavier", pwd="passWrd!",
+                        url="http://127.0.0.1:8095/", fLOG=print)
+
+Finally let's predict:
+
+::
+
+    from lightmlrestapi.netrest import json_predict_model, submit_rest_request
+    from lightmlrestapi.args import image2base64
+    from lightmlrestapi.testing.data import get_wiki_img
+    import numpy
+    from PIL import Image
+    import base64
+    import pickle
+
+    img = "custom_immage.png" # or get_wiki_img() for a dummy one
+    arr = numpy.array(Image.open(img))
+    img_b64 = base64.b64encode(pickle.dumps(arr))
+
+    req = json_predict_model("xavier/keras2", img_b64, format='img')
+    res = submit_rest_request(req, login="xavier", pwd="passWrd!",
+                              url="http://127.0.0.1:8092/", fLOG=print)
+    print(res)
+
+That produces:
+
+::
+
+    {'output': [[3.997e-07, 3.28143e-05, 8.70764e-05, ...

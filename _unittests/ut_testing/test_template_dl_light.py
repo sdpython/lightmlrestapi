@@ -28,7 +28,7 @@ from src.lightmlrestapi.testing.template_dl_light import restapi_version, restap
 from src.lightmlrestapi.testing.data import get_wiki_img
 
 
-class TestTemplateMl(ExtTestCase):
+class TestTemplateDlLight(ExtTestCase):
 
     def test_template_dl_light(self):
         self.assertEqual(restapi_version(), "0.1.1235")
