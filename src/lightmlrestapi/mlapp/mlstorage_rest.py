@@ -46,9 +46,12 @@ class MLStoragePost(BaseLogging):
 
     def on_post(self, req, resp):
         """
+        Processes a POST request.
+
         @param      req         request
         @param      resp        ...
         """
+        print("received")
         add_log_data = dict(user=req.get_header('uid'), ip=req.access_route)
         if self._version is not None:
             add_log_data = self._version
@@ -85,14 +88,14 @@ class MLStoragePost(BaseLogging):
                 if len(es) > 200:
                     es = es[:200] + '...'
                 duration = self.duration()
-                log_data = dict(error=str(e), duration=duration)
+                log_data = dict(error=str(e), duration=duration, data=args)
                 log_data.update(add_log_data)
-                self.error("MLB.load", log_data)
+                self.error("MLB.store", log_data)
                 raise falcon.HTTPBadRequest(
                     "Unable to upload model due to: {}".format(es), excs)
 
             duration = self.duration()
-            log_data = dict(duration=duration)
+            log_data = dict(duration=duration, name=name)
             self.info("MLB.store", log_data)
             resp.status = falcon.HTTP_201
             answer = {"name": name}
@@ -108,7 +111,7 @@ class MLStoragePost(BaseLogging):
                     es = es[:200] + '...'
                 name = args.get('name', None)
                 duration = self.duration()
-                log_data = dict(error=str(e), duration=duration)
+                log_data = dict(error=str(e), duration=duration, data=args)
                 log_data.update(add_log_data)
                 if name is not None:
                     log_data['name'] = name
@@ -116,7 +119,7 @@ class MLStoragePost(BaseLogging):
                     log_data['format'] = format
                 if input in args:
                     log_data['input'] = args['input']
-                self.error("MLB.load", log_data)
+                self.error("MLB.predict", log_data)
                 raise falcon.HTTPBadRequest(
                     "Unable to predict with model '{0}' due to: {1}, format='{2}'".format(name, es, format), excs)
 
@@ -145,8 +148,16 @@ class MLStoragePost(BaseLogging):
         Stores the model in the storage.
         """
         name = args.pop('name', None)
-        if name is None:
-            raise KeyError("Unable to find a model name in sent data.")
+        if name is None or name == '':
+            keys = ", ".join(sorted(args.keys()))
+            try:
+                ms = str(args)
+            except ValueError:
+                ms = ""
+            if len(ms) > 300:
+                ms = ms[:300] + "..."
+            raise KeyError(
+                "Unable to find a model name in sent data, keys={0}, args={1}.".format(keys, ms))
         zipped = args.pop('zip', None)
         if zipped is None:
             raise KeyError(

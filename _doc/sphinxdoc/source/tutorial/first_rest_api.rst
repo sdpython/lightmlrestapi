@@ -7,7 +7,7 @@ Create your first REST API
 
 The module provides helpers to build a REST API
 based on a function which computes predictions for
-aa machine learning model. The following steps
+a machine learning model. The following steps
 explains how to build a simple example.
 
 .. contents::
@@ -121,4 +121,4 @@ with command :ref:`cmd_encrypt4mlrestapi_cmd`.
 
 ::
 
-    encrypt_pwd --input==users.txt --output=encrypted_passwords.txt
+    encrypt_pwd --input=users.txt --output=encrypted_passwords.txt

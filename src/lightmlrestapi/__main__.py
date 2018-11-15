@@ -10,7 +10,7 @@ def available_commands():
     """
     Returns the list of available commands.
     """
-    return ["start_mlrestapi", "encrypt_pwd"]
+    return ["start_mlrestapi", "encrypt_pwd", "start_mlreststor", "upload_model"]
 
 
 def main():
@@ -43,6 +43,12 @@ def main():
         elif cmd == 'encrypt_pwd':
             from .cli.make_encrypt_pwd import _encrypt_pwd
             _encrypt_pwd(args=cp)
+        elif cmd == 'start_mlreststor':
+            from .cli.make_ml_store import _start_mlreststor
+            _start_mlreststor(args=cp)
+        elif cmd == 'upload_model':
+            from .cli.make_ml_submit import _upload_model
+            _upload_model(args=cp)
         else:
             print("Command not found: '{0}'.".format(cmd))
             print("")

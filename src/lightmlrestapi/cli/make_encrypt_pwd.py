@@ -21,12 +21,12 @@ def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disa
     :param fLOG: logging function
     """
     try:
-        from ..mlapp.encrypt_helper import encrypt_passwords
+        from ..args.encrypt_helper import encrypt_passwords
     except (ImportError, ValueError):
         folder = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", ".."))
         sys.path.append(folder)
-        from lightmlrestapi.mlapp.encrypt_helper import encrypt_passwords
+        from lightmlrestapi.args.encrypt_helper import encrypt_passwords
 
     if not os.path.exists(input):
         raise FileNotFoundError("File '{0}' not found".format(input))
@@ -37,7 +37,7 @@ def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disa
     df2 = encrypt_passwords(df, algo=algo)
     if fLOG:
         fLOG("[encrypt_pwd] to      '{0}'".format(output))
-    df2.to_csv(output, sep=',', encoding='utf-8')
+    df2.to_csv(output, sep=',', encoding='utf-8', header=False, index=False)
     if fLOG:
         fLOG("[encrypt_pwd] done.")
 

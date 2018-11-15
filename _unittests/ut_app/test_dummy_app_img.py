@@ -9,7 +9,6 @@ import unittest
 import falcon
 import falcon.testing as testing
 from PIL import Image
-from pyquickhelper.loghelper import fLOG
 import ujson
 
 
@@ -38,11 +37,6 @@ class TestDummyAppImg(testing.TestBase):
         dummy_application_image(self.api)
 
     def test_dummy_app_img(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         # With a different image than the original.
         img2 = os.path.join(os.path.dirname(__file__),
                             "data", "wiki_modified.png")
@@ -74,11 +68,6 @@ class TestDummyAppImg(testing.TestBase):
         self.assertEqual(d['Y'], 0)
 
     def test_dummy_error_img(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         img = get_wiki_img()
         ext_b64 = image2base64(img)
         img2 = base642image(ext_b64[1])
@@ -95,11 +84,6 @@ class TestDummyAppImg(testing.TestBase):
         self.assertIn('.py', d['description'])
 
     def test_image_distance(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         img1 = os.path.join(os.path.dirname(__file__), "data", "white.png")
         img2 = os.path.join(os.path.dirname(__file__), "data", "black.png")
         i1 = Image.open(img1).convert('RGB')

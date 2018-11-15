@@ -103,7 +103,7 @@ class ZipStorage:
                 raise TypeError(
                     "Values must be bytes for key '{0}'.".format(k))
         return {}
-    
+
     def _makedirs(self, subfold):
         """
         Creates a subfolder and add a file ``__init__.py``.
@@ -116,7 +116,7 @@ class ZipStorage:
                 os.mkdir(fold)
                 init = os.path.join(fold, '__init__.py')
                 with open(init, 'w') as f:
-                    pass
+                    f.write('')
 
     def add(self, name, data):
         """
@@ -261,11 +261,11 @@ class MLStorage(ZipStorage):
         self._lock.acquire()
         del self._cache[els[0][1]]
         self._lock.release()
-        
+
     def _import(self, name):
         """
         Imports the main module for one model.
-        
+
         @param      name        model name
         @return                 imported module
         """
@@ -278,7 +278,7 @@ class MLStorage(ZipStorage):
 
         fold, modname = os.path.split(script)
         sys.path.insert(0, self._folder)
-        full_modname = ".".join([name.replace("/", "."), 
+        full_modname = ".".join([name.replace("/", "."),
                                  os.path.splitext(modname)[0]])
         try:
             mod = importlib.import_module(full_modname)
@@ -287,13 +287,15 @@ class MLStorage(ZipStorage):
             with open(script, "r") as f:
                 code = f.read()
             del sys.path[0]
-            values = "\n".join([self._folder, name, str(meta), loc, script, fold, modname, full_modname])
+            values = "\n".join([self._folder, name, str(
+                meta), loc, script, fold, modname, full_modname])
             raise ImportError(
                 "Unable to compile file '{0}'\ndue to {1}\n{2}\n---\n{3}".format(script, e, code, values)) from e
         del sys.path[0]
-        
+
         if not hasattr(mod, "restapi_load"):
-            raise ImportError("Unable to find function 'restapi_load' in module '{0}'".format(mod.__name__))
+            raise ImportError(
+                "Unable to find function 'restapi_load' in module '{0}'".format(mod.__name__))
         return mod
 
     def load_model(self, name):
@@ -326,7 +328,7 @@ class MLStorage(ZipStorage):
             model = mod.restapi_load()
         finally:
             self._lock.release()
-        
+
         res = dict(last=datetime.now(), model=model, module=mod)
         self._lock.acquire()
         self._cache[name] = res

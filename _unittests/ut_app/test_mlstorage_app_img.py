@@ -84,7 +84,7 @@ class TestMLStorageAppImage(testing.TestBase):
         body = self.simulate_request(
             '/', decode='utf-8', method="POST", body=bodyin)
         res = ujson.loads(body)
-        if 'description' in res:            
+        if 'description' in res:
             raise Exception(res["description"])
         self.assertIn('output', res)
         self.assertIn('version', res)
@@ -108,7 +108,8 @@ class TestMLStorageAppImage(testing.TestBase):
         self.assertEqual(self.srmock.status, falcon.HTTP_400)
         res = ujson.loads(body)
         self.assertIn('title', res)
-        self.assertIn("Unable to predict with model 'mlapi/imgn'", res['title'])
+        self.assertIn(
+            "Unable to predict with model 'mlapi/imgn'", res['title'])
 
 
 if __name__ == "__main__":

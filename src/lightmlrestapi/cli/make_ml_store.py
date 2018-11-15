@@ -5,122 +5,87 @@
 import os
 import sys
 import logging
+import falcon
 from pyquickhelper.cli.cli_helper import call_cli_function
 
 
-def start_mlreststor(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
-                     options='', secret='', ccall='single', fLOG=print):
+def start_mlreststor(location='.', host='127.0.0.1', port=8081, name='ml', nostart=False,
+                     wsgi='waitress', secret='', users='', algo='sha224',
+                     fLOG=print):
     """
     Creates an :epkg:`falcon` application and
     runs it through a :epkg:`wsgi` server.
+    The appplication stores machine learned models and runs predictions assuming
+    all the necessary packages were installed.
 
-    :param name: class name or filename which defines the application
+    :param name: only one option is implemented 'ml'
+    :param location: location of the storage
     :param host: host
     :param port: port
-    :param nostart: do not start the wsgi server
+    :param nostart: do not start the wsgi server (for debug purpose)
     :param wsgi: :epkg:`wsgi` framework which runs the falcon application
-    :param options: additional options as a string (depends on the application)
-    :param ccall: calling convention, 'single', 'multi' or 'both' depending on the
-        fact that the prediction function can predict for only one observation,
-        multiple ones or both
     :param secret: secret used to encrypt the logging, default is empty which
-        disables the encryption.
+        disables the encryption
+    :param users: list of authorized users stored
+        in a text file with two columns:
+        login and encrypted password
+    :param algo: algorithm used to encrypt the passwords
     :param fLOG: logging function
 
     Only :epkg:`waitress` is implemented right now.
-    Other option such as :epkg:`mod_wsgi` with :epkg:`Apache`.
-    :epkg:`uwsgi` could be also be implemented.
-    could be added in the future. The command line
-    can be tested with a dummy application (``app_name='dummy'``).
+    Other alternative such as :epkg:`mod_wsgi` with :epkg:`Apache`.
+    :epkg:`uwsgi` are not implemented. Parameter *users* can be empty
+    to disable authentification.
     """
     try:
-        from ..testing import dummy_application, dummy_application_image, dummy_application_fct
-        from ..testing import dummy_application_neighbors, dummy_application_neighbors_image
+        from ..mlapp.mlstorage_rest import MLStoragePost
+        from ..mlapp.authfiction import AuthMiddleware
     except (ImportError, ValueError):
         folder = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", ".."))
         sys.path.append(folder)
-        from lightmlrestapi.testing import dummy_application, dummy_application_image, dummy_application_fct
-        from lightmlrestapi.testing import dummy_application_neighbors, dummy_application_neighbors_image
+        from lightmlrestapi.mlapp.mlstorage_rest import MLStoragePost
+        from lightmlrestapi.mlapp.authfiction import AuthMiddleware
 
-    if name == "dummy":
-        # Dummy application.
-        app = dummy_application()
+    # Secrets.
+    if not secret:
+        secret = None
+    if not users:
+        users = None
+    if name not in {'ml'}:
+        raise ValueError("Name '{0}' is not recognized.".format(name))
 
-    elif name == "dummyfct":
-        # Dummy application with a function.
-        name = options
-        if not os.path.exists(name):
-            raise FileNotFoundError("Unable to find '{0}'.".format(name))
-        path, loc = os.path.split(name)
-        if path not in sys.path:
-            sys.path.append(path)
-            rem = True
-        else:
-            rem = False
-        loc = os.path.splitext(loc)[0]
-        try:
-            mod = __import__(loc)
-        except ImportError as e:
-            if rem:
-                sys.path.pop()
-            with open(name, "r") as f:
-                code = f.read()
-            raise ImportError(
-                "Unable to compile file '{0}'\n{1}".format(name, code)) from e
-        if rem:
-            sys.path.pop()
-
-        if not hasattr(mod, 'restapi_version'):
-            with open(name, "r") as f:
-                code = f.read()
-            raise AttributeError(
-                "Unable to find function 'restapi_version' in file '{0}'\n{1}".format(name, code))
-        if not hasattr(mod, 'restapi_load'):
-            with open(name, "r") as f:
-                code = f.read()
-            raise AttributeError(
-                "Unable to find function 'restapi_load' in file '{0}'\n{1}".format(name, code))
-        if not hasattr(mod, 'restapi_predict'):
-            with open(name, "r") as f:
-                code = f.read()
-            raise AttributeError(
-                "Unable to find function 'restapi_predict' in file '{0}'\n{1}".format(name, code))
-
-        if secret == '':
-            secret = None
-        app = dummy_application_fct(
-            mod.restapi_load, mod.restapi_predict, secret=secret, version=mod.restapi_version)
-
-    elif name == "dummyimg":
-        # Dummy application with an image.
-        app = dummy_application_image(options=options, secret=secret)
-
-    elif name == "dummyknn":
-        # Dummy application with neighbors.
-        app = dummy_application_neighbors()
-
-    elif name == "dummyknnimg":
-        # Dummy application with neighbors and an image.
-        app = dummy_application_neighbors_image(options=options, secret=secret)
-
-    elif '.py' in name:
-        raise NotImplementedError(
-            "Unable to get application from filename '{}'. Not implemented.".format(name))
-
+    # Authenfication.
+    if users:
+        if fLOG:
+            fLOG("[start_mlreststor] enable authentification")
+        middleware = [AuthMiddleware(users, algo=algo)]
+        app = falcon.API(middleware=middleware)
+        url_scheme = 'https'
     else:
-        raise NotImplementedError(
-            "Application '{}' is not implemented.".format(name))
+        app = falcon.API()
+        url_scheme = 'http'
 
+    # REST API
+    location = os.path.abspath(location)
+    if not os.path.exists(location):
+        raise FileNotFoundError("Unable to find '{0}'".format(location))
+    rest = MLStoragePost(secret=secret, folder=location,
+                         folder_storage=location, version=None)
+
+    app.add_route("/", rest)
+
+    # Server.
     if wsgi == 'waitress':
         from waitress import serve
         if not nostart:
-            fLOG("[start_mlrestapi] serve(app, host='{}', port='{}')".format(host, port))
+            fLOG("[start_mlreststor] serve(app, host='{}', port='{}', url_scheme='{}')".format(
+                host, port, url_scheme))
             logger = logging.getLogger('waitress')
             logger.setLevel(logging.INFO)
-            serve(app, host=host, port=port)
+            serve(app, host=host, port=port, url_scheme=url_scheme)
         else:
-            fLOG("[start_mlrestapi] do not run serve(app, host='{}', port='{}')".format(
+            fLOG("[start_mlreststor] do not run serve(app, host='{}', port='{}')".format(
                 host, port))
     else:
         raise NotImplementedError(
@@ -138,10 +103,12 @@ def _start_mlreststor(fLOG=print, args=None):
 
     .. cmdref::
         :title: Creates an falcon application and starts it through a wsgi application
-        :cmd: start_mlrestapi=lightmlrestapi.cli.make_ml_app:_start_mlrestapi
-        :lid: cmd_start_mlrestapi_cmd
+        :cmd: start_mlreststor=lightmlrestapi.cli.make_ml_store:_start_mlreststor
+        :lid: cmd_start_mlreststor_cmd
 
         Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
+        The appplication stores machine learned models and runs predictions assuming
+        all the necessary packages were installed.
     """
     epkg_dictionary = dict(falcon='https://falconframework.org/',
                            Apache='https://httpd.apache.org/',

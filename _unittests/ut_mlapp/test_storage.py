@@ -77,7 +77,7 @@ class TestStorage(ExtTestCase):
         stor = MLStorage(temp, cache_size=3)
 
         for i in range(0, n):
-            app = {"iris_%d.pkl" % i: model_data, 
+            app = {"iris_%d.pkl" % i: model_data,
                    "model.py": code.replace("iris2.pkl", "iris_%d.pkl" % i).encode("utf-8")}
 
             name = "ml%s/iris%d" % (suf, i)

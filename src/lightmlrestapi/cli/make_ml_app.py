@@ -30,10 +30,8 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     :param fLOG: logging function
 
     Only :epkg:`waitress` is implemented right now.
-    Other option such as :epkg:`mod_wsgi` with :epkg:`Apache`.
-    :epkg:`uwsgi` could be also be implemented.
-    could be added in the future. The command line
-    can be tested with a dummy application (``app_name='dummy'``).
+    Other alternative such as :epkg:`mod_wsgi` with :epkg:`Apache`.
+    :epkg:`uwsgi` are not implemented.
     """
     try:
         from ..testing import dummy_application, dummy_application_image, dummy_application_fct

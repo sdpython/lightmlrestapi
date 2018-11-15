@@ -2,6 +2,7 @@
 @file
 @brief Authentification part.
 """
+import base64
 import falcon
 from ..args import encrypt_password, load_passwords
 
@@ -23,6 +24,35 @@ class AuthMiddleware:
             raise ValueError("source cannot be empty")
         self.allowed = load_passwords(source)
         self.algo = algo
+        self.auth_header_prefix = 'Basic'
+
+    def parse_auth_token_from_request(self, auth_header):
+        """
+        Parses and returns Auth token from the request header. Raises
+        `falcon.HTTPUnauthoried exception` with proper error message
+        """
+
+        if not auth_header:
+            raise falcon.HTTPUnauthorized(
+                title='401 Unauthorized', description='Missing Authorization Header')
+
+        parts = auth_header.split()
+
+        if parts[0].lower() != self.auth_header_prefix.lower():
+            raise falcon.HTTPUnauthorized(title='401 Unauthorized',
+                                          description='Invalid Authorization Header: '
+                                          'Must start with {0}'.format(self.auth_header_prefix))
+
+        elif len(parts) == 1:
+            raise falcon.HTTPUnauthorized(
+                title='401 Unauthorized',
+                description='Invalid Authorization Header: Token Missing')
+        elif len(parts) > 2:
+            raise falcon.HTTPUnauthorized(
+                title='401 Unauthorized',
+                description='Invalid Authorization Header: Contains extra content')
+
+        return parts[1]
 
     def process_request(self, req, resp):
         """
@@ -36,30 +66,30 @@ class AuthMiddleware:
                                         description=('All requests must be performed via the HTTPS protocol. '
                                                      'Please switch to HTTPS and try again.'))
 
-        token = req.get_header('token')
-        account_id = req.get_header('uid')
+        auth = req.get_header('Authorization')
+        token = self.parse_auth_token_from_request(auth_header=auth)
+        try:
+            token = base64.b64decode(token).decode('utf-8')
+        except Exception:
+            raise falcon.HTTPUnauthorized(title='401 Unauthorized',
+                                          description='Invalid Authorization Header: Unable to decode credentials (1)')
 
-        challenges = ['Token type="Fernet"']
+        try:
+            username, password = token.split(':', 1)
+        except ValueError:
+            raise falcon.HTTPUnauthorized(
+                title='401 Unauthorized',
+                description='Invalid Authorization: Unable to decode credentials (2)')
 
-        if token is None:
-            description = (
-                'Please provide an auth token as part of the request.')
-            raise falcon.HTTPUnauthorized('Authentification token required',
-                                          description, challenges,
-                                          href=AuthMiddleware.help_url)
+        if not self._token_is_valid(username, password):
+            raise falcon.HTTPUnauthorized(
+                "Authentication failed for '{0}'".format(username))
 
-        if not self._token_is_valid(token, account_id):
-            description = (
-                'The provided auth token is not valid. Please request a new token and try again.')
-            raise falcon.HTTPUnauthorized('Authentication required',
-                                          description, challenges,
-                                          href=AuthMiddleware.help_url)
-
-    def _token_is_valid(self, token, account_id):
+    def _token_is_valid(self, username, password):
         """
         Decides if it is valid or not.
         """
-        if account_id not in self.allowed:
+        if username not in self.allowed:
             return False
-        enc = encrypt_password(token, algo=self.algo)
-        return self.allowed[account_id] == enc
+        enc = encrypt_password(password, algo=self.algo)
+        return self.allowed[username] == enc

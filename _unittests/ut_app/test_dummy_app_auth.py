@@ -5,6 +5,7 @@
 
 import sys
 import os
+import base64
 import unittest
 import warnings
 import falcon
@@ -48,10 +49,11 @@ class TestDummyAppAuth(testing.TestBase):
         self.assertEqual(body.status, falcon.HTTP_400)
         body = client.simulate_request(
             path='/', method="POST", body=bodyin, protocol='https')
-        self.assertIn("token required", str(body.content))
+        self.assertIn("Missing Authorization Header", str(body.content))
         self.assertEqual(body.status, falcon.HTTP_401)
+        zoo = base64.b64encode("me:dummy".encode('utf-8')).decode('utf-8')
         body = client.simulate_request(path='/', method="POST", body=bodyin, protocol='https',
-                                       headers=dict(uid="me", token="dummy"))
+                                       headers=dict(Authorization="Basic " + zoo))
         self.assertIn(body.status, (falcon.HTTP_200, falcon.HTTP_201))
         d = ujson.loads(body.content)
         self.assertTrue('Y' in d)
@@ -67,10 +69,11 @@ class TestDummyAppAuth(testing.TestBase):
         self.assertIn("HTTPS Required", str(body.content))
         body = client.simulate_request(
             path='/', method="POST", body=bodyin, protocol='https')
-        self.assertIn("token required", str(body.content))
+        self.assertIn("Missing Authorization Header", str(body.content))
         self.assertEqual(body.status, falcon.HTTP_401)
+        zoo = base64.b64encode("me:dummy".encode('utf-8')).decode('utf-8')
         body = client.simulate_request(path='/', method="POST", body=bodyin, protocol='https',
-                                       headers=dict(uid="me", token="dummy"))
+                                       headers=dict(Authorization="Basic " + zoo))
         self.assertEqual(body.status, falcon.HTTP_400)
         d = ujson.loads(body.content)
         self.assertIn('Unable to predict', d['title'])
