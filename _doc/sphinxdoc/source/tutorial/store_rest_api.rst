@@ -265,13 +265,13 @@ Then we create the :epkg:`python` application.
 .. runpython::
     :showcode:
 
-        from lightmlrestapi.testing import template_dl_torch
-        with open(template_dl_torch.__file__, "r", encoding="utf-8") as f:
-            code = f.read()
-        code = code.replace("dlmodel.torch", "squeeze.torch")
-        with open("model_torch.py", "w", encoding="utf-8") as f:
-            f.write(code)
-        print(code)
+    from lightmlrestapi.testing import template_dl_torch
+    with open(template_dl_torch.__file__, "r", encoding="utf-8") as f:
+        code = f.read()
+    code = code.replace("dlmodel.torch", "squeeze.torch")
+    with open("model_torch.py", "w", encoding="utf-8") as f:
+        f.write(code)
+    print(code)
 
 Next we upload the model to the wep application:
 
