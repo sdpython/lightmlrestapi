@@ -101,7 +101,7 @@ class TestStorage(ExtTestCase):
         self.mlstorage(1, "1")
 
     def test_mlstorage_multi(self):
-        self.mlstorage(6, "6")
+        self.mlstorage(5, "5")
 
 
 if __name__ == "__main__":
