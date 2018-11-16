@@ -16,11 +16,13 @@ def restapi_version():
 
 
 # Declare a loading function.
-def restapi_load(model="iris2.pkl"):
+def restapi_load(files={"model": "iris2.pkl"}):  # pylint: disable=W0102
     """
     Loads the model.
     The model name is relative to this file.
+    When call by a REST API, the default value is always used.
     """
+    model = files["model"]
     here = os.path.dirname(__file__)
     model = os.path.join(here, model)
     if not os.path.exists(model):

@@ -17,12 +17,14 @@ def restapi_version():
 
 
 # Declare a loading function.
-def restapi_load(model="dlmodel.keras"):
+def restapi_load(files={'model': "dlmodel.keras"}):  # pylint: disable=W0102
     """
     Loads the model.
     The model name is relative to this file.
+    When call by a REST API, the default value is always used.
     """
     from keras.models import load_model  # pylint: disable=E0401
+    model = files["model"]
     here = os.path.dirname(__file__)
     model = os.path.join(here, model)
     if not os.path.exists(model):

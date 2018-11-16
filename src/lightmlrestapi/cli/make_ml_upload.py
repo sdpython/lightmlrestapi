@@ -7,7 +7,7 @@ import sys
 from pyquickhelper.cli.cli_helper import call_cli_function
 
 
-def upload_model(login="", pwd="", name="", pyfile="", data="", url='127.0.0.1:8081',
+def upload_model(login="", pwd="", name="", pyfile="", data=[], url='127.0.0.1:8081',   # pylint: disable=W0102
                  timeout=15, fLOG=print):  # pylint: disable=W0622
     """
     Uplaods a machine learned models to a REST API defined by
@@ -19,7 +19,7 @@ def upload_model(login="", pwd="", name="", pyfile="", data="", url='127.0.0.1:8
     :param pyfile: python file which computes the prediction,
         the file must follows the specification defined in
         :ref:`l-template-ml`
-    :param data: binary file, usually everything the models pickled
+    :param data: files to upload
     :param url: url of the REST API
     :param timeout: timeout
     :param fLOG: logging function
@@ -32,6 +32,8 @@ def upload_model(login="", pwd="", name="", pyfile="", data="", url='127.0.0.1:8
         sys.path.append(folder)
         from lightmlrestapi.netrest import submit_rest_request, json_upload_model
 
+    if isinstance(data, str):
+        data = data.split(',')
     if fLOG:
         fLOG('[upload_model] Prepare the JSON request.')
     req = json_upload_model(name=name, pyfile=pyfile, data=data)

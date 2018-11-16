@@ -52,7 +52,7 @@ class TestTemplateDlKeras(ExtTestCase):
         img_input = os.path.join(temp, "..", "data", "wiki_modified2.png")
         img_input = numpy.array(Image.open(img_input))
 
-        mo = restapi_load(model_name)
+        mo = restapi_load({'model': model_name})
         pred = restapi_predict(mo, img_input)
         self.assertIsInstance(pred, numpy.ndarray)
         self.assertEqual(pred.shape, (1, 1000))

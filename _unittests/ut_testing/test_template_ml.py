@@ -43,7 +43,7 @@ class TestTemplateMl(ExtTestCase):
         with open(pkl, "wb") as f:
             pickle.dump(clf, f)
 
-        mo = restapi_load(pkl)
+        mo = restapi_load({'model': pkl})
         pred = restapi_predict(mo, X[:1])
         exp = clf.predict_proba(X[:1])
         self.assertEqual(pred, exp)

@@ -342,19 +342,24 @@ class MLStorage(ZipStorage):
         else:
             return res
 
-    def call_predict(self, name, data, version=False, was_loaded=False):
+    def call_predict(self, name, data, version=False, was_loaded=False, loaded_model=None):
         """
         Calls method *restapi_predict* from a stored script *python*.
 
-        @param      name        model name
-        @param      data        input data
-        @param      version     returns the version as well
-        @param      was_loaded  if True, return if the model was loaded again
-        @return                 *predictions* or *predictions, version*
+        @param      name            model name
+        @param      data            input data
+        @param      version         returns the version as well
+        @param      was_loaded      if True, return if the model was loaded again
+        @param      loaded_model    skip cached model if exists, should be the result of
+                                    a previous call to @see me loaded_model
+        @return                     *predictions* or *predictions, version*
         """
-        res = self.load_model(name, was_loaded=was_loaded)
-        if was_loaded:
-            res, loaded = res
+        if loaded_model is None:
+            res = self.load_model(name, was_loaded=was_loaded)
+            if was_loaded:
+                res, loaded = res
+        else:
+            res, loaded = loaded_model, False
         pred = res['module'].restapi_predict(res['model'], data)
         if version:
             version = res['module'].restapi_version()

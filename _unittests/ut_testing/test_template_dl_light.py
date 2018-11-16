@@ -43,7 +43,7 @@ class TestTemplateDlLight(ExtTestCase):
         with open(pkl, "wb") as f:
             pickle.dump(arr, f)
 
-        mo = restapi_load(pkl)
+        mo = restapi_load({'model': pkl})
         pred = restapi_predict(mo, arr)
         self.assertEqual(pred, 0)
         pred = restapi_predict(mo, img_input)

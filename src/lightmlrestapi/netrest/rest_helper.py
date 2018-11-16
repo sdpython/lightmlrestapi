@@ -26,8 +26,13 @@ def json_upload_model(name, pyfile, data=None):
         raise ValueError("name cannot be empty.")
     if not os.path.exists(pyfile):
         raise FileNotFoundError("Unable to find '{0}'.".format(pyfile))
-    if data and not os.path.exists(data):
-        raise FileNotFoundError("Unable to find '{0}'.".format(data))
+    if data is None:
+        data = []
+    if not isinstance(data, list):
+        data = [data]
+    for d in data:
+        if not os.path.exists(d):
+            raise FileNotFoundError("Unable to find '{0}'.".format(d))
 
     # model file
     last_file = os.path.split(pyfile)[-1]
@@ -40,10 +45,11 @@ def json_upload_model(name, pyfile, data=None):
 
     # model data
     if data:
-        last_data = os.path.split(data)[-1]
-        with open(data, "rb") as f:
-            content = f.read()
-        model_data[last_data] = content
+        for d in data:
+            ld = os.path.split(d)[-1]
+            with open(d, "rb") as f:
+                content = f.read()
+            model_data[ld] = content
 
     # zip data
     zipped = zip_dict(model_data)
