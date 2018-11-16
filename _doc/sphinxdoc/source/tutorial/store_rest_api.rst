@@ -28,6 +28,7 @@ the model with :epkg:`pickle`.
 
 .. runpython::
     :showcode:
+    :warningout: UserWarning, FutureWarning
 
     from sklearn import datasets
     from sklearn.linear_model import LogisticRegression
@@ -53,6 +54,7 @@ model name.
 
 .. runpython::
     :showcode:
+    :warningout: UserWarning, FutureWarning
 
     from lightmlrestapi.testing import template_ml
     with open(template_ml.__file__, "r", encoding="utf-8") as f:
@@ -180,6 +182,7 @@ on :epkg:`ImageNet`.
 
 .. runpython::
     :showcode:
+    :warningout: UserWarning, FutureWarning
 
     try:
         import keras
@@ -197,6 +200,7 @@ Then we create the :epkg:`python` application.
 
 .. runpython::
     :showcode:
+    :warningout: UserWarning, FutureWarning
 
     from lightmlrestapi.testing import template_dl_keras
     with open(template_dl_keras.__file__, "r", encoding="utf-8") as f:
@@ -250,6 +254,7 @@ on :epkg:`ImageNet`.
 
 .. runpython::
     :showcode:
+    :warningout: UserWarning, FutureWarning
 
     try:
         import torchvision.models as models  # pylint: disable=E0401
@@ -264,6 +269,7 @@ Then we create the :epkg:`python` application.
 
 .. runpython::
     :showcode:
+    :warningout: UserWarning, FutureWarning
 
     from lightmlrestapi.testing import template_dl_torch
     with open(template_dl_torch.__file__, "r", encoding="utf-8") as f:
