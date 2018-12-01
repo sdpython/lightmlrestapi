@@ -285,3 +285,8 @@ _doc/sphinxdoc/mobile.keras
 _doc/sphinxdoc/model_torch.py
 _doc/sphinxdoc/model_keras.py
 _unittests/run_unittests.py.2.out
+_doc/examples/encrypted_users.txt
+_doc/examples/model_iris*.pkl
+_doc/examples/model_iris*.py
+
+_doc/examples/users.txt

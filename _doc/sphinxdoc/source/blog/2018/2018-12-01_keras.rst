@@ -1,0 +1,13 @@
+
+.. blogpost::
+    :title: REST API Keras + Flask
+    :keywords: keras, falcon, flask
+    :date: 2018-12-01
+    :categories: benchmark
+
+    The following article compares :epkg:`flask`
+    and :epkg:`falcon` for a REST API delivering
+    deep learning prediction:
+    `Falcon vs. Flask - Which one to pick to create a scalable deep learning REST API <https://medium.com/idealo-tech-blog/falcon-vs-flask-which-one-to-pick-to-create-a-scalable-deep-learning-rest-api-adef647ebdec>`_.
+    The :epkg:`flask` API is implemented based on this article:
+    `Building a simple Keras + deep learning REST API <https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html>`_.

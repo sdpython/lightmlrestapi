@@ -5,11 +5,19 @@
 History
 =======
 
-current - 2018-11-14 - 0.00Mb
+current - 2018-12-01 - 0.00Mb
 =============================
 
-* `6`: allow a zip file which contains data and code (2018-11-13)
+* `16`: add full example to start a rest api (2018-12-01)
+
+0.1.111 - 2018-11-16 - 0.12Mb
+=============================
+
+0.1.109 - 2018-11-16 - 0.12Mb
+=============================
+
 * `9`: add version number to REST API (2018-11-13)
+* `6`: allow a zip file which contains data and code (2018-11-13)
 * `4`: add authentification to the rest api (2018-11-13)
 
 0.1.88 - 2018-11-05 - 0.11Mb

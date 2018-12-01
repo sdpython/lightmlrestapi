@@ -61,7 +61,7 @@ def load_passwords(source):
         elif os.path.exists(source):
             df = pandas.read_csv(source, encoding="utf-8", header=None)
         else:
-            raise ValueError("Unexectped string '{0}'".format(source))
+            raise ValueError("Unexpected string '{0}'".format(source))
     elif isinstance(source, dict):
         return source
     elif hasattr(source, "values"):

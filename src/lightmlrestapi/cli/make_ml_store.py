@@ -76,20 +76,21 @@ def start_mlreststor(location='.', host='127.0.0.1', port=8081, name='ml', nosta
     app.add_route("/", rest)
 
     # Server.
-    if wsgi == 'waitress':
-        from waitress import serve
-        if not nostart:
-            fLOG("[start_mlreststor] serve(app, host='{}', port='{}', url_scheme='{}')".format(
-                host, port, url_scheme))
-            logger = logging.getLogger('waitress')
-            logger.setLevel(logging.INFO)
-            serve(app, host=host, port=port, url_scheme=url_scheme)
+    if wsgi is not None:
+        if wsgi == 'waitress':
+            from waitress import serve
+            if not nostart:
+                fLOG("[start_mlreststor] serve(app, host='{}', port='{}', url_scheme='{}')".format(
+                    host, port, url_scheme))
+                logger = logging.getLogger('waitress')
+                logger.setLevel(logging.INFO)
+                serve(app, host=host, port=port, url_scheme=url_scheme)
+            else:
+                fLOG("[start_mlreststor] do not run serve(app, host='{}', port='{}')".format(
+                    host, port))
         else:
-            fLOG("[start_mlreststor] do not run serve(app, host='{}', port='{}')".format(
-                host, port))
-    else:
-        raise NotImplementedError(
-            "Server '{}' is not implemented.".format(wsgi))
+            raise NotImplementedError(
+                "Server '{}' is not implemented.".format(wsgi))
 
     return app
 
