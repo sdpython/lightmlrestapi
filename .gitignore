@@ -290,3 +290,4 @@ _doc/examples/model_iris*.pkl
 _doc/examples/model_iris*.py
 
 _doc/examples/users.txt
+_doc/sphinxdoc/source/HISTORY.rst

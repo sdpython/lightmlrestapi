@@ -16,7 +16,7 @@ import ujson
 class BaseLogging:
     """
     Simplifies logging. Logging is encrypted
-    with module :epkg:`pyjwt`.
+    with module :epkg:`pyjwt` if *secret* is specified.
     """
 
     def __init__(self, secret, folder='.', level=logging.INFO, encoding='utf-8', when='d'):

@@ -26,6 +26,8 @@ with open("users.txt", "w", encoding="utf-8") as f:
     f.write(users)
 
 from lightmlrestapi.cli import encrypt_pwd
+if not os.path.exists(location):
+    os.mkdir(location)
 encrypt_pwd("users.txt", os.path.join(location, "encrypted_users.txt"))
 
 ########################
@@ -110,16 +112,18 @@ print('Start server, process id', proc.pid)
 ##########################
 # Let's wait.
 from time import sleep
-sleep(3)
+sleep(5)
 
 ####################
 # Let's publish the machine learned model.
+import random
 url = 'http://{0}:{1}/'.format(host, port)
+model_name = "xavier/iris%d" % random.randint(0, 1000)
 
 from lightmlrestapi.netrest import submit_rest_request, json_upload_model
-req = json_upload_model(name="xavier/iris2",
+req = json_upload_model(name=model_name,
                         pyfile="model_iris.py", data=model_file)
-r = submit_rest_request(req, login="xavier",
+r = submit_rest_request(req, login="xavier", timeout=600,
                         pwd="passWrd!", url=url, fLOG=print)
 print(r)
 
@@ -131,7 +135,7 @@ from sklearn import datasets
 iris = datasets.load_iris()
 X = iris.data[:, :2]
 
-req = json_predict_model("xavier/iris2", X)
+req = json_predict_model(model_name, X)
 res = submit_rest_request(
     req, login="xavier", pwd="passWrd!", url=url, fLOG=print)
 print(res)
@@ -141,7 +145,7 @@ print(res)
 
 
 def query_model(X):
-    req = json_predict_model("xavier/iris2", X)
+    req = json_predict_model(model_name, X)
     return submit_rest_request(req, login="xavier", pwd="passWrd!", url=url, fLOG=None)
 
 

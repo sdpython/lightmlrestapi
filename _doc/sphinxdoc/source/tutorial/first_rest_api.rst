@@ -1,5 +1,5 @@
 
-.. l-dummy-function-application:
+.. _l-dummy-function-application:
 
 ==========================
 Create your first REST API

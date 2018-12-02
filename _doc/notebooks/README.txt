@@ -1,0 +1,8 @@
+
+
+Notebooks gallery
+-----------------
+
+.. contents::
+    :local:
+    

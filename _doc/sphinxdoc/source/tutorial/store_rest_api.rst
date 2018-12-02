@@ -1,5 +1,5 @@
 
-.. l-store_rest_api:
+.. _l-store_rest_api:
 
 ===============================================
 REST API to a storage for machine learned model

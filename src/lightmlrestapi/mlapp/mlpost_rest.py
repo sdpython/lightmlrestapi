@@ -16,7 +16,7 @@ class MachineLearningPost(BaseLogging):
     a post request, no authentification
     is required. The model ingests a vector *X*
     and outputs another one or a number *Y*.
-    An basic exemple of an application is given by
+    An basic example of an application is given by
     @see fn dummy_application.
     """
 

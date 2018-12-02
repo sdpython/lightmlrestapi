@@ -46,7 +46,7 @@ class MLStoragePost(BaseLogging):
 
     def on_post(self, req, resp):
         """
-        Processes a POST request.
+        Processes a :epkg:`POST` request.
 
         @param      req         request
         @param      resp        ...

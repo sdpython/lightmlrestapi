@@ -45,18 +45,28 @@ lightmlrestapi
 *lightmlrestapi* implements a light machine learning :epkg:`REST API`
 based on :epkg:`falcon`.
 
+Documentation
+-------------
+
 .. toctree::
     :maxdepth: 1
 
     tutorial/index
+    api/index
+    i_faq
+    blog/main_0000
+    i_index
+
+Examples
+--------
+
+.. toctree::
+    :maxdepth: 1
+
     gyexamples/index
     all_notebooks
-    api/index
     i_cmd
     i_ex
-    i_faq
-    blog/blogindex
-    i_index
 
 You can test a dummy :epkg:`wsgi` server by running:
 

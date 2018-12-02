@@ -5,7 +5,7 @@
     :date: 2018-12-01
     :categories: server
 
-    :epkg:`waitress` is a pure :pekg:`python` :epkg:`WSGI` server
+    :epkg:`waitress` is a pure :epkg:`python` :epkg:`WSGI` server
     but it can be replaced by :epkg:`bjoern` which a light
     server implemented in :epkg:`C`. A benchmark is available at
     `A Performance Analysis of Python WSGI Servers: Part 2 <https://blog.appdynamics.com/engineering/a-performance-analysis-of-python-wsgi-servers-part-2/>`_.
