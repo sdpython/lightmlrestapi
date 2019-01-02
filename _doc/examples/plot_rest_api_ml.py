@@ -14,7 +14,7 @@ on :epkg:`Iris dataset`.
 import os
 host = '127.0.0.1'
 port = 8093
-location = os.path.abspath('temp_scripts').replace("\\", "/")
+location = os.path.abspath('temp_scripts_ml').replace("\\", "/")
 
 ########################
 # We need users and to encrypt
@@ -67,13 +67,18 @@ print(code)
 
 def process_server(host, port, location):
     from lightmlrestapi.cli import start_mlreststor
-    app = start_mlreststor(location=location, name='ml',
-                           nostart=False, wsgi=None,
-                           secret='', users='encrypted_users.txt',
-                           fLOG=print)
-
-    from waitress import serve
-    serve(app, host=host, port=port, url_scheme='https')
+    import os
+    with open("log.log", "a", encoding="utf-8") as f:
+        def flog(*li):
+            f.write(" ".join(str(_) for _ in li) + "\n")
+            f.flush()
+        flog("create app in ", os.getcwd())
+        app = start_mlreststor(location=location, name='ml',
+                               nostart=True, wsgi=None,
+                               secret='', users='encrypted_users.txt',
+                               fLOG=flog)
+        from waitress import serve
+        serve(app, host=host, port=port, url_scheme='https')
 
 
 ##########################
@@ -98,15 +103,16 @@ with open(code_file, "w") as f:
     f.write(code)
 
 import sys
+import os
 from subprocess import Popen
 if sys.platform.startswith('win'):
     cmd = '{0} -u "{1}"'.format(sys.executable, code_file)
     print("Running '{0}'".format(cmd))
-    proc = Popen(cmd)
+    proc = Popen(cmd, cwd=location)
 else:
     cmd = [sys.executable, '-u', code_file]
     print("Running '{0}'".format(cmd))
-    proc = Popen(cmd)
+    proc = Popen(cmd, cwd=location)
 print('Start server, process id', proc.pid)
 
 ##########################

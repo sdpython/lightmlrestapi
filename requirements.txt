@@ -3,6 +3,7 @@ falcon
 falcon-auth
 jyquickhelper
 keyring
+memory_profiler
 Pillow
 psutil
 PyJWT
