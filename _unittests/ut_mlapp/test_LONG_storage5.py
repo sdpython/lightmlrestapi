@@ -26,7 +26,7 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.lightmlrestapi.mlapp.mlstorage import MLStorage, ZipStorage
+from src.lightmlrestapi.mlapp.mlstorage import MLStorage
 
 
 class TestStorage5(ExtTestCase):
