@@ -29,19 +29,7 @@ except ImportError:
 from src.lightmlrestapi.mlapp.mlstorage import MLStorage, ZipStorage
 
 
-class TestStorage(ExtTestCase):
-
-    def test_storage(self):
-        temp = get_temp_folder(__file__, "temp_zip_storage")
-        stor = ZipStorage(temp)
-        data = {'one.txt': b"1", 'two.txt': b"2"}
-        stor.add("dto/k_", data)
-        data2 = stor.get("dto/k_")
-        self.assertEqual(data, data2)
-        names = list(stor.enumerate_names())
-        self.assertEqual(names, ["dto/k_"])
-        meta = stor.get_metadata("dto/k_")
-        self.assertEqual(meta, {})
+class TestStorage5(ExtTestCase):
 
     def mlstorage(self, n, suf):
 
@@ -97,8 +85,8 @@ class TestStorage(ExtTestCase):
 
         self.assertLesser(len(stor._cache), n)  # pylint: disable=W0212
 
-    def test_mlstorage(self):
-        self.mlstorage(1, "1")
+    def test_mlstorage_multi(self):
+        self.mlstorage(5, "5")
 
 
 if __name__ == "__main__":
