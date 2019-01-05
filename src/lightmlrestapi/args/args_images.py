@@ -16,7 +16,7 @@ def image2array(img):
     @param      img     :epkg:`PIL:Image.Image`
     @return             :epkg:`numpy:array`
     """
-    im_arr = numpy.fromstring(img.tobytes(), dtype=numpy.uint8)
+    im_arr = numpy.frombuffer(img.tobytes(), dtype=numpy.uint8)
     return im_arr.reshape((img.size[1], img.size[0], 3))  # pylint: disable=E1121
 
 
