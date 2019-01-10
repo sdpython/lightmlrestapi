@@ -283,7 +283,7 @@ class MLStorage(ZipStorage):
         try:
             mod = importlib.import_module(full_modname)
             # mod = __import__(full_modname)
-        except ImportError as e:
+        except (ImportError, ModuleNotFoundError) as e:
             with open(script, "r") as f:
                 code = f.read()
             del sys.path[0]
