@@ -287,8 +287,10 @@ class MLStorage(ZipStorage):
             with open(script, "r") as f:
                 code = f.read()
             del sys.path[0]
-            values = "\n".join([self._folder, name, str(
-                meta), loc, script, fold, modname, full_modname])
+            values = dict(self_folder=self._folder, name=name, meta=str(meta),
+                          loc=loc, script=script, fold=fold, modname=modname,
+                          full_modname=full_modname)
+            values = '\n'.join('{}={}'.format(k, v) for k, v in values.items())
             raise ImportError(
                 "Unable to compile file '{0}'\ndue to {1}\n{2}\n---\n{3}".format(script, e, code, values)) from e
         del sys.path[0]
