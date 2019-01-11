@@ -68,7 +68,7 @@ class TestStorage5(ExtTestCase):
             app = {"iris_%d.pkl" % i: model_data,
                    "model.py": code.replace("iris2.pkl", "iris_%d.pkl" % i).encode("utf-8")}
 
-            name = "ml%s/iris%d" % (suf, i)
+            name = "ml%s/iris%s" % (suf, chr(65 + i))
             stor.add(name, app)
             data2 = stor.get(name)
             self.assertEqual(app, data2)
