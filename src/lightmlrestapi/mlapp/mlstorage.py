@@ -314,7 +314,8 @@ class MLStorage(ZipStorage):
             spl = full_modname.split('.')
             for i in range(len(spl)):
                 name = '.'.join(spl[:i + 1])
-                del sys.modules[name]
+                if name in sys.modules:
+                    del sys.modules[name]
                 mod = importlib.import_module(name)
                 importlib.reload(mod)
             try:
