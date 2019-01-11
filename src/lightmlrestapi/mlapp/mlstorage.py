@@ -107,16 +107,26 @@ class ZipStorage:
     def _makedirs(self, subfold):
         """
         Creates a subfolder and add a file ``__init__.py``.
+        The function overwrites it file ``__init__.py``
+        to let the interpreter know there was some changes.
         """
         spl = subfold.replace("\\", "/").split("/")
         fold = self._folder
         for sp in spl:
             fold = os.path.join(fold, sp)
+            init = os.path.join(fold, '__init__.py')
             if not os.path.exists(fold):
                 os.mkdir(fold)
-                init = os.path.join(fold, '__init__.py')
                 with open(init, 'w') as f:
-                    f.write('')
+                    f.write('def do_exists():\n    print("do exists")\n')
+            else:
+                with open(init, "r") as f:
+                    content = f.read()
+                spl = content.split('do_exists')
+                content += '\ndef do_exists{0}():\n    print("do exists{0}")\n'.format(
+                    len(spl))
+                with open(init, "w") as f:
+                    f.write(content)
 
     def add(self, name, data):
         """
@@ -303,7 +313,8 @@ class MLStorage(ZipStorage):
             # Reload modules.
             spl = full_modname.split('.')
             for i in range(len(spl)):
-                importlib.reload('.'.join(spl[:i + 1]))
+                mod = importlib.import_module('.'.join(spl[:i + 1]))
+                importlib.reload(mod)
             try:
                 mod = import_module()
             except ImportError as e:
