@@ -280,19 +280,36 @@ class MLStorage(ZipStorage):
         sys.path.insert(0, self._folder)
         full_modname = ".".join([name.replace("/", "."),
                                  os.path.splitext(modname)[0]])
+
+        def import_module():
+            try:
+                mod = importlib.import_module(full_modname)
+                # mod = __import__(full_modname)
+            except (ImportError, ModuleNotFoundError) as e:
+                with open(script, "r") as f:
+                    code = f.read()
+                values = dict(self_folder=self._folder, name=name, meta=str(meta),
+                              loc=loc, script=script, fold=fold, modname=modname,
+                              full_modname=full_modname)
+                values = '\n'.join('{}={}'.format(k, v)
+                                   for k, v in values.items())
+                raise ImportError(
+                    "Unable to compile file '{0}'\ndue to {1}\n{2}\n---\n{3}".format(script, e, code, values)) from e
+            return mod
+
         try:
-            mod = importlib.import_module(full_modname)
-            # mod = __import__(full_modname)
-        except (ImportError, ModuleNotFoundError) as e:
-            with open(script, "r") as f:
-                code = f.read()
-            del sys.path[0]
-            values = dict(self_folder=self._folder, name=name, meta=str(meta),
-                          loc=loc, script=script, fold=fold, modname=modname,
-                          full_modname=full_modname)
-            values = '\n'.join('{}={}'.format(k, v) for k, v in values.items())
-            raise ImportError(
-                "Unable to compile file '{0}'\ndue to {1}\n{2}\n---\n{3}".format(script, e, code, values)) from e
+            mod = import_module()
+        except ImportError as e:
+            # Reload modules.
+            spl = full_modname.split('.')
+            for i in range(spl):
+                importlib.reload('.'.join(spl[:i + 1]))
+            try:
+                mod = import_module()
+            except ImportError as e:
+                del sys.path[0]
+                raise e
+
         del sys.path[0]
 
         if not hasattr(mod, "restapi_load"):
