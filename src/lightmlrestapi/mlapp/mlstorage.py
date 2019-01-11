@@ -312,7 +312,7 @@ class MLStorage(ZipStorage):
         except ImportError as e:
             # Reload modules.
             spl = full_modname.split('.')
-            for i in range(len(spl)):
+            for i in range(len(spl) - 1):
                 name = '.'.join(spl[:i + 1])
                 if name in sys.modules:
                     del sys.modules[name]
