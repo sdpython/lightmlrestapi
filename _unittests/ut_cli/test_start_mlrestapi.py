@@ -22,7 +22,7 @@ except ImportError:
     import src
 
 
-from src.lightmlrestapi.cli.make_ml_app import _start_mlrestapi
+from src.lightmlrestapi.__main__ import main
 
 
 class TestStartMlRestApi(unittest.TestCase):
@@ -38,7 +38,7 @@ class TestStartMlRestApi(unittest.TestCase):
         def flog(*l):
             rows.append(l)
 
-        _start_mlrestapi(args=['-h'], fLOG=flog)
+        main(args=['start_mlrestapi', '-h'], fLOG=flog)
 
         r = rows[0][0]
         if not r.startswith("usage: start_mlrestapi [-h] [-n NAME] [-ho HOST]"):
@@ -55,7 +55,7 @@ class TestStartMlRestApi(unittest.TestCase):
         def flog(*l):
             rows.append(l)
 
-        _start_mlrestapi(args=['--nostart=True'], fLOG=flog)
+        main(args=['start_mlrestapi', '--nostart=True'], fLOG=flog)
 
         r = rows[0][0]
         if not r.startswith("[start_mlrestapi] do not run serve"):
@@ -72,7 +72,8 @@ class TestStartMlRestApi(unittest.TestCase):
         def flog(*l):
             rows.append(l)
 
-        _start_mlrestapi(args=['--nostart=True', '--name=dummyimg'], fLOG=flog)
+        main(args=['start_mlrestapi', '--nostart=True',
+                   '--name=dummyimg'], fLOG=flog)
 
         r = rows[0][0]
         if not r.startswith("[start_mlrestapi] do not run serve"):
@@ -89,8 +90,8 @@ class TestStartMlRestApi(unittest.TestCase):
         def flog(*l):
             rows.append(l)
 
-        _start_mlrestapi(
-            args=['--nostart=True', '--name=dummyknnimg'], fLOG=flog)
+        main(args=['start_mlrestapi', '--nostart=True', '--name=dummyknnimg'],
+             fLOG=flog)
 
         r = rows[0][0]
         if not r.startswith("[start_mlrestapi] do not run serve"):

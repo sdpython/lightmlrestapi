@@ -4,59 +4,31 @@
 @brief Command line.
 """
 import sys
+from pyquickhelper.cli import cli_main_helper
 
 
-def available_commands():
+def main(args, fLOG=print):
     """
-    Returns the list of available commands.
-    """
-    return ["start_mlrestapi", "encrypt_pwd", "start_mlreststor", "upload_model"]
+    Implements ``python -m pyquickhelper <command> <args>``.
 
-
-def main():
+    @param      args        command line arguments
+    @param      fLOG        logging function
     """
-    Defines what to run when typeing the command line::
+    try:
+        from .cli.make_ml_app import start_mlrestapi
+        from .cli.make_encrypt_pwd import encrypt_pwd
+        from .cli.make_ml_store import start_mlreststor
+        from .cli.make_ml_upload import upload_model
+    except ImportError:
+        from lightmlrestapi.cli.make_ml_app import start_mlrestapi
+        from lightmlrestapi.cli.make_encrypt_pwd import encrypt_pwd
+        from lightmlrestapi.cli.make_ml_store import start_mlreststor
+        from lightmlrestapi.cli.make_ml_upload import upload_model
 
-        python -m lightmlrestapi ...
-    """
-    args = sys.argv
-    if len(args) < 2:
-        print("Usage:")
-        print("")
-        print("    python -m lightmlrestapi <command>")
-        print("")
-        print("To get help:")
-        print("")
-        print("    python -m lightmlrestapi <command> --help")
-        print("")
-        print("Available commands:")
-        print("")
-        for a in available_commands():
-            print("    " + a)
-    else:
-        cmd = args[1]
-        cp = sys.argv.copy()
-        del cp[:2]
-        if cmd == 'start_mlrestapi':
-            from .cli.make_ml_app import _start_mlrestapi
-            _start_mlrestapi(args=cp)
-        elif cmd == 'encrypt_pwd':
-            from .cli.make_encrypt_pwd import _encrypt_pwd
-            _encrypt_pwd(args=cp)
-        elif cmd == 'start_mlreststor':
-            from .cli.make_ml_store import _start_mlreststor
-            _start_mlreststor(args=cp)
-        elif cmd == 'upload_model':
-            from .cli.make_ml_upload import _upload_model
-            _upload_model(args=cp)
-        else:
-            print("Command not found: '{0}'.".format(cmd))
-            print("")
-            print("Available commands:")
-            print("")
-            for a in available_commands():
-                print("    " + a)
+    fcts = dict(start_mlrestapi=start_mlrestapi, encrypt_pwd=encrypt_pwd,
+                start_mlreststor=start_mlreststor, upload_model=upload_model)
+    return cli_main_helper(fcts, args=args, fLOG=fLOG)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

@@ -5,7 +5,6 @@
 import os
 import sys
 import pandas
-from pyquickhelper.cli.cli_helper import call_cli_function
 
 
 def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disable=W0622
@@ -19,6 +18,13 @@ def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disa
         csv, encoding is *utf-8*
     :param algo: algorithm used to hash the passwords
     :param fLOG: logging function
+
+    .. cmdref::
+        :title: Encrypts password
+        :cmd: encrypt_pwd=lightmlrestapi.cli.make_encrypt_pwd:_encrypt_pwd
+        :lid: cmd_encrypt_pwd_cmd
+
+        Encrypts passwords for a REST API created by *lightmlrestapi*.
     """
     try:
         from ..args.encrypt_helper import encrypt_passwords
@@ -40,32 +46,3 @@ def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disa
     df2.to_csv(output, sep=',', encoding='utf-8', header=False, index=False)
     if fLOG:
         fLOG("[encrypt_pwd] done.")
-
-
-def _encrypt_pwd(fLOG=print, args=None):
-    """
-    Encrypts passwords to setup a REST API
-    with *lightmlrestapi*.
-
-    @param      fLOG        logging function
-    @param      args        to overwrite ``sys.args``
-
-    .. cmdref::
-        :title: Encrypts password
-        :cmd: encrypt_pwd=lightmlrestapi.cli.make_encrypt_pwd:_encrypt_pwd
-        :lid: cmd_encrypt_pwd_cmd
-
-        Encrypts passwords for a REST API created by *lightmlrestapi*.
-    """
-    epkg_dictionary = dict(falcon='https://falconframework.org/',
-                           Apache='https://httpd.apache.org/',
-                           mod_wsgi='https://modwsgi.readthedocs.io/en/develop/',
-                           uwsgi='https://uwsgi-docs.readthedocs.io/en/latest/',
-                           wsgi='https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface',
-                           waitress='https://docs.pylonsproject.org/projects/waitress/en/latest/')
-    call_cli_function(encrypt_pwd, args=args, fLOG=fLOG, skip_parameters=('fLOG',),
-                      epkg_dictionary=epkg_dictionary)
-
-
-if __name__ == "__main__":
-    _encrypt_pwd()

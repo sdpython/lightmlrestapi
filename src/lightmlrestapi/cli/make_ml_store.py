@@ -6,7 +6,6 @@ import os
 import sys
 import logging
 import falcon
-from pyquickhelper.cli.cli_helper import call_cli_function
 
 
 def start_mlreststor(location='.', host='127.0.0.1', port=8081, name='ml', nostart=False,
@@ -36,6 +35,15 @@ def start_mlreststor(location='.', host='127.0.0.1', port=8081, name='ml', nosta
     Other alternative such as :epkg:`mod_wsgi` with :epkg:`Apache`.
     :epkg:`uwsgi` are not implemented. Parameter *users* can be empty
     to disable authentification.
+
+    .. cmdref::
+        :title: Creates an falcon application to store machine learned models
+        :cmd: start_mlreststor=lightmlrestapi.cli.make_ml_store:_start_mlreststor
+        :lid: cmd_start_mlreststor_cmd
+
+        Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
+        The appplication stores machine learned models and runs predictions assuming
+        all the necessary packages were installed.
     """
     try:
         from ..mlapp.mlstorage_rest import MLStoragePost
@@ -93,33 +101,3 @@ def start_mlreststor(location='.', host='127.0.0.1', port=8081, name='ml', nosta
                 "Server '{}' is not implemented.".format(wsgi))
 
     return app
-
-
-def _start_mlreststor(fLOG=print, args=None):
-    """
-    Creates an falcon application and starts it through a wsgi application.
-
-    @param      fLOG        logging function
-    @param      args        to overwrite ``sys.args``
-
-    .. cmdref::
-        :title: Creates an falcon application to store machine learned models
-        :cmd: start_mlreststor=lightmlrestapi.cli.make_ml_store:_start_mlreststor
-        :lid: cmd_start_mlreststor_cmd
-
-        Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
-        The appplication stores machine learned models and runs predictions assuming
-        all the necessary packages were installed.
-    """
-    epkg_dictionary = dict(falcon='https://falconframework.org/',
-                           Apache='https://httpd.apache.org/',
-                           mod_wsgi='https://modwsgi.readthedocs.io/en/develop/',
-                           uwsgi='https://uwsgi-docs.readthedocs.io/en/latest/',
-                           wsgi='https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface',
-                           waitress='https://docs.pylonsproject.org/projects/waitress/en/latest/')
-    call_cli_function(start_mlreststor, args=args, fLOG=fLOG, skip_parameters=('fLOG',),
-                      epkg_dictionary=epkg_dictionary)
-
-
-if __name__ == "__main__":
-    _start_mlreststor()

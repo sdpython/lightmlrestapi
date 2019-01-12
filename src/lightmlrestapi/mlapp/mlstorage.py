@@ -327,7 +327,8 @@ class MLStorage(ZipStorage):
             except ImportError as e:
                 del sys.path[0]
                 mes = "\n".join("{0}: {1}".format(a, b) for a, b in specs)
-                raise ImportError("Unable to import module '{0}', specs=\n{1}".format(full_modname, mes)) from e
+                raise ImportError("Unable to import module '{0}', specs=\n{1}".format(
+                    full_modname, mes)) from e
 
         del sys.path[0]
 

@@ -25,10 +25,22 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from src.lightmlrestapi.cli.make_ml_app import _start_mlrestapi
+from src.lightmlrestapi.__main__ import main
 
 
 class TestStartMlRestApiFile(unittest.TestCase):
+
+    def test_start_mlrestapi_file_help(self):
+        rows = []
+
+        def flog(*l):
+            rows.append(l)
+
+        main(args=['start_mlrestapi', '-h'], fLOG=flog)
+
+        r = rows[0][0]
+        if not r.startswith("usage: start_mlrestapi [-h] [-n NAME] [-ho HOST]"):
+            raise Exception(r)
 
     def test_start_mlrestapi_file(self):
         fLOG(
@@ -80,8 +92,9 @@ class TestStartMlRestApiFile(unittest.TestCase):
         def flog(*l):
             rows.append(l)
 
-        _start_mlrestapi(args=['--name=dummyfct', '--option={0}'.format(dest),
-                               '--nostart=True'], fLOG=flog)
+        main(args=['start_mlrestapi', '--name=dummyfct',
+                   '--option={0}'.format(dest),
+                   '--nostart=True'], fLOG=flog)
 
         r = rows[0][0]
         if not r.startswith("[start_mlrestapi] do not run serve"):

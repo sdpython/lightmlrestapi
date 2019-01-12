@@ -5,15 +5,13 @@
 History
 =======
 
-current - 2018-12-01 - 0.00Mb
+current - 2019-01-12 - 0.00Mb
 =============================
 
+* `17`: reload module mapped to subfolder (2019-01-11)
 * `16`: add full example to start a rest api (2018-12-01)
 
 0.1.111 - 2018-11-16 - 0.12Mb
-=============================
-
-0.1.109 - 2018-11-16 - 0.12Mb
 =============================
 
 * `9`: add version number to REST API (2018-11-13)

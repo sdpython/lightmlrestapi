@@ -5,7 +5,6 @@
 import os
 import sys
 import logging
-from pyquickhelper.cli.cli_helper import call_cli_function
 
 
 def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
@@ -32,6 +31,13 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     Only :epkg:`waitress` is implemented right now.
     Other alternative such as :epkg:`mod_wsgi` with :epkg:`Apache`.
     :epkg:`uwsgi` are not implemented.
+
+    .. cmdref::
+        :title: Creates an falcon application and starts it through a wsgi application
+        :cmd: start_mlrestapi=lightmlrestapi.cli.make_ml_app:_start_mlrestapi
+        :lid: cmd_start_mlrestapi_cmd
+
+        Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
     """
     try:
         from ..testing import dummy_application, dummy_application_image, dummy_application_fct
@@ -135,31 +141,3 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
             "Server '{}' is not implemented.".format(wsgi))
 
     return app
-
-
-def _start_mlrestapi(fLOG=print, args=None):
-    """
-    Creates an falcon application and starts it through a wsgi application.
-
-    @param      fLOG        logging function
-    @param      args        to overwrite ``sys.args``
-
-    .. cmdref::
-        :title: Creates an falcon application and starts it through a wsgi application
-        :cmd: start_mlrestapi=lightmlrestapi.cli.make_ml_app:_start_mlrestapi
-        :lid: cmd_start_mlrestapi_cmd
-
-        Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
-    """
-    epkg_dictionary = dict(falcon='https://falconframework.org/',
-                           Apache='https://httpd.apache.org/',
-                           mod_wsgi='https://modwsgi.readthedocs.io/en/develop/',
-                           uwsgi='https://uwsgi-docs.readthedocs.io/en/latest/',
-                           wsgi='https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface',
-                           waitress='https://docs.pylonsproject.org/projects/waitress/en/latest/')
-    call_cli_function(start_mlrestapi, args=args, fLOG=fLOG, skip_parameters=('fLOG',),
-                      epkg_dictionary=epkg_dictionary)
-
-
-if __name__ == "__main__":
-    _start_mlrestapi()
