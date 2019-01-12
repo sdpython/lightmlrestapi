@@ -44,6 +44,7 @@ epkg_dictionary.update({
     'json': 'https://docs.python.org/fr/3/library/json.html',
     'keras': 'https://keras.io/',
     'mod_wsgi': 'https://github.com/GrahamDumpleton/mod_wsgi',
+    'POST': 'https://en.wikipedia.org/wiki/POST_(HTTP)',
     'PIL': ("https://pillow.readthedocs.io/en/4.3.x/",
             ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html", 1),
             ("https://pillow.readthedocs.io/en/4.3.x/reference/{0}.html#PIL.{0}.{1}", 2)),
