@@ -38,7 +38,7 @@ def start_mlreststor(location='.', host='127.0.0.1', port=8081, name='ml', nosta
 
     .. cmdref::
         :title: Creates an falcon application to store machine learned models
-        :cmd: start_mlreststor=lightmlrestapi.cli.make_ml_store:_start_mlreststor
+        :cmd: -m lightmlrestapi start_mlreststor --help
         :lid: cmd_start_mlreststor_cmd
 
         Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.

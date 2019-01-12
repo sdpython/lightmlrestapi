@@ -25,7 +25,7 @@ def upload_model(login="", pwd="", name="", pyfile="", data="", url='127.0.0.1:8
 
     .. cmdref::
         :title: Uploads a machine model
-        :cmd: upload_model=lightmlrestapi.cli.make_ml_upload:_upload_model
+        :cmd: :cmd: -m lightmlrestapi upload_model --help
         :lid: cmd_upload_model_cmd
 
         Uploads a machine learned model to a REST API

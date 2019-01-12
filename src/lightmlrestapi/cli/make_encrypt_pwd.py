@@ -21,7 +21,7 @@ def encrypt_pwd(input="", output="", algo="sha224", fLOG=print):  # pylint: disa
 
     .. cmdref::
         :title: Encrypts password
-        :cmd: encrypt_pwd=lightmlrestapi.cli.make_encrypt_pwd:_encrypt_pwd
+        :cmd: -m lightmlrestapi encrypt_pwd --help
         :lid: cmd_encrypt_pwd_cmd
 
         Encrypts passwords for a REST API created by *lightmlrestapi*.

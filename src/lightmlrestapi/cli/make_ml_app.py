@@ -34,7 +34,7 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
 
     .. cmdref::
         :title: Creates an falcon application and starts it through a wsgi application
-        :cmd: start_mlrestapi=lightmlrestapi.cli.make_ml_app:_start_mlrestapi
+        :cmd: -m lightmlrestapi start_mlrestapi --help
         :lid: cmd_start_mlrestapi_cmd
 
         Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
