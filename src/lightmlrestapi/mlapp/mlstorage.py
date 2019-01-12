@@ -311,18 +311,23 @@ class MLStorage(ZipStorage):
             mod = import_module()
         except ImportError as e:
             # Reload modules.
+            specs = []
             spl = full_modname.split('.')
             for i in range(len(spl) - 1):
                 name = '.'.join(spl[:i + 1])
                 if name in sys.modules:
                     del sys.modules[name]
+                importlib.invalidate_caches()
+                spec = importlib.util.find_spec(name)
+                specs.append((name, spec))
                 mod = importlib.import_module(name)
                 importlib.reload(mod)
             try:
                 mod = import_module()
             except ImportError as e:
                 del sys.path[0]
-                raise e
+                mes = "\n".join("{0}: {1}".format(a, b) for a, b in specs)
+                raise ImportError("Unable to import module '{0}', specs=\n{1}".format(full_modname, mes)) from e
 
         del sys.path[0]
 

@@ -54,7 +54,7 @@ Documentation
     tutorial/index
     api/index
     i_faq
-    blog/main_0000
+    blog <blog/main_0000>
     i_index
 
 Examples
