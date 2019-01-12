@@ -7,7 +7,7 @@ memory_profiler
 Pillow
 psutil
 PyJWT
-pyquickhelper>=1.8.2814
+pyquickhelper>=1.8.2924
 scikit-image
 scikit-learn
 scipy
