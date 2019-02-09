@@ -43,11 +43,11 @@ class AuthMiddleware:
                                           description='Invalid Authorization Header: '
                                           'Must start with {0}'.format(self.auth_header_prefix))
 
-        elif len(parts) == 1:
+        if len(parts) == 1:
             raise falcon.HTTPUnauthorized(
                 title='401 Unauthorized',
                 description='Invalid Authorization Header: Token Missing')
-        elif len(parts) > 2:
+        if len(parts) > 2:
             raise falcon.HTTPUnauthorized(
                 title='401 Unauthorized',
                 description='Invalid Authorization Header: Contains extra content')
