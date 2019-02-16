@@ -1,9 +1,4 @@
 
-.. _l-README:
-
-README
-======
-
 .. image:: https://travis-ci.org/sdpython/lightmlrestapi.svg?branch=master
     :target: https://travis-ci.org/sdpython/lightmlrestapi
     :alt: Build status
@@ -41,13 +36,12 @@ README
     :target: http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
-**Links:**
+.. _l-README:
 
-* `GitHub/lightmlrestapi <https://github.com/sdpython/lightmlrestapi/>`_
-* `documentation <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html>`_
-* `Blog <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/blog/main_0000.html#ap-main-0>`_
+lightmlrestapi
+==============
 
-*lightmlrestapi* implements a light machine learning *REST API*
+It implements a light machine learning *REST API*
 based on *falcon*. You can test a dummy *wsgi* server by running:
 
 ::
@@ -70,3 +64,13 @@ It should return:
 ::
 
     {'Y': [[0.4994216179, 0.4514893599, 0.0490890222]]}
+
+The module was first tried with success in a hackathon in 2018.
+Participants could upload their model and retrieve their predictions
+through a REST API to check it was producing the same one as they had.
+A simple way to put a model into production.
+
+* `GitHub/lightmlrestapi <https://github.com/sdpython/lightmlrestapi/>`_
+* `documentation <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html>`_
+* `Blog <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/blog/main_0000.html#ap-main-0>`_
+
