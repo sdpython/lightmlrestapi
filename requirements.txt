@@ -12,7 +12,6 @@ scikit-image
 scikit-learn
 scipy
 sphinx_modern_theme_modified
-tornado
 ujson
 waitress
 wheel
