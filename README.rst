@@ -73,4 +73,3 @@ A simple way to put a model into production.
 * `GitHub/lightmlrestapi <https://github.com/sdpython/lightmlrestapi/>`_
 * `documentation <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html>`_
 * `Blog <http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/blog/main_0000.html#ap-main-0>`_
-

@@ -1,31 +1,13 @@
 """
 @brief      test tree node (time=8s)
 """
-
-
-import sys
 import os
 import unittest
 import pandas
 from pyquickhelper.loghelper import noLOG
 from pyquickhelper.pycode import get_temp_folder, ExtTestCase
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-
-from src.lightmlrestapi.cli.make_encrypt_pwd import encrypt_pwd
-from src.lightmlrestapi.__main__ import main
+from lightmlrestapi.cli.make_encrypt_pwd import encrypt_pwd
+from lightmlrestapi.__main__ import main
 
 
 class TestEncryptPwd(ExtTestCase):

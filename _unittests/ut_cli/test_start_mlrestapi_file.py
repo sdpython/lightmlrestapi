@@ -1,9 +1,6 @@
 """
 @brief      test tree node (time=8s)
 """
-
-
-import sys
 import os
 import unittest
 import pickle
@@ -11,21 +8,7 @@ import re
 import textwrap
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.__main__ import main
+from lightmlrestapi.__main__ import main
 
 
 class TestStartMlRestApiFile(unittest.TestCase):

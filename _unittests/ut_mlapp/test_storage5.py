@@ -2,31 +2,13 @@
 """
 @brief      test log(time=10s)
 """
-
-import sys
-import os
 import unittest
 import pickle
 import textwrap
 from sklearn import datasets
 from sklearn.linear_model import LogisticRegression
 from pyquickhelper.pycode import get_temp_folder, ExtTestCase
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.mlapp.mlstorage import MLStorage
+from lightmlrestapi.mlapp.mlstorage import MLStorage
 
 
 class TestStorage5(ExtTestCase):

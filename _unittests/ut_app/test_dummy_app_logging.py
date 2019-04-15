@@ -2,32 +2,15 @@
 """
 @brief      test log(time=4s)
 """
-
-import sys
 import os
 import unittest
 from datetime import datetime
 import falcon
 import falcon.testing as testing
-from pyquickhelper.pycode import get_temp_folder
 import ujson
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.testing import dummy_application
-from src.lightmlrestapi.mlapp import enumerate_parsed_logs
+from pyquickhelper.pycode import get_temp_folder
+from lightmlrestapi.testing import dummy_application
+from lightmlrestapi.mlapp import enumerate_parsed_logs
 
 
 class TestDummyAppLogging(testing.TestBase):

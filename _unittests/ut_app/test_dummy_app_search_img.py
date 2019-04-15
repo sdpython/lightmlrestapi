@@ -2,30 +2,14 @@
 """
 @brief      test log(time=3s)
 """
-
-import sys
 import os
 import unittest
 import falcon
 import falcon.testing as testing
 import ujson
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.testing import dummy_application_neighbors_image
-from src.lightmlrestapi.testing.data import get_wiki_img
-from src.lightmlrestapi.args import image2base64, image2array, base642image
+from lightmlrestapi.testing import dummy_application_neighbors_image
+from lightmlrestapi.testing.data import get_wiki_img
+from lightmlrestapi.args import image2base64, image2array, base642image
 
 
 class TestDummyAppSearchImg(testing.TestBase):

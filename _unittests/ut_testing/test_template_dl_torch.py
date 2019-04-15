@@ -1,29 +1,12 @@
 """
 @brief      test tree node (time=12s)
 """
-
-
-import sys
 import os
 import unittest
 import numpy
 from PIL import Image
 from pyquickhelper.pycode import get_temp_folder, ExtTestCase
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.testing.template_dl_torch import restapi_version, restapi_load, restapi_predict
+from lightmlrestapi.testing.template_dl_torch import restapi_version, restapi_load, restapi_predict
 
 
 def get_torch():

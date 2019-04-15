@@ -2,29 +2,11 @@
 """
 @brief      test log(time=33s)
 """
-
-import sys
-import os
 import unittest
 import falcon.testing as testing
 from pyquickhelper.loghelper import fLOG
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.args import image2base64, base642image, image2array
-from src.lightmlrestapi.testing.data import get_wiki_img
+from lightmlrestapi.args import image2base64, base642image, image2array
+from lightmlrestapi.testing.data import get_wiki_img
 
 
 class TestArgsImages(testing.TestBase):

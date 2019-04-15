@@ -2,9 +2,6 @@
 """
 @brief      test log(time=3s)
 """
-
-import sys
-import os
 import unittest
 import pickle
 import base64
@@ -12,28 +9,13 @@ import numpy
 import falcon
 import falcon.testing as testing
 from PIL import Image
-from pyquickhelper.pycode import get_temp_folder
 import ujson
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.testing import dummy_mlstorage
-from src.lightmlrestapi.args.args_images import bytes2string
-from src.lightmlrestapi.args import zip_dict
-from src.lightmlrestapi.testing import template_dl_light
-from src.lightmlrestapi.testing.data import get_wiki_img
+from pyquickhelper.pycode import get_temp_folder
+from lightmlrestapi.testing import dummy_mlstorage
+from lightmlrestapi.args.args_images import bytes2string
+from lightmlrestapi.args import zip_dict
+from lightmlrestapi.testing import template_dl_light
+from lightmlrestapi.testing.data import get_wiki_img
 
 
 class TestMLStorageAppImage(testing.TestBase):

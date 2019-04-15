@@ -2,31 +2,14 @@
 """
 @brief      test log(time=10s)
 """
-
-import sys
 import os
 import unittest
 import pickle
 from sklearn import datasets
 from sklearn.linear_model import LogisticRegression
 from pyquickhelper.pycode import get_temp_folder, ExtTestCase
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.lightmlrestapi.netrest import json_upload_model, json_predict_model
-from src.lightmlrestapi.testing import template_ml
+from lightmlrestapi.netrest import json_upload_model, json_predict_model
+from lightmlrestapi.testing import template_ml
 
 
 class TestRestHelper(ExtTestCase):
