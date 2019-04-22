@@ -8,11 +8,12 @@ git+https://github.com/sdpython/nbconvert.git@fixes
 Pillow
 psutil
 PyJWT
-pyquickhelper>=1.8.2924
+pyquickhelper>=1.9
 scikit-image
 scikit-learn
 scipy
-sphinx_modern_theme_modified
+sphinx
+sphinx_readable_theme
 ujson
 waitress
 wheel
