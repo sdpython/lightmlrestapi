@@ -4,7 +4,6 @@ import os
 import sphinx_readable_theme
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables, get_default_stylesheet
 
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
 local_template = os.path.join(os.path.abspath(
