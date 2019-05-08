@@ -15,11 +15,12 @@ from lightmlrestapi.args import zip_dict
 from lightmlrestapi.testing import template_ml
 
 
-class TestMLStorageApp(testing.TestBase):
+class TestMLStorageApp(testing.TestCase):
 
-    def before(self):
+    def setUp(self):
+        super(TestMLStorageApp, self).setUp()
         temp = get_temp_folder(__file__, "temp_dummy_app_storage")
-        dummy_mlstorage(self.api, folder_storage=temp, folder=temp)
+        self.app = dummy_mlstorage(self.app, folder_storage=temp, folder=temp)
 
     def _data_sklearn(self, tweak=False):
         # model
@@ -54,19 +55,17 @@ class TestMLStorageApp(testing.TestBase):
         # upload model
         obs, X, clf = self._data_sklearn()
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_201)
-        d = ujson.loads(body)
+        body = self.simulate_post('/', body=bodyin)
+        self.assertEqual(body.status, falcon.HTTP_201)
+        d = ujson.loads(body.content)
         self.assertEqual(d, {'name': 'ml/iris'})
 
         # test model
         js = ujson.dumps([list(X[0])])
         obs = dict(cmd='predict', name='ml/iris', input=js, format='json')
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        res = ujson.loads(body)
+        body = self.simulate_post('/', body=bodyin)
+        res = ujson.loads(body.content)
         self.assertIn('output', res)
         self.assertIn('version', res)
         pred = res['output']
@@ -81,19 +80,17 @@ class TestMLStorageApp(testing.TestBase):
         # upload model
         obs, X, clf = self._data_sklearn(tweak=True)
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_400)
-        self.assertIn("Unable to upload model due to:", body)
+        body = self.simulate_post('/', body=bodyin)
+        self.assertEqual(body.status, falcon.HTTP_400)
+        self.assertIn(b"Unable to upload model due to:", body.content)
 
         # test model
         js = ujson.dumps([[list(X[0])]])
         obs = dict(cmd='predict', name='ml/iris', input=js, format='json')
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_400)
-        res = ujson.loads(body)
+        body = self.simulate_post('/', body=bodyin)
+        self.assertEqual(body.status, falcon.HTTP_400)
+        res = ujson.loads(body.content)
         self.assertIn('title', res)
         self.assertIn("Unable to predict with model 'ml/iris'", res['title'])
 

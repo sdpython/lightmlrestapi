@@ -291,3 +291,4 @@ _doc/examples/model_iris*.py
 
 _doc/examples/users.txt
 _doc/sphinxdoc/source/HISTORY.rst
+_unittests/unittests.out

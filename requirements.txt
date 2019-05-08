@@ -1,5 +1,5 @@
 coverage
-falcon
+falcon>=2.0
 falcon-auth
 jyquickhelper
 keyring

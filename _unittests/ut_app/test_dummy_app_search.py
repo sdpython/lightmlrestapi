@@ -9,17 +9,17 @@ import ujson
 from lightmlrestapi.testing import dummy_application_neighbors
 
 
-class TestDummyAppSearch(testing.TestBase):
+class TestDummyAppSearch(testing.TestCase):
 
-    def before(self):
-        dummy_application_neighbors(self.api)
+    def setUp(self):
+        super(TestDummyAppSearch, self).setUp()
+        self.app = dummy_application_neighbors(self.app)
 
     def test_dummy_app_search(self):
         bodyin = ujson.dumps({'X': [0.1, 0.2]})
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_201)
-        d = ujson.loads(body)
+        result = self.simulate_post('/', body=bodyin)
+        self.assertEqual(result.status, falcon.HTTP_201)
+        d = ujson.loads(result.content)
         self.assertTrue('Y' in d)
         self.assertIsInstance(d['Y'], list)
         self.assertEqual(len(d['Y']), 1)
@@ -27,10 +27,9 @@ class TestDummyAppSearch(testing.TestBase):
 
     def test_dummy_error_search(self):
         bodyin = ujson.dumps({'X': [0.1, 0.2, 0.3]})
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_400)
-        d = ujson.loads(body)
+        result = self.simulate_post('/', body=bodyin)
+        self.assertEqual(result.status, falcon.HTTP_400)
+        d = ujson.loads(result.content)
         self.assertIn('Unable to predict', d['title'])
         self.assertIn(
             'query data dimension must match training data dimension', d['title'])

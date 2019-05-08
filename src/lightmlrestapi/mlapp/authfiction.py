@@ -61,7 +61,7 @@ class AuthMiddleware:
         @param  req     request
         @param  resp    unused
         """
-        if req.protocol.lower() != 'https':
+        if req.scheme.lower() != 'https':
             raise falcon.HTTPBadRequest(title='HTTPS Required',
                                         description=('All requests must be performed via the HTTPS protocol. '
                                                      'Please switch to HTTPS and try again.'))

@@ -9,7 +9,7 @@ from lightmlrestapi.args import image2base64, base642image, image2array
 from lightmlrestapi.testing.data import get_wiki_img
 
 
-class TestArgsImages(testing.TestBase):
+class TestArgsImages(testing.TestCase):
 
     def test_dummy_app(self):
         fLOG(

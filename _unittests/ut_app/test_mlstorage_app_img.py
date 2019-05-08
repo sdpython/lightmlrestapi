@@ -18,15 +18,14 @@ from lightmlrestapi.testing import template_dl_light
 from lightmlrestapi.testing.data import get_wiki_img
 
 
-class TestMLStorageAppImage(testing.TestBase):
+class TestMLStorageAppImage(testing.TestCase):
 
-    def before(self):
+    def setUp(self):
+        super(TestMLStorageAppImage, self).setUp()
         temp = get_temp_folder(__file__, "temp_dummy_app_storage_imgn")
-        dummy_mlstorage(self.api, folder_storage=temp, folder=temp)
+        self.app = dummy_mlstorage(self.app, folder_storage=temp, folder=temp)
 
     def _data_dl(self, tweak=False):
-        # model
-
         # file
         name = template_dl_light.__file__
         with open(name, "r", encoding="utf-8") as f:
@@ -53,19 +52,17 @@ class TestMLStorageAppImage(testing.TestBase):
         # upload model
         obs, X = self._data_dl()
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_201)
-        d = ujson.loads(body)
+        body = self.simulate_post('/', body=bodyin)
+        self.assertEqual(body.status, falcon.HTTP_201)
+        d = ujson.loads(body.content)
         self.assertEqual(d, {'name': 'mlapi/imgn'})
 
         # test model
         ba = base64.b64encode(pickle.dumps(X))
         obs = dict(cmd='predict', name='mlapi/imgn', input=ba, format='img')
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        res = ujson.loads(body)
+        body = self.simulate_post('/', body=bodyin)
+        res = ujson.loads(body.content)
         if 'description' in res:
             raise Exception(res["description"])
         self.assertIn('output', res)
@@ -76,19 +73,17 @@ class TestMLStorageAppImage(testing.TestBase):
         # upload model
         obs, X = self._data_dl(tweak=True)
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_400)
-        self.assertIn("Unable to upload model due to:", body)
+        body = self.simulate_post('/', body=bodyin)
+        self.assertEqual(body.status, falcon.HTTP_400)
+        self.assertIn(b"Unable to upload model due to:", body.content)
 
         # test model
         js = base64.b64encode(b"r" + pickle.dumps(X))
         obs = dict(cmd='predict', name='mlapi/imgn', input=js, format='img')
         bodyin = ujson.dumps(obs)
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_400)
-        res = ujson.loads(body)
+        body = self.simulate_post('/', body=bodyin)
+        self.assertEqual(body.status, falcon.HTTP_400)
+        res = ujson.loads(body.content)
         self.assertIn('title', res)
         self.assertIn(
             "Unable to predict with model 'mlapi/imgn'", res['title'])

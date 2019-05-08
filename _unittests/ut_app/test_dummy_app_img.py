@@ -14,10 +14,11 @@ from lightmlrestapi.testing.dummy_applications import _distance_img
 from lightmlrestapi.args import image2base64, image2array, base642image
 
 
-class TestDummyAppImg(testing.TestBase):
+class TestDummyAppImg(testing.TestCase):
 
-    def before(self):
-        dummy_application_image(self.api)
+    def setUp(self):
+        super(TestDummyAppImg, self).setUp()
+        self.app = dummy_application_image(self.app)
 
     def test_dummy_app_img(self):
         # With a different image than the original.
@@ -25,13 +26,12 @@ class TestDummyAppImg(testing.TestBase):
                             "data", "wiki_modified.png")
         b64 = image2base64(img2)[1]
         bodyin = ujson.dumps({'X': b64})
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        if self.srmock.status != falcon.HTTP_201:
-            res = ujson.loads(body)
+        result = self.simulate_post('/', body=bodyin)
+        if result.status != falcon.HTTP_201:
+            res = ujson.loads(result.content)
             raise Exception("Failure\n{0}".format(res))
-        self.assertEqual(self.srmock.status, falcon.HTTP_201)
-        d = ujson.loads(body)
+        self.assertEqual(result.status, falcon.HTTP_201)
+        d = ujson.loads(result.content)
         self.assertTrue('Y' in d)
         self.assertGreater(d['Y'], 0.21)
 
@@ -40,13 +40,12 @@ class TestDummyAppImg(testing.TestBase):
         ext_b64 = image2base64(img)
 
         bodyin = ujson.dumps({'X': ext_b64[1]})
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        if self.srmock.status != falcon.HTTP_201:
-            res = ujson.loads(body)
+        result = self.simulate_post('/', body=bodyin)
+        if result.status != falcon.HTTP_201:
+            res = ujson.loads(result.content)
             raise Exception("Failure\n{0}".format(res))
-        self.assertEqual(self.srmock.status, falcon.HTTP_201)
-        d = ujson.loads(body)
+        self.assertEqual(result.status, falcon.HTTP_201)
+        d = ujson.loads(result.content)
         self.assertTrue('Y' in d)
         self.assertEqual(d['Y'], 0)
 
@@ -56,11 +55,9 @@ class TestDummyAppImg(testing.TestBase):
         img2 = base642image(ext_b64[1])
         arr = image2array(img2)
         bodyin = ujson.dumps({'X': arr.tolist()})
-
-        body = self.simulate_request(
-            '/', decode='utf-8', method="POST", body=bodyin)
-        self.assertEqual(self.srmock.status, falcon.HTTP_400)
-        d = ujson.loads(body)
+        result = self.simulate_post('/', body=bodyin)
+        self.assertEqual(result.status, falcon.HTTP_400)
+        d = ujson.loads(result.content)
         self.assertIn('Unable to predict', d['title'])
         self.assertIn(
             "argument should be a bytes-like object or ASCII string, not 'list'", d['title'])

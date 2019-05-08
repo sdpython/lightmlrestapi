@@ -57,8 +57,16 @@ class MLStoragePost(BaseLogging):
 
         # To get the parameters
         # req.get_params
+        js = None
         try:
-            js = req.stream.read()
+            while True:
+                chunk = req.stream.read(2**16)
+                if len(chunk) == 0:
+                    break
+                if js is None:
+                    js = chunk
+                else:
+                    js += chunk
         except AssertionError as e:
             excs = traceback.format_exc()
             es = str(e)

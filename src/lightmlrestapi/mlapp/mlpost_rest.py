@@ -98,13 +98,21 @@ class MachineLearningPost(BaseLogging):
 
         # To get the parameters
         # req.get_params
+        js = None
         try:
-            js = req.stream.read()
+            while True:
+                chunk = req.stream.read(2**16)
+                if len(chunk) == 0:
+                    break
+                if js is None:
+                    js = chunk
+                else:
+                    js += chunk
         except AssertionError as e:
             excs = traceback.format_exc()
             es = str(e)
-            if len(es) > 200:
-                es = es[:200] + '...'
+            if len(es) > 400:
+                es = es[:400] + '...'
             log_data = dict(error=str(e))
             log_data.update(add_log_data)
             if self._load_params:
