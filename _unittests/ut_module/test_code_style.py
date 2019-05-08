@@ -25,6 +25,7 @@ class TestCodeStyle(ExtTestCase):
                                   'C0111', 'C0414', 'W0107'),
                    skip=["Instance of 'tuple' has no ",
                          "Module 'ujson' has no ",
+                         "Module 'falcon' has no 'HTTP_'",
                          ])
 
 
