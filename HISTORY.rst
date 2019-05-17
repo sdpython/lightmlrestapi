@@ -5,9 +5,10 @@
 History
 =======
 
-current - 2019-01-12 - 0.00Mb
+current - 2019-05-17 - 0.00Mb
 =============================
 
+* `20`: fix issue with falcon 2.0 (2019-05-08)
 * `17`: reload module mapped to subfolder (2019-01-11)
 * `16`: add full example to start a rest api (2018-12-01)
 
