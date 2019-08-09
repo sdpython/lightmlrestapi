@@ -7,37 +7,9 @@ import sys
 import logging
 
 
-def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
-                    options='', secret='', ccall='single', users='', fLOG=print):
+def _get_app(name, options, secret, users):
     """
-    Creates an :epkg:`falcon` application and
-    runs it through a :epkg:`wsgi` server.
-
-    :param name: class name or filename which defines the application
-    :param host: host
-    :param port: port
-    :param nostart: do not start the wsgi server
-    :param wsgi: :epkg:`wsgi` framework which runs the falcon application
-    :param options: additional options as a string (depends on the application)
-    :param ccall: calling convention, 'single', 'multi' or 'both' depending on the
-        fact that the prediction function can predict for only one observation,
-        multiple ones or both
-    :param secret: secret used to encrypt the logging, default is empty which
-        disables the encryption
-    :param users: registred users, file with two columns login, encrypted password,
-        and no header
-    :param fLOG: logging function
-
-    Only :epkg:`waitress` is implemented right now.
-    Other alternative such as :epkg:`mod_wsgi` with :epkg:`Apache`.
-    :epkg:`uwsgi` are not implemented.
-
-    .. cmdref::
-        :title: Creates an falcon application and starts it through a wsgi application
-        :cmd: -m lightmlrestapi start_mlrestapi --help
-        :lid: cmd_start_mlrestapi_cmd
-
-        Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
+    Get application.
     """
     try:
         from ..testing import dummy_application, dummy_application_image, dummy_application_fct
@@ -125,7 +97,42 @@ def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, ws
     else:
         raise NotImplementedError(
             "Application '{}' is not implemented.".format(name))
+    return app
 
+
+def start_mlrestapi(name='dummy', host='127.0.0.1', port=8081, nostart=False, wsgi='waitress',
+                    options='', secret='', ccall='single', users='', fLOG=print):
+    """
+    Creates an :epkg:`falcon` application and
+    runs it through a :epkg:`wsgi` server.
+
+    :param name: class name or filename which defines the application
+    :param host: host
+    :param port: port
+    :param nostart: do not start the wsgi server
+    :param wsgi: :epkg:`wsgi` framework which runs the falcon application
+    :param options: additional options as a string (depends on the application)
+    :param ccall: calling convention, 'single', 'multi' or 'both' depending on the
+        fact that the prediction function can predict for only one observation,
+        multiple ones or both
+    :param secret: secret used to encrypt the logging, default is empty which
+        disables the encryption
+    :param users: registred users, file with two columns login, encrypted password,
+        and no header
+    :param fLOG: logging function
+
+    Only :epkg:`waitress` is implemented right now.
+    Other alternative such as :epkg:`mod_wsgi` with :epkg:`Apache`.
+    :epkg:`uwsgi` are not implemented.
+
+    .. cmdref::
+        :title: Creates an falcon application and starts it through a wsgi application
+        :cmd: -m lightmlrestapi start_mlrestapi --help
+        :lid: cmd_start_mlrestapi_cmd
+
+        Creates an :epkg:`falcon` application and starts it through a :epkg:`wsgi` server.
+    """
+    app = _get_app(name, options=options, secret=secret, users=users)
     if wsgi == 'waitress':
         from waitress import serve
         if not nostart:

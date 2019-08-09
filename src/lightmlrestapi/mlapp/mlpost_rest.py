@@ -40,9 +40,9 @@ class MachineLearningPost(BaseLogging):
         Some models can only computes predictions for a sequence
         of observations, not just one. Parameter *ccall* defines what
         the prediction function can ingest.
-        * single: only one observation
-        * multi: only multiple ones
-        * both: the function determines what it must do
+        * *single*: only one observation
+        * *multi*: only multiple ones
+        * *both*: the function determines what it must do
         """
         BaseLogging.__init__(self, secret=secret, folder=folder)
         self._predict_fct = predict_function
