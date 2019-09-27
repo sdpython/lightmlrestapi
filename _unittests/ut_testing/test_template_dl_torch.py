@@ -11,7 +11,7 @@ from lightmlrestapi.testing.template_dl_torch import restapi_version, restapi_lo
 
 def get_torch():
     try:
-        import torch
+        import torch  # pylint: disable=C0415
         return torch
     except ImportError:
         return None
@@ -24,8 +24,8 @@ class TestTemplateDlTorch(ExtTestCase):
         self.assertEqual(restapi_version(), "0.1.1238")
         temp = get_temp_folder(__file__, "temp_template_dl_torch")
 
-        import torchvision.models as models  # pylint: disable=E0401
-        import torch  # pylint: disable=E0401
+        import torchvision.models as models  # pylint: disable=E0401,C0415
+        import torch  # pylint: disable=E0401,C0415
         model = models.squeezenet1_0(pretrained=True)
         model_name = os.path.join(temp, "model.torch")
         torch.save(model, model_name)

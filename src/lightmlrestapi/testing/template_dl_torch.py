@@ -29,7 +29,7 @@ def restapi_load(files={"model": "dlmodel.torch"}):  # pylint: disable=W0102
     if not os.path.exists(model):
         raise FileNotFoundError("Cannot find model '{0}' (full path is '{1}')".format(
             model, os.path.abspath(model)))
-    import torch  # pylint: disable=E0401
+    import torch  # pylint: disable=E0401,C0415
     loaded_model = torch.load(model)
     return loaded_model
 

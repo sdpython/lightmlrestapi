@@ -11,7 +11,7 @@ from lightmlrestapi.testing.template_dl_keras import restapi_version, restapi_lo
 
 def get_keras():
     try:
-        import keras
+        import keras  # pylint: disable=C0415
         return keras
     except ImportError:
         return None
