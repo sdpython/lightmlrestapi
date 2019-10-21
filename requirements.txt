@@ -8,7 +8,7 @@ git+https://github.com/sdpython/nbconvert.git@fixes
 Pillow
 psutil
 PyJWT
-pyquickhelper>=1.9
+pyquickhelper>=1.9.3240
 scikit-image
 scikit-learn
 scipy
