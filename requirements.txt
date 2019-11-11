@@ -4,7 +4,6 @@ falcon-auth
 jyquickhelper
 keyring
 memory_profiler
-git+https://github.com/sdpython/nbconvert.git@fixes
 Pillow
 psutil
 PyJWT
