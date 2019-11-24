@@ -78,7 +78,7 @@ def json_predict_model(name, data, format='json'):  # pylint: disable=W0622
 
 
 def submit_rest_request(request, login=None, pwd=None, url='http://127.0.0.1:8081/',
-                        timeout=15, fLOG=None):
+                        timeout=50, fLOG=None):
     """
     Submits a request to a REST API defined by
     @see cl MLStoragePost.

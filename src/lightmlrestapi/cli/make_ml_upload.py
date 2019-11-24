@@ -7,7 +7,7 @@ import sys
 
 
 def upload_model(login="", pwd="", name="", pyfile="", data="", url='127.0.0.1:8081',   # pylint: disable=W0102
-                 timeout=15, fLOG=print):  # pylint: disable=W0622
+                 timeout=50, fLOG=print):  # pylint: disable=W0622
     """
     Uplaods a machine learned models to a REST API defined by
     @see cl MLStoragePost.
