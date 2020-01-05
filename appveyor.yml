@@ -18,12 +18,7 @@ init:
 install:
   - "%PYTHON%\\python -m pip install --upgrade pip"
   - "%PYTHON%\\Scripts\\pip install pymyinstall"
-  - "%PYTHON%\\Scripts\\pymy_install3 --set=pyquickhelper"
   - "%PYTHON%\\Scripts\\pymy_install3 --task=tool --source=zip graphviz"
-  - "%PYTHON%\\Scripts\\pip install pyquickhelper --no-deps"
-  - "%PYTHON%\\Scripts\\pip install wcwidth backcall packaging"
-  - "%PYTHON%\\Scripts\\pip install falcon falcon-auth waitress PyJWT"
-  - "%PYTHON%\\Scripts\\pymy_install3 scikit-learn scipy ujson psutil scikit-image"
   - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - "set PATH=%PATH%;C:\\projects\\jyquickhelper\\build\\update_modules\\Graphviz\\bin"
   - set PYTHONPATH=src
