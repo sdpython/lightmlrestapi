@@ -6,7 +6,7 @@ import traceback
 import json
 import falcon
 import numpy
-import ujson
+from ..tools import json_loads, json_dumps
 from .base_logging import BaseLogging
 
 
@@ -121,7 +121,7 @@ class MachineLearningPost(BaseLogging):
             raise falcon.HTTPBadRequest(
                 'Unable to retrieve request content due to: {0}'.format(es), excs)
 
-        args = ujson.loads(js)
+        args = json_loads(js)
         X = args["X"]
 
         # load the model
@@ -183,7 +183,7 @@ class MachineLearningPost(BaseLogging):
         if self._version is not None:
             answer[".version"] = self._version
         try:
-            js = ujson.dumps(answer)
+            js = json_dumps(answer)
         except OverflowError as e:
             try:
                 json.dumps(answer)

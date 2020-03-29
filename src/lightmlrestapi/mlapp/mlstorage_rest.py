@@ -7,10 +7,10 @@ import pickle
 import base64
 import falcon
 import numpy
-import ujson
+from ..args.args_images import string2bytes
+from ..tools import json_loads, json_dumps
 from .base_logging import BaseLogging
 from .mlstorage import MLStorage
-from ..args.args_images import string2bytes
 
 
 class MLStoragePost(BaseLogging):
@@ -78,7 +78,7 @@ class MLStoragePost(BaseLogging):
             raise falcon.HTTPBadRequest(
                 'Unable to retrieve request content due to: {0}'.format(es), excs)
 
-        args = ujson.loads(js)
+        args = json_loads(js)
         self.save_time()
         duration = self.duration()
         log_data = dict(duration=duration)
@@ -146,7 +146,7 @@ class MLStoragePost(BaseLogging):
                 'Unable to retrieve request content due to: {0}'.format(es))
 
         try:
-            js = ujson.dumps(answer)
+            js = json_dumps(answer)
         except OverflowError as e:
             raise falcon.HTTPBadRequest(
                 'Unable to retrieve request content due to: {0}'.format(e))
@@ -189,7 +189,7 @@ class MLStoragePost(BaseLogging):
                            "machine learned model can process. Field 'format' indicates which "
                            "preprocessing to do before calling the model which is currently '{0}'".format(form))
         if form == 'json':
-            data = ujson.loads(data)
+            data = json_loads(data)
         elif form == 'img':
             simg = base64.b64decode(data)
             data = pickle.loads(simg)

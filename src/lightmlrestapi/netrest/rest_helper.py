@@ -6,8 +6,8 @@ import os
 import requests
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import HTTPError
-import ujson
 from ..args import zip_dict, bytes2string
+from ..tools import json_loads, json_dumps
 
 
 def json_upload_model(name, pyfile, data=None):
@@ -72,7 +72,7 @@ def json_predict_model(name, data, format='json'):  # pylint: disable=W0622
     if name is None or name == '':
         raise ValueError("name cannot be empty.")
 
-    js = ujson.dumps(data)
+    js = json_dumps(data)
     obs = dict(cmd='predict', name=name, input=js, format=format)
     return obs
 
@@ -96,17 +96,17 @@ def submit_rest_request(request, login=None, pwd=None, url='http://127.0.0.1:808
             fLOG("[submit_rest_request] submit authentified request as '{0}' to '{1}'".format(
                 login, url))
         auth = HTTPBasicAuth(login, pwd)
-        jsonified = ujson.dumps(request)
+        jsonified = json_dumps(request)
         response = requests.post(
             url, auth=auth, data=jsonified, timeout=timeout)
     else:
         if fLOG:
             fLOG("[submit_rest_request] submit request to '{0}'".format(url))
-        jsonified = ujson.dumps(request)
+        jsonified = json_dumps(request)
         response = requests.post(url, data=jsonified, timeout=timeout)
 
     if response.ok:
-        return ujson.loads(response.content)
+        return json_loads(response.content)
     else:
         content = None
         if hasattr(response, 'content'):
@@ -117,14 +117,14 @@ def submit_rest_request(request, login=None, pwd=None, url='http://127.0.0.1:808
             if isinstance(content, bytes):
                 http_error_msg = content.decode('ascii')
                 try:
-                    val = ujson.loads(http_error_msg)
+                    val = json_loads(http_error_msg)
                     http_error_msg = val
                 except ValueError:
                     pass
                 finally:
                     pass
             else:
-                http_error_msg = ujson.loads(content)
+                http_error_msg = json_loads(content)
             if isinstance(http_error_msg, dict):
                 http_error_msg = "\n".join(
                     ["{0}: {1}".format(k, v) for k, v in sorted(http_error_msg.items())])

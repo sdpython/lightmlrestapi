@@ -10,7 +10,7 @@ import logging
 from logging import Formatter
 from logging.handlers import TimedRotatingFileHandler
 import jwt
-import ujson
+from ..tools import json_loads, json_dumps
 
 
 class BaseLogging:
@@ -87,7 +87,7 @@ class BaseLogging:
         if self.logger is not None:
             if self.secret is None:
                 try:
-                    dumped = ujson.dumps(data)
+                    dumped = json_dumps(data)
                 except Exception:  # pylint: disable=W0703
                     # Cannot serialize into json.
                     dumped = str(data)
@@ -121,7 +121,7 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
                         dt = datetime.strptime(spl[0], '%Y-%m-%d %H:%M:%S')
                         data = ','.join(spl[4:])
                         try:
-                            data = ujson.loads(data)
+                            data = json_loads(data)
                         except ValueError:
                             # json gives better error messages.
                             data = json.loads(data)
