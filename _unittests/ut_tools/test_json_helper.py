@@ -21,6 +21,14 @@ class TestJsonHelper(ExtTestCase):
         obj2 = json_loads(js)
         self.assertEqualArray(obj, obj2)
 
+    def test_numpy_dict(self):
+        obj = dict(t=1, j=numpy.array([[0, 1], [1, 2], [3, 5]]))
+        js = json_dumps(obj)
+        obj2 = json_loads(js)
+        self.assertIsInstance(obj2, dict)
+        self.assertIn('j', obj2)
+        self.assertEqualArray(obj['j'], obj2['j'])
+
 
 if __name__ == "__main__":
     unittest.main()

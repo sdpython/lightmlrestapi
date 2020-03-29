@@ -32,14 +32,19 @@ def json_dumps(obj):
     @param      X       object
     @return             json
     """
+    def _modify(o):
+        return dict(shape=o.shape, dtype=str(o.dtype),
+                    data=o.tolist(), ___=1)
+
     if isinstance(obj, numpy.ndarray):
-        data = dict(shape=obj.shape, dtype=str(obj.dtype),
-                    data=obj.tolist(), ___=1)
-        try:
-            return ujson.dumps(data)
-        except UnicodeDecodeError:
-            raise JsonError(obj, data)
-    return ujson.dumps(obj)
+        obj = _modify(obj)
+    elif isinstance(obj, dict):
+        obj = {k: (_modify(v) if isinstance(v, numpy.ndarray) else v)
+               for k, v in obj.items()}
+    try:
+        return ujson.dumps(obj)
+    except UnicodeDecodeError:
+        raise JsonError(obj)
 
 
 def json_loads(jsdata):
@@ -50,9 +55,19 @@ def json_loads(jsdata):
     @return                 object
     """
     obj = ujson.loads(jsdata)
-    if isinstance(obj, dict) and '___' in obj:
-        # numpy array
-        shape = obj['shape']
-        obj = numpy.array(obj['data'], dtype=obj['dtype'])
-        obj = obj.reshape(tuple(shape))
+    if isinstance(obj, dict):
+        if '___' in obj:
+            # numpy array
+            shape = obj['shape']
+            obj = numpy.array(obj['data'], dtype=obj['dtype'])
+            obj = obj.reshape(tuple(shape))
+        else:
+            up = {}
+            for k, v in obj.items():
+                if isinstance(v, dict) and '___' in v:
+                    shape = v['shape']
+                    v = numpy.array(v['data'], dtype=v['dtype'])
+                    v = v.reshape(tuple(shape))
+                    up[k] = v
+            obj.update(up)
     return obj

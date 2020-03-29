@@ -183,7 +183,7 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['ujson', 'falcon>=2.0',
+        install_requires=['ujson', 'falcon>=2.0', 'msgpack_numpy',
                           'waitress', 'PyJWT', 'requests'],
         extras_require={
             'cli': ['pyquickhelper'],

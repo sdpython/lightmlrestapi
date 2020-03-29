@@ -4,6 +4,7 @@ falcon-auth
 jyquickhelper
 keyring
 memory_profiler
+msgpack_numpy
 Pillow
 psutil
 PyJWT
