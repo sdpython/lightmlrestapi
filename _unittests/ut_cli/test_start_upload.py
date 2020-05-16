@@ -12,8 +12,8 @@ class TestUploadModel(ExtTestCase):
     def test_upload_model_help(self):
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['upload_model', '-h'], fLOG=flog)
 

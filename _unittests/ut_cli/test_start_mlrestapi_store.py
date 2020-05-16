@@ -12,8 +12,8 @@ class TestStartMlRestApiStore(ExtTestCase):
     def test_start_mlreststor_help(self):
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlreststor', '-h'], fLOG=flog)
 

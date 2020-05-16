@@ -16,8 +16,8 @@ class TestStartMlRestApi(unittest.TestCase):
 
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlrestapi', '-h'], fLOG=flog)
 
@@ -33,8 +33,8 @@ class TestStartMlRestApi(unittest.TestCase):
 
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlrestapi', '--nostart=True'], fLOG=flog)
 
@@ -50,8 +50,8 @@ class TestStartMlRestApi(unittest.TestCase):
 
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlrestapi', '--nostart=True',
                    '--name=dummyimg'], fLOG=flog)
@@ -68,8 +68,8 @@ class TestStartMlRestApi(unittest.TestCase):
 
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlrestapi', '--nostart=True', '--name=dummyknnimg'],
              fLOG=flog)

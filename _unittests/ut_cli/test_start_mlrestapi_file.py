@@ -16,8 +16,8 @@ class TestStartMlRestApiFile(unittest.TestCase):
     def test_start_mlrestapi_file_help(self):
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlrestapi', '-h'], fLOG=flog)
 
@@ -72,8 +72,8 @@ class TestStartMlRestApiFile(unittest.TestCase):
         # We run the app.
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['start_mlrestapi', '--name=dummyfct',
                    '--option={0}'.format(dest),

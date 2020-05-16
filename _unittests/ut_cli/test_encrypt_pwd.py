@@ -15,8 +15,8 @@ class TestEncryptPwd(ExtTestCase):
     def test_encrypt_pwd(self):
         rows = []
 
-        def flog(*l):
-            rows.append(l)
+        def flog(*args):
+            rows.append(args)
 
         main(args=['encrypt_pwd', '-h'], fLOG=flog)
 
