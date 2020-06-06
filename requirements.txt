@@ -5,6 +5,7 @@ jyquickhelper
 keyring
 memory_profiler
 msgpack_numpy
+pandas
 Pillow
 psutil
 PyJWT
