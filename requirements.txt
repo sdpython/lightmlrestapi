@@ -8,6 +8,7 @@ msgpack_numpy
 pandas
 Pillow
 psutil
+pycodestyle
 PyJWT
 pyquickhelper>=1.9.3240
 scikit-image
