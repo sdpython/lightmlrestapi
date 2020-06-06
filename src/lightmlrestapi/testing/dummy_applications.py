@@ -153,7 +153,7 @@ def dummy_application_image(app=None, options=None, **params):
             from lightmlrestapi.args import image2base64
             img = "path_to_image"
             b64 = image2base64(img)[1]
-            features = ujson.dumps({'X': b64})
+            features = ujson.dumps({'X': b64}, reject_bytes=False)
             r = requests.post('http://127.0.0.1:8081', data=features)
             print(r)
             print(r.json())
@@ -295,7 +295,7 @@ def dummy_application_neighbors_image(app=None, options=None, **params):
         from lightmlrestapi.args import image2base64
         img = "path_to_image"
         b64 = image2base64(img)[1]
-        features = ujson.dumps({'X': b64})
+        features = ujson.dumps({'X': b64}, reject_bytes=False)
         r = requests.post('http://127.0.0.1:8081', data=features)
         print(r)
         print(r.json())

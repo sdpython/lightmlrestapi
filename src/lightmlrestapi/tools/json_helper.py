@@ -42,7 +42,7 @@ def json_dumps(obj):
         obj = {k: (_modify(v) if isinstance(v, numpy.ndarray) else v)
                for k, v in obj.items()}
     try:
-        return ujson.dumps(obj)
+        return ujson.dumps(obj, reject_bytes=False)
     except UnicodeDecodeError:
         raise JsonError(obj)
 

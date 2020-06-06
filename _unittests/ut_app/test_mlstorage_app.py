@@ -54,7 +54,7 @@ class TestMLStorageApp(testing.TestCase):
     def test_dummy_app_storage(self):
         # upload model
         obs, X, clf = self._data_sklearn()
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         self.assertEqual(body.status, falcon.HTTP_201)
         d = ujson.loads(body.content)
@@ -63,7 +63,7 @@ class TestMLStorageApp(testing.TestCase):
         # test model
         js = ujson.dumps([list(X[0])])
         obs = dict(cmd='predict', name='ml/iris', input=js, format='json')
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         res = ujson.loads(body.content)
         self.assertIn('output', res)
@@ -87,7 +87,7 @@ class TestMLStorageApp(testing.TestCase):
         # test model
         js = ujson.dumps([[list(X[0])]])
         obs = dict(cmd='predict', name='ml/iris', input=js, format='json')
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         self.assertEqual(body.status, falcon.HTTP_400)
         res = ujson.loads(body.content)

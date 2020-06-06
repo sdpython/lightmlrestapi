@@ -25,7 +25,7 @@ class TestDummyAppImg(testing.TestCase):
         img2 = os.path.join(os.path.dirname(__file__),
                             "data", "wiki_modified.png")
         b64 = image2base64(img2)[1]
-        bodyin = ujson.dumps({'X': b64})
+        bodyin = ujson.dumps({'X': b64}, reject_bytes=False)
         result = self.simulate_post('/', body=bodyin)
         if result.status != falcon.HTTP_201:
             res = ujson.loads(result.content)
@@ -39,7 +39,7 @@ class TestDummyAppImg(testing.TestCase):
         img = get_wiki_img()
         ext_b64 = image2base64(img)
 
-        bodyin = ujson.dumps({'X': ext_b64[1]})
+        bodyin = ujson.dumps({'X': ext_b64[1]}, reject_bytes=False)
         result = self.simulate_post('/', body=bodyin)
         if result.status != falcon.HTTP_201:
             res = ujson.loads(result.content)

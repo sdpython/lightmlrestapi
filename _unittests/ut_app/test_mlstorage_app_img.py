@@ -51,7 +51,7 @@ class TestMLStorageAppImage(testing.TestCase):
     def test_dummy_app_storage_img(self):
         # upload model
         obs, X = self._data_dl()
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         self.assertEqual(body.status, falcon.HTTP_201)
         d = ujson.loads(body.content)
@@ -60,7 +60,7 @@ class TestMLStorageAppImage(testing.TestCase):
         # test model
         ba = base64.b64encode(pickle.dumps(X))
         obs = dict(cmd='predict', name='mlapi/imgn', input=ba, format='img')
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         res = ujson.loads(body.content)
         if 'description' in res:
@@ -72,7 +72,7 @@ class TestMLStorageAppImage(testing.TestCase):
 
         # upload model
         obs, X = self._data_dl(tweak=True)
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         self.assertEqual(body.status, falcon.HTTP_400)
         self.assertIn(b"Unable to upload model due to:", body.content)
@@ -80,7 +80,7 @@ class TestMLStorageAppImage(testing.TestCase):
         # test model
         js = base64.b64encode(b"r" + pickle.dumps(X))
         obs = dict(cmd='predict', name='mlapi/imgn', input=js, format='img')
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         self.assertEqual(body.status, falcon.HTTP_400)
         res = ujson.loads(body.content)

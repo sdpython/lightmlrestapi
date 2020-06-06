@@ -23,7 +23,11 @@ class TestDummyAppSearchImg(testing.TestCase):
         img2 = os.path.join(os.path.dirname(__file__),
                             "data", "wiki_modified.png")
         b64 = image2base64(img2)[1]
-        bodyin = ujson.dumps({'X': b64})
+        try:
+            bodyin = ujson.dumps({'X': b64}, reject_bytes=False)
+        except TypeError as e:
+            raise AssertionError(
+                "Issue with type '{}'.".format(type(b64))) from e
         body = self.simulate_post('/', body=bodyin)
         if body.status != falcon.HTTP_201:
             res = ujson.loads(body)
