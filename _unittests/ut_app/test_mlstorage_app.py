@@ -79,7 +79,7 @@ class TestMLStorageApp(testing.TestCase):
 
         # upload model
         obs, X, clf = self._data_sklearn(tweak=True)
-        bodyin = ujson.dumps(obs)
+        bodyin = ujson.dumps(obs, reject_bytes=False)
         body = self.simulate_post('/', body=bodyin)
         self.assertEqual(body.status, falcon.HTTP_400)
         self.assertIn(b"Unable to upload model due to:", body.content)
