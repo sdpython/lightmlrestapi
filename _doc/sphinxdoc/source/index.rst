@@ -38,6 +38,10 @@ lightmlrestapi
     :target: http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
+.. image:: https://img.shields.io/github/repo-size/sdpython/lightmlrestapi
+    :target: https://github.com/sdpython/lightmlrestapi/
+    :alt: size
+
 *lightmlrestapi* implements a light machine learning :epkg:`REST API`
 based on :epkg:`falcon`.
 
