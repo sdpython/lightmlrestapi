@@ -1,6 +1,7 @@
 coverage
 falcon>=2.0
 falcon-auth
+jupyter_sphinx
 jyquickhelper
 keyring
 memory_profiler
