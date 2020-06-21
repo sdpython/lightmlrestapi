@@ -1,3 +1,4 @@
+autopep8
 coverage
 falcon>=2.0
 falcon-auth
