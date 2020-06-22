@@ -20,7 +20,6 @@ scipy
 sphinx
 sphinx_gallery 
 sphinxcontrib-imagesvg
-sphinx_readable_theme
 ujson
 waitress
 wheel
