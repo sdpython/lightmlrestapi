@@ -7,6 +7,7 @@ jyquickhelper
 keyring
 memory_profiler
 msgpack_numpy
+nbconvert>=6.0.2
 pandas
 Pillow
 psutil
