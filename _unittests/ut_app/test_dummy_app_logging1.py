@@ -6,6 +6,7 @@ import unittest
 import numpy
 import falcon
 import falcon.testing as testing
+import jwt
 from pyquickhelper.pycode import get_temp_folder
 from lightmlrestapi.testing import dummy_application
 from lightmlrestapi.mlapp import enumerate_parsed_logs
@@ -21,6 +22,11 @@ class TestDummyAppLogging1(testing.TestCase):
             self.app, secret='dummys', folder=self.temp)
 
     def test_dummy_app_logging(self):
+        data = {"some": "payload"}
+        encoded_jwt = jwt.encode(data, "secret", algorithm="HS256")
+        res = jwt.decode(encoded_jwt, "secret", algorithms=["HS256"])
+        self.assertEqual(data, res)
+
         bodyin = json_dumps({'X': [0.1, 0.2]})
         result = self.simulate_post('/', body=bodyin)
         self.assertEqual(result.status, falcon.HTTP_201)

@@ -141,8 +141,7 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
                         if spl[4].startswith("b'") and spl[4].endswith("'"):
                             data = spl[4][2:-1]
                         else:
-                            raise ValueError(
-                                "Corrupted logs due to: '{0}'".format(spl[4]))
+                            data = spl[4]
                         dec = jwt.decode(data, secret, algorithms=['HS256'])
                         dt = datetime.strptime(spl[0], '%Y-%m-%d %H:%M:%S')
                         rec = dict(dt=dt, code=spl[1], level=spl[2],
