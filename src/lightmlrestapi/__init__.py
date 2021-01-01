@@ -4,7 +4,7 @@
 @brief Module *lightmlrestapi*.
 Light REST API for machine learned models.
 """
-__version__ = "0.3.190"
+__version__ = "0.3.192"
 __author__ = "Xavier Dupré"
 __github__ = "https://github.com/sdpython/lightmlrestapi"
 __url__ = "http://www.xavierdupre.fr/app/lightmlrestapi/helpsphinx/index.html"
