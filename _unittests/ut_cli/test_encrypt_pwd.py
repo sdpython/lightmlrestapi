@@ -21,7 +21,7 @@ class TestEncryptPwd(ExtTestCase):
         main(args=['encrypt_pwd', '-h'], fLOG=flog)
 
         r = rows[0][0]
-        if not r.startswith("usage: encrypt_pwd [-h] [-i INPUT] [-o OUTPUT] [-a ALGO]"):
+        if not r.startswith("usage: encrypt_pwd"):
             raise Exception(r)
 
     def test_encrypt_pwd2(self):
