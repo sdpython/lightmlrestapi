@@ -21,10 +21,8 @@ html_context = {
     'css_files': get_default_stylesheet() + ['_static/my-styles.css'],
 }
 
-html_logo = "project_ico.png"
-
+html_logo = "phdoc_static/project_ico.png"
 html_sidebars = {}
-
 language = "en"
 
 mathdef_link_only = True

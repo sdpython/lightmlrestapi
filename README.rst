@@ -42,7 +42,10 @@ lightmlrestapi
 ==============
 
 It implements a light machine learning *REST API*
-based on *falcon*. You can test a dummy *wsgi* server by running:
+based on `falcon <https://falcon.readthedocs.io/en/stable/>`_.
+If I were to start again this project, I would
+probably choose `FastAPI <https://fastapi.tiangolo.com/>`_.
+You can test a dummy *wsgi* server by running:
 
 ::
 

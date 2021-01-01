@@ -9,7 +9,6 @@ from time import perf_counter
 import logging
 from logging import Formatter
 from logging.handlers import TimedRotatingFileHandler
-import jwt
 from ..tools import json_loads, json_dumps
 
 
@@ -46,6 +45,9 @@ class BaseLogging:
             self.logger.setLevel(level)
             self.logger.addHandler(self.handler)
             self.secret = secret
+        if self.secret is not None:
+            import jwt
+            self.jwt = jwt
 
     def save_time(self):
         """
@@ -93,7 +95,8 @@ class BaseLogging:
                     dumped = str(data)
                 extra = dict(data=dumped)
             else:
-                enc_data = jwt.encode(data, self.secret, algorithm='HS256')
+                enc_data = self.jwt.encode(
+                    data, self.secret, algorithm='HS256')
                 extra = dict(data=enc_data)
             if fct == 'info':
                 self.logger.info(msg, extra=extra)
@@ -111,6 +114,8 @@ def enumerate_parsed_logs(folder, secret, encoding='utf-8'):
     @param      encoding    encoding
     @return                 iterator on decrypted data
     """
+    if secret is not None:
+        import jwt
     for root, _, files in os.walk(folder):
         for name in files:
             full = os.path.join(root, name)

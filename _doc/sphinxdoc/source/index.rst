@@ -44,6 +44,8 @@ lightmlrestapi
 
 *lightmlrestapi* implements a light machine learning :epkg:`REST API`
 based on :epkg:`falcon`.
+If I were to start again this project, I would
+probably choose `FastAPI <https://fastapi.tiangolo.com/>`_.
 
 Documentation
 -------------
