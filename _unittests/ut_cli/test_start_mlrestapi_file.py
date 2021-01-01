@@ -22,7 +22,7 @@ class TestStartMlRestApiFile(unittest.TestCase):
         main(args=['start_mlrestapi', '-h'], fLOG=flog)
 
         r = rows[0][0]
-        if not r.startswith("usage: start_mlrestapi [-h] [-n NAME] [-ho HOST]"):
+        if not r.startswith("usage: start_mlrestapi"):
             raise Exception(r)
 
     def test_start_mlrestapi_file(self):

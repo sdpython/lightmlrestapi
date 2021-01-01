@@ -18,7 +18,7 @@ class TestStartMlRestApiStore(ExtTestCase):
         main(args=['start_mlreststor', '-h'], fLOG=flog)
 
         r = rows[0][0]
-        if not r.startswith("usage: start_mlreststor [-h] [-l LOCATION]"):
+        if not r.startswith("usage: start_mlreststor"):
             raise Exception(r)
 
     def test_start_mlreststor(self):

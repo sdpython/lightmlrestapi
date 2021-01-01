@@ -18,7 +18,7 @@ class TestUploadModel(ExtTestCase):
         main(args=['upload_model', '-h'], fLOG=flog)
 
         r = rows[0][0]
-        if not r.startswith("usage: upload_model [-h] [-l LOGIN] [--pwd PWD]"):
+        if not r.startswith("usage: upload_model"):
             raise Exception(r)
 
     def test_upload_model(self):
