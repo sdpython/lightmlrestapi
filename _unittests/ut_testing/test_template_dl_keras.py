@@ -24,7 +24,7 @@ class TestTemplateDlKeras(ExtTestCase):
         self.assertEqual(restapi_version(), "0.1.1237")
         temp = get_temp_folder(__file__, "temp_template_dl_keras")
 
-        from keras.applications.mobilenet import MobileNet  # pylint: disable=E0401
+        from keras.applications.mobilenet import MobileNet  # pylint: disable=E0401,E0611
         model = MobileNet(input_shape=None, alpha=1.0, depth_multiplier=1,
                           dropout=1e-3, include_top=True,
                           weights='imagenet', input_tensor=None,
