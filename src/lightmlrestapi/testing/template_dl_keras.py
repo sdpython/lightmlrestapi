@@ -23,7 +23,7 @@ def restapi_load(files={'model': "dlmodel.keras"}):  # pylint: disable=W0102
     The model name is relative to this file.
     When call by a REST API, the default value is always used.
     """
-    from keras.models import load_model  # pylint: disable=E0401
+    from keras.models import load_model  # pylint: disable=E0401,E0611
     model = files["model"]
     here = os.path.dirname(__file__)
     model = os.path.join(here, model)
