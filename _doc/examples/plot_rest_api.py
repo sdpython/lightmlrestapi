@@ -72,8 +72,11 @@ sleep(3)
 import requests
 import ujson
 features = ujson.dumps({'X': [0.1, 0.2]})
-r = requests.post('http://%s:%d' % (host, port), data=features)
-print(r.json())
+try:
+    r = requests.post('http://%s:%d' % (host, port), data=features)
+    print(r.json())
+except Exception as e:
+    print("ERROR: %r" % e)
 
 ####################
 # Let's stop the server.
