@@ -14,7 +14,8 @@ psutil
 pycodestyle
 PyJWT
 pylint
-pyquickhelper>=1.9.3240
+pyquickhelper>=1.10
+pyquicksetup
 scikit-image
 scikit-learn
 scipy
