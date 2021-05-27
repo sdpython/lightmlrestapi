@@ -1,6 +1,6 @@
 
-.. image:: https://travis-ci.org/sdpython/lightmlrestapi.svg?branch=master
-    :target: https://travis-ci.org/sdpython/lightmlrestapi
+.. image:: https://travis-ci.com/sdpython/lightmlrestapi.svg?branch=master
+    :target: https://travis-ci.com/sdpython/lightmlrestapi
     :alt: Build status
 
 .. image:: https://ci.appveyor.com/api/projects/status/itkrtmperlhjm4xw?svg=true
