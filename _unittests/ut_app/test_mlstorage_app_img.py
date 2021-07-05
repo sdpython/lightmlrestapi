@@ -7,7 +7,7 @@ import pickle
 import base64
 import numpy
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=E0401,R0402
 from PIL import Image
 import ujson
 from pyquickhelper.pycode import get_temp_folder

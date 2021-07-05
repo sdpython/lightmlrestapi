@@ -4,7 +4,7 @@
 """
 import unittest
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 import ujson
 from lightmlrestapi.testing import dummy_application_neighbors
 

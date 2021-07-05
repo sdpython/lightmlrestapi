@@ -3,7 +3,7 @@
 @brief      test log(time=33s)
 """
 import unittest
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=E0401,R0402
 from pyquickhelper.loghelper import fLOG
 from lightmlrestapi.args import image2base64, base642image, image2array
 from lightmlrestapi.testing.data import get_wiki_img

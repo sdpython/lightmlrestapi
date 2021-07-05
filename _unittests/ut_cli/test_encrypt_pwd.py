@@ -35,7 +35,8 @@ class TestEncryptPwd(ExtTestCase):
         df = pandas.read_csv(enc, header=None)
         self.assertEqual(df.iloc[0, 0], "xavier")
         self.assertEqual(
-            df.iloc[0, 1], "85155e3fb5c95d483d5508d41ca9abbb9a09c4e4468b31e3b805021e")
+            df.iloc[0, 1],  # pylint: disable=E1101
+            "85155e3fb5c95d483d5508d41ca9abbb9a09c4e4468b31e3b805021e")
 
 
 if __name__ == "__main__":

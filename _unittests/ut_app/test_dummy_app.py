@@ -5,7 +5,7 @@
 import unittest
 import numpy
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 from pyquickhelper.loghelper import fLOG
 from lightmlrestapi.testing import dummy_application
 from lightmlrestapi.tools import json_loads, json_dumps

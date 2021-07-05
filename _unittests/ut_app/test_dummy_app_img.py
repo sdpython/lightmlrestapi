@@ -5,7 +5,7 @@
 import os
 import unittest
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 from PIL import Image
 import ujson
 from lightmlrestapi.testing import dummy_application_image

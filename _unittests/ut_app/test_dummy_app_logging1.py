@@ -5,7 +5,7 @@
 import unittest
 import numpy
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 import jwt
 from pyquickhelper.pycode import get_temp_folder
 from lightmlrestapi.testing import dummy_application
@@ -23,8 +23,10 @@ class TestDummyAppLogging1(testing.TestCase):
 
     def test_dummy_app_logging(self):
         data = {"some": "payload"}
-        encoded_jwt = jwt.encode(data, "secret", algorithm="HS256")
-        res = jwt.decode(encoded_jwt, "secret", algorithms=["HS256"])
+        encoded_jwt = jwt.encode(  # pylint: disable=E1101
+            data, "secret", algorithm="HS256")
+        res = jwt.decode(  # pylint: disable=E1101
+            encoded_jwt, "secret", algorithms=["HS256"])
         self.assertEqual(data, res)
 
         bodyin = json_dumps({'X': [0.1, 0.2]})

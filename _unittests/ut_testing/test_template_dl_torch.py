@@ -24,7 +24,7 @@ class TestTemplateDlTorch(ExtTestCase):
         self.assertEqual(restapi_version(), "0.1.1238")
         temp = get_temp_folder(__file__, "temp_template_dl_torch")
 
-        import torchvision.models as models  # pylint: disable=E0401,C0415
+        import torchvision.models as models  # pylint: disable=E0401,C0415,R0402
         import torch  # pylint: disable=E0401,C0415
         model = models.squeezenet1_0(pretrained=True)
         model_name = os.path.join(temp, "model.torch")

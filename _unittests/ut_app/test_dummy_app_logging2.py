@@ -5,7 +5,7 @@
 import unittest
 import numpy
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 from pyquickhelper.pycode import get_temp_folder
 from lightmlrestapi.testing import dummy_application
 from lightmlrestapi.mlapp import enumerate_parsed_logs

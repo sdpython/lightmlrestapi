@@ -5,7 +5,7 @@
 import os
 import unittest
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 import ujson
 from lightmlrestapi.testing import dummy_application_neighbors_image
 from lightmlrestapi.testing.data import get_wiki_img

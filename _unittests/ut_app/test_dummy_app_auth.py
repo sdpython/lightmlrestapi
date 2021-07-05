@@ -7,7 +7,7 @@ import unittest
 import warnings
 import numpy
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=R0402
 from lightmlrestapi.testing import dummy_application_auth
 from lightmlrestapi.tools import json_loads, json_dumps
 

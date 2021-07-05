@@ -6,7 +6,7 @@ import unittest
 import pickle
 import numpy
 import falcon
-import falcon.testing as testing
+import falcon.testing as testing  # pylint: disable=E0401,R0402
 import ujson
 from pyquickhelper.pycode import get_temp_folder
 from lightmlrestapi.testing import dummy_mlstorage
