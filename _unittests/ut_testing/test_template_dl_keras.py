@@ -6,14 +6,13 @@ import unittest
 import numpy
 from PIL import Image
 from pyquickhelper.pycode import get_temp_folder, ExtTestCase
-from lightmlrestapi.testing.template_dl_keras import restapi_version, restapi_load, restapi_predict
 
 
 def get_keras():
     try:
         import keras  # pylint: disable=C0415
         return keras
-    except ImportError:
+    except (ImportError, AttributeError):
         return None
 
 
@@ -21,6 +20,8 @@ class TestTemplateDlKeras(ExtTestCase):
 
     @unittest.skipIf(get_keras() is None, reason="no keras")
     def test_template_dl_keras(self):
+        from lightmlrestapi.testing.template_dl_keras import (
+            restapi_version, restapi_load, restapi_predict)
         self.assertEqual(restapi_version(), "0.1.1237")
         temp = get_temp_folder(__file__, "temp_template_dl_keras")
 
