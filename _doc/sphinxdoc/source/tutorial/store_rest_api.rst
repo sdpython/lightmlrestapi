@@ -195,6 +195,8 @@ on :epkg:`ImageNet`.
         model.save(model_name)
     except ImportError:
         print("Keras is not installed.")
+    except AttributeError as e:
+        print(e)
 
 Then we create the :epkg:`python` application.
 
@@ -264,6 +266,8 @@ on :epkg:`ImageNet`.
         torch.save(model, model_name)
     except ImportError:
         print("Keras is not installed.")
+    except AttributeError as e:
+        print(e)
 
 Then we create the :epkg:`python` application.
 
