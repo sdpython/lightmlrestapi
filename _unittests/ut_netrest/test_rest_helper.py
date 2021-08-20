@@ -30,7 +30,7 @@ class TestRestHelper(ExtTestCase):
             f.write(model_data)
 
         # application
-        with open(template_ml.__file__, "r") as f:
+        with open(template_ml.__file__, "r") as f:  # pylint: disable=W1514
             code = f.read()
         code = code.replace("iris2.pkl", "model_iris.pkl")
         pyfile = os.path.join(temp, "model.py")
