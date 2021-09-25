@@ -32,7 +32,7 @@ class TestDummyAppSearch(testing.TestCase):
         d = ujson.loads(result.content)
         self.assertIn('Unable to predict', d['title'])
         self.assertIn(
-            'query data dimension must match training data dimension', d['title'])
+            'is expecting 2 features as input', d['title'])
         self.assertIn('.py', d['description'])
 
 
