@@ -57,7 +57,8 @@ class TestDummyAppAuth(testing.TestCase):
         self.assertEqual(body.status, falcon.HTTP_400)
         d = json_loads(body.content)
         self.assertIn('Unable to predict', d['title'])
-        self.assertIn('X has 3 features per sample; expecting 2', d['title'])
+        self.assertIn('X has 3 features', d['title'])
+        self.assertIn('expecting 2 features', d['title'])
         self.assertIn('.py', d['description'])
 
 
