@@ -5,6 +5,7 @@ falcon-auth
 jupyter_sphinx
 jyquickhelper
 keyring
+matplotlib
 memory_profiler
 msgpack_numpy
 nbconvert>=6.0.2
