@@ -309,7 +309,7 @@ class MLStorage(ZipStorage):
 
         try:
             mod = import_module()
-        except ImportError as e:
+        except ImportError:
             # Reload modules.
             specs = []
             spl = full_modname.split('.')
